@@ -1,0 +1,42 @@
+# Manim generated files
+media/
+manim.log
+*.mp4
+*.gif
+*.png
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.mypy_cache/
+*.egg-info/
+.installed.cfg
+lib/
+lib64/
+*.egg
+
+# Virtual environments
+venv/
+*.venv/
+env/
+*.env/
+
+# IDEs
+.vscode/
+.idea/
+*.iml
+*.swp
+
+# macOS artifacts
+.DS_Store
