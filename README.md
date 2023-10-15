@@ -2,7 +2,7 @@
 
 ## Quick start
 
-`./main.py`
+`./src/main.py`
 
 ## Structure
 
