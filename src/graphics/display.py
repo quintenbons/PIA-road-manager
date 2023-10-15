@@ -18,13 +18,21 @@ class PygameDisplay:
                     pygame.quit()
                     return
 
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:
+                        self.simulation.next_tick()
+
             screen.fill((0, 0, 0))
 
             for road in self.simulation.roads:
-                draw_road(screen, road.start, road.end)
+                draw_road(screen, road)
 
             for car in self.simulation.cars:
-                draw_car(screen, (car.x, car.y))
+                draw_car(screen, car)
+
+            font = pygame.font.SysFont('Arial', 20)
+            text = font.render('Press space to advance', True, (255, 255, 255))
+            screen.blit(text, (300, 550))
 
             pygame.display.flip()
 
