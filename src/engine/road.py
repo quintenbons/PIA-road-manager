@@ -19,7 +19,10 @@ class Road:
     def update(self) -> None:
         for m in self.content:
             m.update()
-        
+    
+    def collisionDetection(self) -> List[Movable]:
+        #TODO detect collision between two movable
+        ...
 
     def norm(self) -> Coordinate:
         if self._norm is None:
