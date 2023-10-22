@@ -4,31 +4,25 @@ small test for binary search tree
 """
 from engine.tree import BinarySearchTree
 
-def displayTree(root):
-    if root:
-        displayTree(root.left)
-        print(root)
-        displayTree(root.right)
 
 def main():
 
-    r = BinarySearchTree(4, 8, 'c')
+    r = BinarySearchTree()
+    r.insert(4, 8, 'c')
 
-    assert(not r.isAvailable(2, 5))
-    assert(r.isAvailable(0, 3))
-    r.insert(0, 3, 'a')
-    assert(not r.isAvailable(2, 3))
-    assert(r.isAvailable(3, 4))
-    r.insert(3, 4, 'b')
-    assert(r.isAvailable(12, 15))
-    r.insert(12, 15, 'd')
-    assert(not r.isAvailable(12, 15))
+    assert(not r.insert(2, 5, 'i'))
+    assert(r.insert(0, 3, 'a'))
+    
+    assert(not r.insert(2, 3, 'i'))
+    assert(r.insert(3, 4, 'b'))
+    assert(r.insert(12, 15, 'd'))
+    assert(not r.insert(12, 15, 'i'))
     try:
         r.insert(13, 11, 'i')
     except AssertionError:
         print("assert(minVal < maxVal) catched")
 
-    displayTree(r)
+    r.printTree()
 
 if __name__ == "__main__":
     main()

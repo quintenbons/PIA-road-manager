@@ -4,9 +4,9 @@ from dataclasses import dataclass
 import sys
 from typing import TYPE_CHECKING
 
-# if TYPE_CHECKING:
-sys.path.append('../engine')
-from engine.road import Road
+if TYPE_CHECKING:
+    sys.path.append('../engine')
+    from engine.road import Road
 
 @dataclass
 class Car:
