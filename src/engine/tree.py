@@ -44,6 +44,30 @@ class BinarySearchTree:
             self.root.printTree()
 
     
+    def remove(self, node: Node):
+        if node.left is None:
+            self.shiftNode(node, node.right)
+        elif node.right is None:
+            self.shiftNode(node, node.left)
+        else:
+            e = node.successor()
+            if e.parent is not node:
+                self.shiftNode(e, e.right)
+                e.right = node.right
+                e.right.parent = e
+            self.shiftNode(node, e)
+            e.left = node.left
+            e.left.parent = e
+
+    def shiftNode(self, node1: Node, node2: Node):
+        if node1.parent is None:
+            self.root = node2
+        elif node1 == node1.parent.left:
+            node1.parent.left = node2
+        else:
+            node1.parent.right = node2
+        if node2 is not None:
+            node2.parent = node1.parent
     # def remove(self, minVal, maxVal):
     #     if self.minValue == minVal and self.maxValue == maxVal:
     #         ...
@@ -83,12 +107,47 @@ class Node:
             else:
                 self.right.insert(minVal, maxVal, obj)
 
-    def isAvailable(self, minVal, maxVal):
+    def isAvailable(self, minVal, maxVal) -> bool:
         if maxVal <= self.minValue:
             return True if self.left is None else self.left.isAvailable(minVal, maxVal)
         elif minVal >= self.maxValue:
             return True if self.right is None else self.right.isAvailable(minVal, maxVal)
         return False
+
+    def successor(self) -> Node:
+        if self.right is not None:
+            return self.right.minimum()
+        x = self
+        y = self.parent
+        while y is not None and x == y.right():
+            x = y
+            y = y.parent
+        
+        return y
+
+    def predecessor(self) -> Node:
+        if self.left is not None:
+            return self.left.maximum()
+        x = self
+        y = self.parent
+
+        while y is not None and x == y.left:
+            x = y
+            y = y.parent
+        
+        return y
+
+    def maximum(self) -> Node:
+        x = self
+        while x.right is not None:
+            x = x.right
+        return x
+
+    def minimum(self) -> Node:
+        x = self
+        while x.left is not None:
+            x = x.left
+        return x
 
     def printTree(self):
         if self.left:

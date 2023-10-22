@@ -28,5 +28,11 @@ def main():
     assert(r.search(12, 15) == r.root.right)
     assert(r.search(3, 4) == r.root.left.right)
 
+    print("removing root...")
+    n = r.root.right
+    r.remove(r.root)
+    assert(r.root == n)
+    r.printTree()
+
 if __name__ == "__main__":
     main()
