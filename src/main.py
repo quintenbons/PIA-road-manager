@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(__file__))
 import numpy as np
 from engine.road import Road
 from engine.movable.car import Car
+from engine.tree import BinarySearchTree
 # from engine.simulation import Simulation
 # from graphics.display import PygameDisplay
 
