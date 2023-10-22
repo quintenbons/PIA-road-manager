@@ -22,42 +22,43 @@ class ImplemNodable(Nodable):
         return str(self.val)
 def main():
 
-    r = BinarySearchTree()
-    # r.insert(4, 8, 'c')
-    r.insert(ImplemNodable(4, 8, 'c'))
-    assert(not r.insert(ImplemNodable(2, 5, 'i')))
-    assert(r.insert(ImplemNodable(0, 3, 'a')))
+    bst = BinarySearchTree()
+    # bst.insert(4, 8, 'c')
+    bst.insert(ImplemNodable(4, 8, 'c'))
+    assert(not bst.insert(ImplemNodable(2, 5, 'i')))
+    assert(bst.insert(ImplemNodable(0, 3, 'a')))
     
-    assert(not r.insert(ImplemNodable(2, 3, 'i')))
-    assert(r.insert(ImplemNodable(3, 4, 'b')))
-    assert(r.insert(ImplemNodable(12, 15, 'd')))
-    assert(not r.insert(ImplemNodable(12, 15, 'i')))
+    assert(not bst.insert(ImplemNodable(2, 3, 'i')))
+    assert(bst.insert(ImplemNodable(3, 4, 'b')))
+    assert(bst.insert(ImplemNodable(12, 15, 'd')))
+    assert(not bst.insert(ImplemNodable(12, 15, 'i')))
     try:
-        r.insert(ImplemNodable(13, 11, 'i'))
+        bst.insert(ImplemNodable(13, 11, 'i'))
     except AssertionError:
         print("assert(minVal < maxVal) catched")
 
-    r.printTree()
+    bst.printTree()
 
-    assert(not r.search(2, 8))
-    assert(r.search(12, 15) == r.root.right)
-    assert(r.search(3, 4) == r.root.left.right)
+    assert(not bst.search(2, 8))
+    assert(bst.search(12, 15) == bst.root.right)
+    assert(bst.search(3, 4) == bst.root.left.right)
 
     print("iterate")
     msg = ""
-    for n in r.iterate():
+    for n in bst:
         msg += str(n)
     assert(msg == "abcd")
 
     print("removing root...")
-    n = r.root.right
-    r.remove(r.root)
-    assert(r.root == n)
-    r.printTree()
+    n = bst.root.right
+    bst.remove(bst.root)
+    assert(bst.root == n)
+    bst.printTree()
     print("iterate")
     msg = ""
-    for n in r.iterate():
+    for n in bst:
         msg += str(n)
     assert(msg == "abd")
+
 if __name__ == "__main__":
     main()

@@ -17,28 +17,27 @@ class Road:
     _isOneWay: bool = True
     _trafficFlow: float = None
     _avgSpeed: float = None
-    content: List[BinarySearchTree] = None
+    content: List[BinarySearchTree[Movable]] = None
 
     def update(self) -> None:
         for lane in self.content:
-            for mov in lane:
-                mov.update()
-    
-    # TODO call before update
-    def collisionDetection(self) -> None:
-        #TODO clear intentation hell
-        for lane in self.content:
             previous: Movable = None
-            for movable in lane.iterate():
-                movable: Movable
+            for mov in lane:
+                mov: Movable
                 if previous is not None:
-                    if previous.nextPosition() + previous.size > movable.nextPosition() - movable.size:
-                        previous.handlePossibleCollision(movable)
+                    self.collisionDetection(previous, mov)
+                mov.update()
+                
 
-    def removeMovable(self, mov):
+
+    def collisionDetection(self, previous: Movable, nxt: Movable) -> float:
+        if previous.nextPosition() + previous.size > nxt.nextPosition() - nxt.size:
+            previous.handlePossibleCollision(nxt)
+
+    def removeMovable(self, mov: Movable):
         #TODO optimize this
         for lane in self.content:
             try:
-                lane.remove(mov)
+                lane.remove(mov.getNode())
             except ValueError:
                 continue

@@ -42,7 +42,7 @@ class Movable(Nodable):
 
     def handlePossibleCollision(self, other: Movable):
         pass
-    
+
     def maxValue(self):
         return self.pos + self.size
     def minValue(self):
@@ -50,6 +50,9 @@ class Movable(Nodable):
     
     def bindTree(self, node: Node):
         self._roadNode = node
+
+    def getNode(self) -> Node:
+        return self._roadNode
 
 class Category(Enum):
     CAR = 0

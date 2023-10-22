@@ -44,7 +44,7 @@ class BinarySearchTree:
         if self.root:
             self.root.printTree()
 
-    def iterate(self):
+    def __iter__(self):
         if self.root:
             yield from self.root.iterate()
 
@@ -151,7 +151,7 @@ class Node:
         yield self.obj
         if self.right:
             yield from self.right.iterate()
-
+    
     def printTree(self):
         if self.left:
             self.left.printTree()
@@ -167,4 +167,6 @@ class Nodable:
         pass
 
     def bindTree(self, node: Node):
+        pass
+    def getNode(self):
         pass
