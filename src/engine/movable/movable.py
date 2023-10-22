@@ -5,7 +5,7 @@ from enum import Enum
 
 import sys
 from typing import TYPE_CHECKING
-from engine.tree import Nodable
+from engine.tree import Nodable, Node
 
 
 if TYPE_CHECKING:
@@ -20,6 +20,8 @@ class Movable(Nodable):
     size: float
     category: Enum
     currentRoad: Road
+
+    _roadNode: Node
 
     def update(self) -> None:
         #TODO what happen
@@ -40,6 +42,9 @@ class Movable(Nodable):
     def minValue(self):
         return self.pos - self.size
     
+    def bindTree(self, node: Node):
+        self._roadNode = node
+        
 class Category(Enum):
     CAR = 0
     BIKE = 1

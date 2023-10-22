@@ -4,7 +4,6 @@ small test for binary search tree
 """
 from engine.tree import BinarySearchTree, Nodable
 
-
 class ImplemNodable(Nodable):
 
     minVal: int

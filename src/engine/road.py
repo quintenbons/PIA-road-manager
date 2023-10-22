@@ -29,6 +29,7 @@ class Road:
         collision = []
         for lane in self.content:
             #TODO use a binary search tree to optimize this
+            
             for movable, otherMovable in filter(lambda obj: (obj[0] != obj[1]), zip(lane, lane)):
                 m1, m2 = (movable, otherMovable) if movable.pos < otherMovable.pos else (otherMovable, movable)
                 

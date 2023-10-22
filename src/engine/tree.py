@@ -75,13 +75,14 @@ class Node:
     parent: Node
     obj: Nodable
 
-    def __init__(self, obj, parent: Node = None, left = None, right = None) -> None:
+    def __init__(self, obj: Nodable, parent: Node = None, left = None, right = None) -> None:
         assert(obj.minValue() < obj.maxValue())
 
         self.obj = obj
         self.left = left
         self.right = right
         self.parent = parent
+        self.obj.bindTree(self)
     
     def __str__(self) -> str:
         return f"{(self.obj.minValue(), self.obj.maxValue(), str(self.obj))}"
@@ -152,4 +153,7 @@ class Nodable:
     def maxValue(self):
         pass
     def minValue(self):
+        pass
+
+    def bindTree(self, node: Node):
         pass
