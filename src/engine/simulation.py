@@ -1,7 +1,7 @@
 """
 Simulation of the road network
 """
-from .car import Car
+from .movable.car import Car
 from .road import Road
 from typing import List
 
