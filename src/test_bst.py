@@ -2,23 +2,39 @@
 """
 small test for binary search tree
 """
-from engine.tree import BinarySearchTree
+from engine.tree import BinarySearchTree, Nodable
 
 
+class ImplemNodable(Nodable):
+
+    minVal: int
+    maxVal: int
+    val: object
+    def __init__(self, minVal, maxVal, val) -> None:
+        self.minVal = minVal
+        self.maxVal = maxVal
+        self.val = val
+
+    def minValue(self):
+        return self.minVal
+    def maxValue(self):
+        return self.maxVal
+    def __str__(self) -> str:
+        return str(self.val)
 def main():
 
     r = BinarySearchTree()
-    r.insert(4, 8, 'c')
-
-    assert(not r.insert(2, 5, 'i'))
-    assert(r.insert(0, 3, 'a'))
+    # r.insert(4, 8, 'c')
+    r.insert(ImplemNodable(4, 8, 'c'))
+    assert(not r.insert(ImplemNodable(2, 5, 'i')))
+    assert(r.insert(ImplemNodable(0, 3, 'a')))
     
-    assert(not r.insert(2, 3, 'i'))
-    assert(r.insert(3, 4, 'b'))
-    assert(r.insert(12, 15, 'd'))
-    assert(not r.insert(12, 15, 'i'))
+    assert(not r.insert(ImplemNodable(2, 3, 'i')))
+    assert(r.insert(ImplemNodable(3, 4, 'b')))
+    assert(r.insert(ImplemNodable(12, 15, 'd')))
+    assert(not r.insert(ImplemNodable(12, 15, 'i')))
     try:
-        r.insert(13, 11, 'i')
+        r.insert(ImplemNodable(13, 11, 'i'))
     except AssertionError:
         print("assert(minVal < maxVal) catched")
 

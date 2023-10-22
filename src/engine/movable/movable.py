@@ -5,12 +5,14 @@ from enum import Enum
 
 import sys
 from typing import TYPE_CHECKING
+from engine.tree import Nodable
+
 
 if TYPE_CHECKING:
     sys.path.append('../engine')
     from engine.road import Road
 
-class Movable:
+class Movable(Nodable):
 
     speed: float = 0.0
     latency: float = 0.0
@@ -33,6 +35,11 @@ class Movable:
     def handleCrosswalk(self):
         pass
 
+    def maxValue(self):
+        return self.pos + self.size
+    def minValue(self):
+        return self.pos - self.size
+    
 class Category(Enum):
     CAR = 0
     BIKE = 1

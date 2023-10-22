@@ -6,35 +6,35 @@ class BinarySearchTree:
     def __init__(self):
         self.root = None
 
-    def insertCmp(self, minVal, maxVal, cmpMin, cmpMax, obj) -> bool:
+    def insertCmp(self, cmpMin, cmpMax, obj) -> bool:
         if self.root is None:
-            self.root = Node(minVal, maxVal, obj)
+            self.root = Node(obj)
             return True
         if self.root.isAvailable(cmpMin, cmpMax):
-            self.root.insert(minVal, maxVal, obj)
+            self.root.insert(obj)
             return True
         return False
     #Duplicate : performance issue
-    def insert(self, minVal, maxVal, obj) -> bool:
+    def insert(self, obj: Nodable) -> bool:
         if self.root is None:
-            self.root = Node(minVal, maxVal, obj)
+            self.root = Node(obj)
             return True
-        if self.root.isAvailable(minVal, maxVal):
-            self.root.insert(minVal, maxVal, obj)
+        if self.root.isAvailable(obj.minValue(), obj.maxValue()):
+            self.root.insert(obj)
             return True
         return False
 
     def search(self, minVal, maxVal) -> Node:
         current = self.root
         #TODO optimize with precondition after
-        while current is not None and (current.minValue != minVal and current.maxValue != maxVal):
-            if maxVal <= current.minValue:
+        while current is not None and (current.obj.minValue() != minVal and current.obj.maxValue() != maxVal):
+            if maxVal <= current.obj.minValue():
                 current = current.left
-            elif minVal >= current.maxValue:
+            elif minVal >= current.obj.maxValue():
                 current = current.right
             else:
                 return None
-        if current.minValue == minVal and current.maxValue == maxVal:
+        if current.obj.minValue() == minVal and current.obj.maxValue() == maxVal:
             return current
         else:
             return None
@@ -68,49 +68,40 @@ class BinarySearchTree:
             node1.parent.right = node2
         if node2 is not None:
             node2.parent = node1.parent
-    # def remove(self, minVal, maxVal):
-    #     if self.minValue == minVal and self.maxValue == maxVal:
-    #         ...
-
-    # def shiftNodes
 
 class Node:
     left: Node
     right: Node
     parent: Node
+    obj: Nodable
 
-    minValue: float
-    maxValue: float
-    obj: None
+    def __init__(self, obj, parent: Node = None, left = None, right = None) -> None:
+        assert(obj.minValue() < obj.maxValue())
 
-    def __init__(self, minVal, maxVal, obj = None, parent: Node = None, left = None, right = None) -> None:
-        assert(minVal < maxVal)
-        self.minValue = minVal
-        self.maxValue = maxVal
         self.obj = obj
         self.left = left
         self.right = right
         self.parent = parent
     
     def __str__(self) -> str:
-        return f"{(self.minValue, self.maxValue, self.obj)}"
+        return f"{(self.obj.minValue(), self.obj.maxValue(), str(self.obj))}"
     
-    def insert(self, minVal, maxVal, obj):
-        if maxVal <= self.minValue:
+    def insert(self, obj: Nodable):
+        if obj.maxValue() <= self.obj.minValue():
             if self.left is None:
-                self.left = Node(minVal, maxVal, obj, self)
+                self.left = Node(obj, self)
             else:
-                self.left.insert(minVal, maxVal, obj)
-        elif minVal >= self.maxValue:
+                self.left.insert(obj)
+        elif obj.minValue() >= self.obj.maxValue():
             if self.right is None:
-                self.right = Node(minVal, maxVal, obj, self)
+                self.right = Node(obj, self)
             else:
-                self.right.insert(minVal, maxVal, obj)
+                self.right.insert(obj)
 
     def isAvailable(self, minVal, maxVal) -> bool:
-        if maxVal <= self.minValue:
+        if maxVal <= self.obj.minValue():
             return True if self.left is None else self.left.isAvailable(minVal, maxVal)
-        elif minVal >= self.maxValue:
+        elif minVal >= self.obj.maxValue():
             return True if self.right is None else self.right.isAvailable(minVal, maxVal)
         return False
 
@@ -155,3 +146,10 @@ class Node:
         print(self)
         if self.right:
             self.right.printTree()
+
+class Nodable:
+    """Interface used by this BST"""
+    def maxValue(self):
+        pass
+    def minValue(self):
+        pass
