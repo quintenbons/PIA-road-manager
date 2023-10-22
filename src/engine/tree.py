@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import TypeVar
 
 class BinarySearchTree:
     root: Node
@@ -43,7 +44,10 @@ class BinarySearchTree:
         if self.root:
             self.root.printTree()
 
-    
+    def iterate(self):
+        if self.root:
+            yield from self.root.iterate()
+
     def remove(self, node: Node):
         if node.left is None:
             self.shiftNode(node, node.right)
@@ -140,6 +144,13 @@ class Node:
         while x.left is not None:
             x = x.left
         return x
+
+    def iterate(self) -> object:
+        if self.left:
+            yield from self.left.iterate()
+        yield self.obj
+        if self.right:
+            yield from self.right.iterate()
 
     def printTree(self):
         if self.left:

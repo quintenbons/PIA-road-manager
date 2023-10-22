@@ -24,18 +24,16 @@ class Road:
             for mov in lane:
                 mov.update()
     
+    # TODO call before update
     def collisionDetection(self) -> List[Movable, Movable]:
-
         collision = []
         for lane in self.content:
-            #TODO use a binary search tree to optimize this
-            
-            for movable, otherMovable in filter(lambda obj: (obj[0] != obj[1]), zip(lane, lane)):
-                m1, m2 = (movable, otherMovable) if movable.pos < otherMovable.pos else (otherMovable, movable)
-                
-                if(m1.pos + m1.size > m2.pos - m2.size):
-                    collision.append([m1, m2])
-                    #TODO m1.triggerBehaviour() is probably better than this
+            previous: Movable = None
+            for movable in lane.iterate():
+                movable: Movable
+                if previous is not None:
+                    if previous.nextPosition() + previous.size > movable.nextPosition() - movable.size:
+                        previous.handlePossibleCollision(movable)
                     
         return collision
 

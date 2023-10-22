@@ -43,11 +43,21 @@ def main():
     assert(r.search(12, 15) == r.root.right)
     assert(r.search(3, 4) == r.root.left.right)
 
+    print("iterate")
+    msg = ""
+    for n in r.iterate():
+        msg += str(n)
+    assert(msg == "abcd")
+
     print("removing root...")
     n = r.root.right
     r.remove(r.root)
     assert(r.root == n)
     r.printTree()
-
+    print("iterate")
+    msg = ""
+    for n in r.iterate():
+        msg += str(n)
+    assert(msg == "abd")
 if __name__ == "__main__":
     main()

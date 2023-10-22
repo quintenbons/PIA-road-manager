@@ -25,7 +25,10 @@ class Movable(Nodable):
 
     def update(self) -> None:
         #TODO what happen
-        self.pos += self.speed
+        self.pos = self.nextPosition()
+
+    def nextPosition(self) -> float:
+        return self.pos + self.speed
     
     def changeRoad(self, Road):
         pass
@@ -37,6 +40,9 @@ class Movable(Nodable):
     def handleCrosswalk(self):
         pass
 
+    def handlePossibleCollision(self, other: Movable):
+        pass
+    
     def maxValue(self):
         return self.pos + self.size
     def minValue(self):
@@ -44,7 +50,7 @@ class Movable(Nodable):
     
     def bindTree(self, node: Node):
         self._roadNode = node
-        
+
 class Category(Enum):
     CAR = 0
     BIKE = 1
