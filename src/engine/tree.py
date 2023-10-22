@@ -6,7 +6,7 @@ class BinarySearchTree:
     def __init__(self):
         self.root = None
 
-    def insertCmp(self, minVal, maxVal, cmpMin, cmpMax, obj):
+    def insertCmp(self, minVal, maxVal, cmpMin, cmpMax, obj) -> bool:
         if self.root is None:
             self.root = Node(minVal, maxVal, obj)
             return True
@@ -15,7 +15,7 @@ class BinarySearchTree:
             return True
         return False
     #Duplicate : performance issue
-    def insert(self, minVal, maxVal, obj):
+    def insert(self, minVal, maxVal, obj) -> bool:
         if self.root is None:
             self.root = Node(minVal, maxVal, obj)
             return True
@@ -23,6 +23,21 @@ class BinarySearchTree:
             self.root.insert(minVal, maxVal, obj)
             return True
         return False
+
+    def search(self, minVal, maxVal) -> Node:
+        current = self.root
+        #TODO optimize with precondition after
+        while current is not None and (current.minValue != minVal and current.maxValue != maxVal):
+            if maxVal <= current.minValue:
+                current = current.left
+            elif minVal >= current.maxValue:
+                current = current.right
+            else:
+                return None
+        if current.minValue == minVal and current.maxValue == maxVal:
+            return current
+        else:
+            return None
 
     def printTree(self):
         if self.root:

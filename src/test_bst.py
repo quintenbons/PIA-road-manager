@@ -24,5 +24,9 @@ def main():
 
     r.printTree()
 
+    assert(not r.search(2, 8))
+    assert(r.search(12, 15) == r.root.right)
+    assert(r.search(3, 4) == r.root.left.right)
+
 if __name__ == "__main__":
     main()
