@@ -25,8 +25,8 @@ class Road:
                 mov.update()
     
     # TODO call before update
-    def collisionDetection(self) -> List[Movable, Movable]:
-        collision = []
+    def collisionDetection(self) -> None:
+        #TODO clear intentation hell
         for lane in self.content:
             previous: Movable = None
             for movable in lane.iterate():
@@ -34,8 +34,6 @@ class Road:
                 if previous is not None:
                     if previous.nextPosition() + previous.size > movable.nextPosition() - movable.size:
                         previous.handlePossibleCollision(movable)
-                    
-        return collision
 
     def removeMovable(self, mov):
         #TODO optimize this
