@@ -48,6 +48,7 @@ class BinarySearchTree:
         if self.root:
             yield from self.root.iterate()
 
+    #TODO migrate to Node
     def remove(self, node: Node):
         if node.left is None:
             self.shiftNode(node, node.right)

@@ -24,20 +24,22 @@ class Road:
             previous: Movable = None
             for mov in lane:
                 mov: Movable
-                if previous is not None:
-                    self.collisionDetection(previous, mov)
-                mov.update()
                 
-
+                self.collisionDetection(previous, mov)
+                mov.update()
 
     def collisionDetection(self, previous: Movable, nxt: Movable) -> float:
+        if previous is None:
+            return
         if previous.nextPosition() + previous.size > nxt.nextPosition() - nxt.size:
             previous.handlePossibleCollision(nxt)
 
     def removeMovable(self, mov: Movable):
-        #TODO optimize this
+        #TODO doesn't work, need to make remove function from Node class
+        # mov.getNode().remove()
         for lane in self.content:
             try:
                 lane.remove(mov.getNode())
             except ValueError:
                 continue
+        
