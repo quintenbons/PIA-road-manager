@@ -6,13 +6,19 @@ import csv
 import os
 
 OVERPASS_URL = "http://overpass-api.de/api/interpreter"
+BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build')
 
 
-def save_to_csv(filename, data):
+def save_to_csv(filename, data, directory=BUILD_DIR):
     """
     Sauvegarde les données dans un fichier CSV.
     """
-    with open(filename, mode='w', newline='') as file:
+    # Créer le répertoire s'il n'existe pas
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+
+    filepath = os.path.join(directory, filename)
+    with open(filepath, mode='w', newline='') as file:
         writer = csv.writer(file)
         for row in data:
             writer.writerow(row)
@@ -34,7 +40,7 @@ def fetch_road_data(city_name):
     out skel qt;
     """
 
-    print("Sending the request to the Overpass API...")
+    print("Fetching data from Overpass API...")
     response = requests.get(OVERPASS_URL, params={'data': overpass_query})
     data = response.json()
 
@@ -104,6 +110,7 @@ def simplify_roads(roads, intersections):
 def process_road_data(city_name, simplify=True):
     road_data = fetch_road_data(city_name)
 
+    print("Parsing data...")
     nodes = {element['id']: (element['lat'], element['lon'])
              for element in road_data['elements']
              if element['type'] == 'node'}
@@ -114,13 +121,16 @@ def process_road_data(city_name, simplify=True):
             road_nodes = [nodes[node_id] for node_id in element['nodes']]
             roads.append(road_nodes)
 
+    print("Finding intersections...")
     intersections = find_intersections(roads)
 
     if simplify:
+        print("Simplifying roads...")
         roads = simplify_roads(roads, intersections)
         intersections = find_intersections(roads)
 
     # Sauvegarder les intersections et les routes dans des fichiers CSV
+    print("Saving data...")
     save_to_csv('intersections.csv', intersections)
     save_to_csv('roads.csv', [[point for point in road] for road in roads])
 
@@ -128,13 +138,14 @@ def process_road_data(city_name, simplify=True):
 
 
 # Process the road data
-intersections, roads = process_road_data("Saint-Trinit")
+intersections, roads = process_road_data("Sault")
 
 
 def plot_roads_and_intersections(roads, intersections):
     """
     Plot the roads and intersections on a graph.
     """
+    print("Plotting data...")
     plt.figure(figsize=(10, 10))
 
     for road in roads:
