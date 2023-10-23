@@ -2,8 +2,20 @@ import requests
 import json
 from shapely.geometry import LineString, MultiPoint, Point
 import matplotlib.pyplot as plt
+import csv
+import os
 
 OVERPASS_URL = "http://overpass-api.de/api/interpreter"
+
+
+def save_to_csv(filename, data):
+    """
+    Sauvegarde les données dans un fichier CSV.
+    """
+    with open(filename, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        for row in data:
+            writer.writerow(row)
 
 
 def fetch_road_data(city_name):
@@ -25,10 +37,6 @@ def fetch_road_data(city_name):
     print("Sending the request to the Overpass API...")
     response = requests.get(OVERPASS_URL, params={'data': overpass_query})
     data = response.json()
-
-    # print("Saving the JSON data to a file...")
-    # with open('road_data.json', 'w', encoding='utf-8') as file:
-    #     json.dump(data, file, ensure_ascii=False, indent=4)
 
     return data
 
@@ -93,16 +101,15 @@ def simplify_roads(roads, intersections):
     return simplified_roads
 
 
-def process_road_data(filename='road_data.json', simplify=True):
-    with open(filename, 'r') as file:
-        data = json.load(file)
+def process_road_data(city_name, simplify=True):
+    road_data = fetch_road_data(city_name)
 
     nodes = {element['id']: (element['lat'], element['lon'])
-             for element in data['elements']
+             for element in road_data['elements']
              if element['type'] == 'node'}
 
     roads = []
-    for element in data['elements']:
+    for element in road_data['elements']:
         if element['type'] == 'way':
             road_nodes = [nodes[node_id] for node_id in element['nodes']]
             roads.append(road_nodes)
@@ -113,13 +120,15 @@ def process_road_data(filename='road_data.json', simplify=True):
         roads = simplify_roads(roads, intersections)
         intersections = find_intersections(roads)
 
+    # Sauvegarder les intersections et les routes dans des fichiers CSV
+    save_to_csv('intersections.csv', intersections)
+    save_to_csv('roads.csv', [[point for point in road] for road in roads])
+
     return intersections, roads
 
 
-road_data = fetch_road_data("Grenoble")
-
 # Process the road data
-intersections, roads = process_road_data()
+intersections, roads = process_road_data("Saint-Trinit")
 
 
 def plot_roads_and_intersections(roads, intersections):
