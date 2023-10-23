@@ -35,7 +35,7 @@ def main():
         bst.insert(ImplemNodable(13, 11, 'i'))
     except AssertionError:
         print("assert(minVal < maxVal) catched")
-
+    assert(len(bst) == 4)
     bst.printTree()
 
     assert(not bst.search(2, 8))
@@ -52,12 +52,18 @@ def main():
     n = bst.root.right
     bst.remove(bst.root)
     assert(bst.root == n)
+    assert(len(bst) == 3)
     bst.printTree()
     print("iterate")
     msg = ""
     for n in bst:
         msg += str(n)
     assert(msg == "abd")
+
+    bst.remove(bst.root)
+    bst.remove(bst.root)
+    bst.remove(bst.root)
+    assert(bst.root is None)
 
 if __name__ == "__main__":
     main()
