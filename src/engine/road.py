@@ -35,11 +35,4 @@ class Road:
             previous.handlePossibleCollision(nxt)
 
     def removeMovable(self, mov: Movable):
-        #TODO doesn't work, need to make remove function from Node class
-        # mov.getNode().remove()
-        for lane in self.content:
-            try:
-                lane.remove(mov.getNode())
-            except ValueError:
-                continue
-        
+        mov.getNode().remove()        

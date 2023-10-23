@@ -9,19 +9,19 @@ class BinarySearchTree:
 
     def insertCmp(self, cmpMin, cmpMax, obj) -> bool:
         if self.root is None:
-            self.root = Node(obj)
+            self.root = Node(self, obj)
             return True
         if self.root.isAvailable(cmpMin, cmpMax):
-            self.root.insert(obj)
+            self.root.insert(self, obj)
             return True
         return False
     #Duplicate : performance issue
     def insert(self, obj: Nodable) -> bool:
         if self.root is None:
-            self.root = Node(obj)
+            self.root = Node(self, obj)
             return True
         if self.root.isAvailable(obj.minValue(), obj.maxValue()):
-            self.root.insert(obj)
+            self.root.insert(self, obj)
             return True
         return False
 
@@ -48,41 +48,20 @@ class BinarySearchTree:
         if self.root:
             yield from self.root.iterate()
 
-    #TODO migrate to Node
     def remove(self, node: Node):
-        if node.left is None:
-            self.shiftNode(node, node.right)
-        elif node.right is None:
-            self.shiftNode(node, node.left)
-        else:
-            e = node.successor()
-            if e.parent is not node:
-                self.shiftNode(e, e.right)
-                e.right = node.right
-                e.right.parent = e
-            self.shiftNode(node, e)
-            e.left = node.left
-            e.left.parent = e
-
-    def shiftNode(self, node1: Node, node2: Node):
-        if node1.parent is None:
-            self.root = node2
-        elif node1 == node1.parent.left:
-            node1.parent.left = node2
-        else:
-            node1.parent.right = node2
-        if node2 is not None:
-            node2.parent = node1.parent
+        assert(node._bst == self)
+        node.remove()
 
 class Node:
     left: Node
     right: Node
     parent: Node
     obj: Nodable
+    _bst: BinarySearchTree
 
-    def __init__(self, obj: Nodable, parent: Node = None, left = None, right = None) -> None:
+    def __init__(self, bst: BinarySearchTree, obj: Nodable, parent: Node = None, left = None, right = None) -> None:
         assert(obj.minValue() < obj.maxValue())
-
+        self._bst = bst
         self.obj = obj
         self.left = left
         self.right = right
@@ -92,17 +71,17 @@ class Node:
     def __str__(self) -> str:
         return f"{(self.obj.minValue(), self.obj.maxValue(), str(self.obj))}"
     
-    def insert(self, obj: Nodable):
+    def insert(self, bst: BinarySearchTree, obj: Nodable):
         if obj.maxValue() <= self.obj.minValue():
             if self.left is None:
-                self.left = Node(obj, self)
+                self.left = Node(bst, obj, self)
             else:
-                self.left.insert(obj)
+                self.left.insert(bst, obj)
         elif obj.minValue() >= self.obj.maxValue():
             if self.right is None:
-                self.right = Node(obj, self)
+                self.right = Node(bst, obj, self)
             else:
-                self.right.insert(obj)
+                self.right.insert(bst, obj)
 
     def isAvailable(self, minVal, maxVal) -> bool:
         if maxVal <= self.obj.minValue():
@@ -110,6 +89,31 @@ class Node:
         elif minVal >= self.obj.maxValue():
             return True if self.right is None else self.right.isAvailable(minVal, maxVal)
         return False
+
+    def remove(self):
+        if self.left is None:
+            self.shiftNode(self.right)
+        elif self.right is None:
+            self.shiftNode(self.left)
+        else:
+            successor = self.successor()
+            if successor.parent is not self:
+                successor.shiftNode(successor.right)
+                successor.right = self.right
+                successor.right.parent = successor
+            self.shiftNode(successor)
+            successor.left = self.left
+            successor.left.parent = successor
+
+    def shiftNode(self, other: Node):
+        if self.parent is None:
+            self._bst.root = other
+        elif self == self.parent.left:
+            self.parent.left = other
+        else:
+            self.parent.right = other
+        if other is not None:
+            other.parent = self.parent
 
     def successor(self) -> Node:
         if self.right is not None:
