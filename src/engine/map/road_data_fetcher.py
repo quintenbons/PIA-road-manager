@@ -32,9 +32,12 @@ def fetch_road_data(city_name):
     # Requête Overpass pour fetch les routes (highways), données non triées
     overpass_query = f"""
     [out:json];
-    area[name="{city_name}"];
-    (way[highway](area);
-     way[railway](area);
+    area[name="Colmar"]["boundary"="administrative"]["admin_level"="8"]->.searchArea;
+    (
+        way["highway"="primary"](area.searchArea);
+        way["highway"="secondary"](area.searchArea);
+        way["highway"="tertiary"](area.searchArea);
+        way["highway"="residential"](area.searchArea);
     );
     out body;
     >;
@@ -159,7 +162,7 @@ def process_road_data(city_name, simplify=True):
 
 
 # Process the road data
-intersections, roads = process_road_data("Sault")
+intersections, roads = process_road_data("Sault", simplify=False)
 # intersections, roads = process_road_data("Revest-du-Bion")
 
 
