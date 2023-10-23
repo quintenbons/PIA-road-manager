@@ -23,7 +23,6 @@ class ImplemNodable(Nodable):
 def main():
 
     bst = BinarySearchTree()
-    # bst.insert(4, 8, 'c')
     bst.insert(ImplemNodable(4, 8, 'c'))
     assert(not bst.insert(ImplemNodable(2, 5, 'i')))
     assert(bst.insert(ImplemNodable(0, 3, 'a')))

@@ -1,33 +1,41 @@
 from __future__ import annotations
 from typing import TypeVar
 
+
 class BinarySearchTree:
     root: Node
-    
+    count: int
+
     def __init__(self):
         self.root = None
+        self.count = 0
 
     def insertCmp(self, cmpMin, cmpMax, obj) -> bool:
         if self.root is None:
             self.root = Node(self, obj)
+            self.count = 1
             return True
         if self.root.isAvailable(cmpMin, cmpMax):
             self.root.insert(self, obj)
+            self.count += 1
             return True
         return False
-    #Duplicate : performance issue
+    # Duplicate : performance issue
+
     def insert(self, obj: Nodable) -> bool:
         if self.root is None:
             self.root = Node(self, obj)
+            self.count = 1
             return True
         if self.root.isAvailable(obj.minValue(), obj.maxValue()):
             self.root.insert(self, obj)
+            self.count += 1
             return True
         return False
 
     def search(self, minVal, maxVal) -> Node:
         current = self.root
-        #TODO optimize with precondition after
+        # TODO optimize with precondition
         while current is not None and (current.obj.minValue() != minVal and current.obj.maxValue() != maxVal):
             if maxVal <= current.obj.minValue():
                 current = current.left
@@ -49,8 +57,13 @@ class BinarySearchTree:
             yield from self.root.iterate()
 
     def remove(self, node: Node):
-        assert(node._bst == self)
+        assert (node._bst == self)
         node.remove()
+        self.count -= 1
+    
+    def __len__(self):
+        return self.count
+
 
 class Node:
     left: Node
@@ -59,18 +72,18 @@ class Node:
     obj: Nodable
     _bst: BinarySearchTree
 
-    def __init__(self, bst: BinarySearchTree, obj: Nodable, parent: Node = None, left = None, right = None) -> None:
-        assert(obj.minValue() < obj.maxValue())
+    def __init__(self, bst: BinarySearchTree, obj: Nodable, parent: Node = None, left=None, right=None) -> None:
+        assert (obj.minValue() < obj.maxValue())
         self._bst = bst
         self.obj = obj
         self.left = left
         self.right = right
         self.parent = parent
         self.obj.bindTree(self)
-    
+
     def __str__(self) -> str:
         return f"{(self.obj.minValue(), self.obj.maxValue(), str(self.obj))}"
-    
+
     def insert(self, bst: BinarySearchTree, obj: Nodable):
         if obj.maxValue() <= self.obj.minValue():
             if self.left is None:
@@ -123,7 +136,7 @@ class Node:
         while y is not None and x == y.right():
             x = y
             y = y.parent
-        
+
         return y
 
     def predecessor(self) -> Node:
@@ -135,7 +148,7 @@ class Node:
         while y is not None and x == y.left:
             x = y
             y = y.parent
-        
+
         return y
 
     def maximum(self) -> Node:
@@ -156,7 +169,7 @@ class Node:
         yield self.obj
         if self.right:
             yield from self.right.iterate()
-    
+
     def printTree(self):
         if self.left:
             self.left.printTree()
@@ -164,14 +177,18 @@ class Node:
         if self.right:
             self.right.printTree()
 
+
 class Nodable:
     """Interface used by this BST"""
+
     def maxValue(self):
         pass
+
     def minValue(self):
         pass
 
     def bindTree(self, node: Node):
         pass
+
     def getNode(self):
         pass
