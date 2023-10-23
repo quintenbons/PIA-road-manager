@@ -1,7 +1,6 @@
 import requests
-import json
 import time
-from shapely.geometry import LineString, MultiPoint, Point, Polygon
+from shapely.geometry import LineString, Point
 import matplotlib.pyplot as plt
 import csv
 import os
@@ -64,13 +63,19 @@ def find_intersections(roads):
     # Recherche d'intersections
     for i, road1 in enumerate(roads):
         road1_line = LineString(road1)
+        # Nous obtenons les identifiants des routes potentiellement intersectantes
         potential_matches = list(idx.intersection(road1_line.bounds))
-        potential_matches.remove(i)
 
         for j in potential_matches:
+            # Assurez-vous de ne pas comparer une route avec elle-même
+            # et évitez les comparaisons redondantes
+            if j <= i:
+                continue
+
             road2_line = LineString(roads[j])
             if road1_line.intersects(road2_line):
                 intersection = road1_line.intersection(road2_line)
+
                 if intersection.geom_type == 'Point':
                     intersections.add((intersection.x, intersection.y))
                 elif intersection.geom_type == 'MultiPoint':
@@ -87,37 +92,38 @@ def find_intersections(roads):
 def simplify_roads(roads, intersections):
     start_timer = time.time()
     simplified_roads = []
+    idx = index.Index()
 
-    intersection_points = [Point(i) for i in intersections]
+    intersection_points = [Point(intersect) for intersect in intersections]
+
+    # Indexing intersection points
+    for i, point in enumerate(intersection_points):
+        idx.insert(i, point.bounds)
 
     for road in roads:
         road_line = LineString(road)
+        intersecting_points_indices = list(idx.intersection(road_line.bounds))
 
-        # Trouver les points d'intersection entre la route et les intersections
+        # Filtering actual intersections
         intersecting_points = [
-            p for p in intersection_points if p.intersects(road_line)]
+            intersection_points[i] for i in intersecting_points_indices
+            if intersection_points[i].intersects(road_line)]
 
-        # Si il y a des intersections, diviser la route
         if intersecting_points:
-            # Assurez-vous que les extrémités de la route sont incluses
             intersecting_points.extend([Point(road[0]), Point(road[-1])])
-
-            # Supprimer les doublons et trier les points le long de la route
             intersecting_points = sorted(
                 set(intersecting_points), key=lambda p: road_line.project(p))
 
-            # Créer des segments de route entre chaque paire de points d'intersection
             for i in range(len(intersecting_points) - 1):
                 start = intersecting_points[i].coords[0]
                 end = intersecting_points[i+1].coords[0]
                 simplified_roads.append([start, end])
-
         else:
-            # Si il n'y a pas d'intersections, garder la route telle quelle
             simplified_roads.append(road)
-    print(f"Time simplifying roads: ({time.time() - start_timer:.3f}s)")
 
+    print(f"Time simplifying roads: ({time.time() - start_timer:.3f}s)")
     return simplified_roads
+
 
 
 def process_road_data(city_name, simplify=True):
@@ -153,7 +159,7 @@ def process_road_data(city_name, simplify=True):
 
 
 # Process the road data
-intersections, roads = process_road_data("Revest-du-Bion")
+intersections, roads = process_road_data("Sault")
 # intersections, roads = process_road_data("Revest-du-Bion")
 
 
