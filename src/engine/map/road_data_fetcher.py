@@ -1,9 +1,11 @@
 import requests
 import json
-from shapely.geometry import LineString, MultiPoint, Point
+import time
+from shapely.geometry import LineString, MultiPoint, Point, Polygon
 import matplotlib.pyplot as plt
 import csv
 import os
+from rtree import index
 
 OVERPASS_URL = "http://overpass-api.de/api/interpreter"
 BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build')
@@ -41,39 +43,49 @@ def fetch_road_data(city_name):
     """
 
     print("Fetching data from Overpass API...")
+    start = time.time()
     response = requests.get(OVERPASS_URL, params={'data': overpass_query})
     data = response.json()
+    print(f"Time fetching: ({time.time() - start:.3f}s)")
 
     return data
 
 
 def find_intersections(roads):
+    start = time.time()
     intersections = set()
+    idx = index.Index()
 
+    # Indexation des routes
+    for i, road in enumerate(roads):
+        road_line = LineString(road)
+        idx.insert(i, road_line.bounds)
+
+    # Recherche d'intersections
     for i, road1 in enumerate(roads):
-        for j, road2 in enumerate(roads):
-            if i != j:
-                line1 = LineString(road1)
-                line2 = LineString(road2)
+        road1_line = LineString(road1)
+        potential_matches = list(idx.intersection(road1_line.bounds))
+        potential_matches.remove(i)
 
-                if line1.intersects(line2):
-                    intersection = line1.intersection(line2)
-                    if intersection.is_empty:
-                        continue
+        for j in potential_matches:
+            road2_line = LineString(roads[j])
+            if road1_line.intersects(road2_line):
+                intersection = road1_line.intersection(road2_line)
+                if intersection.geom_type == 'Point':
+                    intersections.add((intersection.x, intersection.y))
+                elif intersection.geom_type == 'MultiPoint':
+                    for point in intersection.geoms:
+                        intersections.add((point.x, point.y))
+                elif intersection.geom_type == 'LineString':
+                    for point in intersection.coords:
+                        intersections.add(point)
 
-                    if intersection.geom_type == 'Point':
-                        intersections.add((intersection.x, intersection.y))
-                    elif intersection.geom_type == 'MultiPoint':
-                        for point in intersection.geoms:
-                            intersections.add((point.x, point.y))
-                    elif intersection.geom_type == 'LineString':
-                        for point in intersection.coords:
-                            intersections.add(point)
-
+    print(f"Time finding intersections: ({time.time() - start:.3f}s)")
     return list(intersections)
 
 
 def simplify_roads(roads, intersections):
+    start_timer = time.time()
     simplified_roads = []
 
     intersection_points = [Point(i) for i in intersections]
@@ -103,6 +115,7 @@ def simplify_roads(roads, intersections):
         else:
             # Si il n'y a pas d'intersections, garder la route telle quelle
             simplified_roads.append(road)
+    print(f"Time simplifying roads: ({time.time() - start_timer:.3f}s)")
 
     return simplified_roads
 
@@ -111,6 +124,7 @@ def process_road_data(city_name, simplify=True):
     road_data = fetch_road_data(city_name)
 
     print("Parsing data...")
+    start = time.time()
     nodes = {element['id']: (element['lat'], element['lon'])
              for element in road_data['elements']
              if element['type'] == 'node'}
@@ -120,6 +134,7 @@ def process_road_data(city_name, simplify=True):
         if element['type'] == 'way':
             road_nodes = [nodes[node_id] for node_id in element['nodes']]
             roads.append(road_nodes)
+    print(f"Time parsing: ({time.time() - start:.3f}s)")
 
     print("Finding intersections...")
     intersections = find_intersections(roads)
@@ -138,7 +153,8 @@ def process_road_data(city_name, simplify=True):
 
 
 # Process the road data
-intersections, roads = process_road_data("Sault")
+intersections, roads = process_road_data("Revest-du-Bion")
+# intersections, roads = process_road_data("Revest-du-Bion")
 
 
 def plot_roads_and_intersections(roads, intersections):
