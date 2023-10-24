@@ -14,6 +14,8 @@ if TYPE_CHECKING:
 
 class Movable(Nodable):
 
+    road: Road
+    lane: int = 0
     speed: float = 0.0
     latency: float = 0.0
     pos: float = 0.0
@@ -22,10 +24,18 @@ class Movable(Nodable):
     currentRoad: Road
 
     _roadNode: Node
-
+    
+    def __init__(self, speed, latency, pos, size):
+        self.speed = speed
+        self.latency = latency
+        self.pos = pos
+        self.size = size
     def update(self) -> None:
         #TODO what happen
         self.pos = self.nextPosition()
+
+    def setRoad(self, road: Road):
+        self.road = road
 
     def nextPosition(self) -> float:
         return self.pos + self.speed
@@ -53,6 +63,9 @@ class Movable(Nodable):
 
     def getNode(self) -> Node:
         return self._roadNode
+    
+    def __str__(self):
+        return str(self.pos)
 
 class Category(Enum):
     CAR = 0
