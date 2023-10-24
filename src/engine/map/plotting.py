@@ -5,26 +5,33 @@ import os
 
 
 @timing
-def plot_roads_and_intersections(roads, intersections):
+def plot_roads_and_intersections(roads):
     """
-    Plot the roads and intersections on a graph.
+    Plot the roads on a graph. Intersections are identified by the endpoints of the roads.
     """
     print("Plotting data...")
     plt.figure(figsize=(10, 10))
 
-    for road in roads:
-        x_coords = [node[1] for node in road]
-        y_coords = [node[0] for node in road]
-        plt.plot(x_coords, y_coords, color='blue', linewidth=1)
+    # Set to keep track of intersections already plotted
+    plotted_intersections = set()
 
-    for intersection in intersections:
-        # Les longitudes et latitudes sont inversées
-        plt.scatter(intersection[1], intersection[0], color='red', s=10)
+    for road in roads:
+        x_coords = [point[1] for point in road]
+        y_coords = [point[0] for point in road]
+        
+        # Plot the road
+        plt.plot(x_coords, y_coords, color='blue', linewidth=1)
+        
+        # Plot the intersections (endpoints of the roads)
+        for point in road:
+            point_tuple = tuple(point)
+            if point_tuple not in plotted_intersections:
+                plt.scatter(point[1], point[0], color='red', s=10)
+                plotted_intersections.add(point_tuple)
 
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
     plt.title('Roads and Intersections')
-
     plt.show()
 
 

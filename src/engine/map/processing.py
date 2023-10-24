@@ -2,6 +2,7 @@ import ast
 import csv
 import os
 from shapely.geometry import LineString
+import networkx as nx
 from rtree import index
 from fetching import fetch_road_data
 from file_manager import save_to_csv
@@ -64,7 +65,34 @@ def simplify_roads_csv(input_filepath, output_filepath):
     return simplified_roads
 
 @timing
-def process_road_data(city_name, simplify=True):
+def extract_connex_roads(roads):
+    G = nx.Graph()
+
+    for road in roads:
+        G.add_edge(road[0], road[1])
+    
+    largest_cc = max(nx.connected_components(G), key=len)
+
+    largest_subgraph = G.subgraph(largest_cc)
+
+    road_complex = []
+    filename = os.path.join(BUILD_DIR, 'largest_connected_component.csv')
+    with open(filename, mode='w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+
+        # Parcourir chaque bord du plus grand sous-graphe connecté
+        for edge in largest_subgraph.edges():
+            node1, node2 = edge
+            
+            # Écrire les nœuds de chaque bord dans le fichier CSV
+            writer.writerow([str(node1), str(node2)])
+            road = [node1, node2]
+            road_complex.append(road)
+    return road_complex
+            
+
+@timing
+def process_road_data(city_name):
     road_data = fetch_road_data(city_name)
 
     print("Parsing data...")
@@ -89,4 +117,7 @@ def process_road_data(city_name, simplify=True):
     output_filepath = 'simplified_roads.csv'
     roads = simplify_roads_csv(input_filepath, output_filepath)
 
-    return intersections, roads
+    print("Extract largest connected component...")
+    roads = extract_connex_roads(roads)
+
+    return roads

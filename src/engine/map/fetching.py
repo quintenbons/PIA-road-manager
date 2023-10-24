@@ -13,10 +13,13 @@ def fetch_road_data(city_name):
     [out:json];
     area[name="{city_name}"]["boundary"="administrative"]["admin_level"="8"]->.searchArea;
     (
+        way["highway"="trunk"](area.searchArea);
         way["highway"="primary"](area.searchArea);
         way["highway"="secondary"](area.searchArea);
         way["highway"="tertiary"](area.searchArea);
+        way["highway"="unclassified"](area.searchArea);
         way["highway"="residential"](area.searchArea);
+        way["highway"="service"](area.searchArea);
     );
     out body;
     >;
