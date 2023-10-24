@@ -1,5 +1,8 @@
 import matplotlib.pyplot as plt
 from utils import timing
+from utils import BUILD_DIR
+import os
+
 
 @timing
 def plot_roads_and_intersections(roads, intersections):
@@ -26,10 +29,11 @@ def plot_roads_and_intersections(roads, intersections):
 
 
 def analyze_times():
-    with open("execution_times.txt", "r") as file:
+    file_path = os.path.join(BUILD_DIR, "execution_times.txt")
+    with open(file_path, "r") as file:
         lines = file.readlines()
 
-    # Créer un dictionnaire pour stocker le total du temps d'exécution par fonction
+    # dictionnaire pour stocker le total du temps d'exécution par fonction
     execution_times = {}
     total_time = 0
 
@@ -43,13 +47,12 @@ def analyze_times():
 
         total_time += execution_time
 
-    # Créer un bar chart
     function_names = list(execution_times.keys())
     times = [execution_times[fn] for fn in function_names]
-    percentages = [ (t / total_time) * 100 for t in times]
+    percentages = [(t / total_time) * 100 for t in times]
 
     plt.barh(function_names, percentages)
     plt.xlabel('Percentage of Total Execution Time')
     plt.title('Function Execution Time Analysis')
-    plt.gca().invert_yaxis()  # Inverser l'ordre pour avoir la fonction la plus lente en haut
+    plt.gca().invert_yaxis()  # fonction la plus lente en haut
     plt.show()

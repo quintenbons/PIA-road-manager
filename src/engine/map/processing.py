@@ -1,19 +1,18 @@
 import ast
 import csv
 import os
-import time
 from shapely.geometry import LineString
 from rtree import index
 from fetching import fetch_road_data
-from file_manager import save_to_csv, BUILD_DIR
-from utils import timing
+from file_manager import save_to_csv
+from utils import timing, BUILD_DIR
 
 @timing
 def find_intersections(roads):
     intersections = set()
     idx = index.Index()
 
-    # Indexation des routes
+    # Indexation des routes pour les rtrees
     for i, road in enumerate(roads):
         road_line = LineString(road)
         idx.insert(i, road_line.bounds)
@@ -21,12 +20,11 @@ def find_intersections(roads):
     # Recherche d'intersections
     for i, road1 in enumerate(roads):
         road1_line = LineString(road1)
-        # Nous obtenons les identifiants des routes potentiellement intersectantes
+        # routes potentiellement intersectantes
         potential_matches = list(idx.intersection(road1_line.bounds))
 
         for j in potential_matches:
-            # Assurez-vous de ne pas comparer une route avec elle-même
-            # et évitez les comparaisons redondantes
+            # évite les comparaisons redondantes
             if j <= i:
                 continue
 
@@ -49,13 +47,12 @@ def find_intersections(roads):
 def simplify_roads_csv(input_filepath, output_filepath):
     simplified_roads = []
 
-    # Lire le fichier CSV d'entrée
     file_path = os.path.join(BUILD_DIR, input_filepath)
     output_filepath = os.path.join(BUILD_DIR, output_filepath)
     with open(file_path, newline='') as csvfile:
         reader = csv.reader(csvfile, delimiter=',', quotechar='"')
         for row in reader:
-            # Convertir les strings de tuples en tuples
+            # Convert strings de tuples en tuples, todo: ne pas stocker les routes en string dans le csv
             first_point = ast.literal_eval(row[0])
             last_point = ast.literal_eval(row[-1])
 
@@ -64,7 +61,6 @@ def simplify_roads_csv(input_filepath, output_filepath):
 
     save_to_csv(output_filepath, simplified_roads)
 
-    # Retourner la liste des routes simplifiées
     return simplified_roads
 
 @timing
@@ -85,7 +81,6 @@ def process_road_data(city_name, simplify=True):
     print("Finding intersections...")
     intersections = find_intersections(roads)
 
-    # Sauvegarder les intersections et les routes dans des fichiers CSV
     print("Saving data...")
     save_to_csv('intersections.csv', intersections)
     save_to_csv('roads.csv', [[point for point in road] for road in roads])

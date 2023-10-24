@@ -1,4 +1,7 @@
 import time
+import os
+
+BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build')
 
 def timing(f):
     def wrap(*args, **kwargs):
@@ -6,8 +9,8 @@ def timing(f):
         result = f(*args, **kwargs)
         end_time = time.time()
         
-        # Écrire les résultats dans un fichier
-        with open("execution_times.txt", "a") as file:
+        file_path = os.path.join(BUILD_DIR, "execution_times.txt")
+        with open(file_path, "a") as file:
             file.write(f"{f.__name__},{end_time - start_time}\n")
         
         return result

@@ -1,8 +1,7 @@
 import os
 import csv
-from utils import timing
+from utils import timing, BUILD_DIR
 
-BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build')
 ROADS_FILE = 'roads.csv'
 SIMPLIFIED_ROADS_FILE = 'simplified_roads.csv'
 INTERSECTIONS_FILE = 'intersections.csv'
