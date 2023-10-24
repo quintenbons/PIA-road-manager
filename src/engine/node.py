@@ -12,6 +12,7 @@ class Node:
     _id: int
 
     def __init__(self):
+        #TODO remove it later
         global nid
         self._id = nid
         nid += 1

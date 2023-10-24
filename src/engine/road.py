@@ -29,6 +29,7 @@ class Road:
         self._speedLimit = speedLimit
         start.addRoadOut(self)
         end.addRoadIn(self)
+        #TODO remove it later
         global rid
         self._id = rid
         rid += 1
