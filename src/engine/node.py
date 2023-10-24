@@ -16,6 +16,9 @@ class Node:
         global nid
         self._id = nid
         nid += 1
+        self.roadIn = []
+        self.roadOut = []
+        self.controller = []
 
     def addRoadIn(self, road: Road):
         self.roadIn.append(road)

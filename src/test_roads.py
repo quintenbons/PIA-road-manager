@@ -14,6 +14,8 @@ from typing import List
 def main():
 
     nodes, roads = readMap("maps/test_roads.txt")
+    for road in roads:
+        print(road)
 
 def readMap(name) -> (List[Node], List[Road]):
     # number of nodes

@@ -57,4 +57,4 @@ class Road:
         mov.getNode().remove()
 
     def __str__(self) -> str:
-        return f"{self.start} -> {self._id} -> {self.end}"
+        return f"{self.start} -> {self.end} :  {self._id}"
