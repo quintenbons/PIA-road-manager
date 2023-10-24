@@ -1,9 +1,9 @@
-import time
 import requests
+from utils import timing
 
 OVERPASS_URL = "http://overpass-api.de/api/interpreter"
 
-
+@timing
 def fetch_road_data(city_name):
     """
     Fetches the road data for the specified city from the OpenStreetMap database.
@@ -24,9 +24,7 @@ def fetch_road_data(city_name):
     """
 
     print("Fetching data from Overpass API...")
-    start = time.time()
     response = requests.get(OVERPASS_URL, params={'data': overpass_query})
     data = response.json()
-    print(f"Time fetching: ({time.time() - start:.3f}s)")
 
     return data

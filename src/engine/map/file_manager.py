@@ -1,13 +1,13 @@
 import os
 import csv
-
+from utils import timing
 
 BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build')
 ROADS_FILE = 'roads.csv'
 SIMPLIFIED_ROADS_FILE = 'simplified_roads.csv'
 INTERSECTIONS_FILE = 'intersections.csv'
 
-
+@timing
 def save_to_csv(filename, data, directory=BUILD_DIR):
     """
     Sauvegarde les données dans un fichier CSV.

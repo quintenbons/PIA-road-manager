@@ -5,11 +5,11 @@ import time
 from shapely.geometry import LineString
 from rtree import index
 from fetching import fetch_road_data
-
 from file_manager import save_to_csv, BUILD_DIR
+from utils import timing
 
+@timing
 def find_intersections(roads):
-    start = time.time()
     intersections = set()
     idx = index.Index()
 
@@ -43,10 +43,9 @@ def find_intersections(roads):
                     for point in intersection.coords:
                         intersections.add(point)
 
-    print(f"Time finding intersections: ({time.time() - start:.3f}s)")
     return list(intersections)
 
-
+@timing
 def simplify_roads_csv(input_filepath, output_filepath):
     simplified_roads = []
 
@@ -68,15 +67,11 @@ def simplify_roads_csv(input_filepath, output_filepath):
     # Retourner la liste des routes simplifiées
     return simplified_roads
 
-    # Retourner la liste des routes simplifiées
-    return simplified_roads
-
-
+@timing
 def process_road_data(city_name, simplify=True):
     road_data = fetch_road_data(city_name)
 
     print("Parsing data...")
-    start = time.time()
     nodes = {element['id']: (element['lat'], element['lon'])
              for element in road_data['elements']
              if element['type'] == 'node'}
@@ -86,7 +81,6 @@ def process_road_data(city_name, simplify=True):
         if element['type'] == 'way':
             road_nodes = [nodes[node_id] for node_id in element['nodes']]
             roads.append(road_nodes)
-    print(f"Time parsing: ({time.time() - start:.3f}s)")
 
     print("Finding intersections...")
     intersections = find_intersections(roads)
