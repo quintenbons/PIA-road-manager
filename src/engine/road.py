@@ -56,5 +56,8 @@ class Road:
     def removeMovable(self, mov: Movable):
         mov.getNode().remove()
 
+    def length(self):
+        return self._length
+    
     def __str__(self) -> str:
         return f"{self.start} -> {self.end} :  {self._id}"

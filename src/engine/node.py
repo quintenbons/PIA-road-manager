@@ -1,3 +1,4 @@
+from __future__ import annotations
 from .road import Road
 from .traffic.flow_controller import FlowController
 from typing import List
@@ -9,6 +10,7 @@ class Node:
     roadOut: List[Road]
     controller: List[FlowController]
 
+    paths: dict[Node: Node]
     _id: int
 
     def __init__(self):
@@ -25,6 +27,13 @@ class Node:
 
     def addRoadOut(self, road: Road):
         self.roadOut.append(road)
+
+    def pathTo(self, node: Node) -> List[Node]:
+        return self.paths[node]
+
+    def neighbors(self) -> Node:
+        for r in self.roadOut:
+            yield r.end, r.length()
 
     def __str__(self) -> str:
         return str(self._id)
