@@ -20,6 +20,3 @@ class Car(Movable):
 
     # def get_coord(self) -> Coordinate:
     #     return self.road.start + self.road.norm() * self.pos
-
-    def __str__(self) -> str:
-        return str(self.pos)
