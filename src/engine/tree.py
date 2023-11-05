@@ -182,13 +182,14 @@ class Nodable:
     """Interface used by this BST"""
 
     def maxValue(self):
-        pass
+        raise NotImplementedError
 
     def minValue(self):
-        pass
+        raise NotImplementedError
 
     def bindTree(self, node: Node):
-        pass
+        raise NotImplementedError
 
     def getNode(self):
-        pass
+        raise NotImplementedError
+

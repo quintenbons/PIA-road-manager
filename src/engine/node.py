@@ -21,6 +21,7 @@ class Node:
         self.roadIn = []
         self.roadOut = []
         self.controller = []
+        self.paths = {}
 
     def addRoadIn(self, road: Road):
         self.roadIn.append(road)
@@ -37,3 +38,9 @@ class Node:
 
     def __str__(self) -> str:
         return str(self._id)
+
+    def printPath(self):
+        print(self._id)
+        for p in self.paths:
+            print(f"{p._id,self.paths[p]._id}", end='#')
+        print("")
