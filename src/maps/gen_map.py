@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# Test purpose only
+
 import sys
 import random as rd
 if __name__ == "__main__":

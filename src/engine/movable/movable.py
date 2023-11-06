@@ -67,6 +67,8 @@ class Movable(Nodable):
     def __str__(self):
         return str(self.pos)
 
+    
+
 class Category(Enum):
     CAR = 0
     BIKE = 1
