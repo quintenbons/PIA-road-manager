@@ -23,6 +23,7 @@ class Node:
         self.road_out = []
         self.controllers = []
         self.position = (x, y)
+        self.paths = {}
 
     def update(self, time) -> None:
         for controller in self.controllers:
@@ -49,6 +50,18 @@ class Node:
     def pathTo(self, node: Node) -> List[Node]:
         return self.paths[node]
 
+    def road_to(self, node: Node) -> Road:
+        # precondition : there is a road in between this node and the next
+        # TODO : decide if we change data structure to add roads inside paths
+        dist = float('inf')
+        road = None
+        for r in self.road_out:
+            if(r.end == node and r.length < dist):
+                dist = r.length
+                road = r
+        assert(road)
+        return road
+    
     def neighbors(self) -> Node:
         for r in self.road_out:
             yield r.end, r.length()

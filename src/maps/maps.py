@@ -1,20 +1,17 @@
 from __future__ import annotations
 import sys
-import os
 from math import inf
 
-from typing import List, TYPE_CHECKING
+from typing import List
 
+sys.path.append('../engine')
+from engine.road import Road
+from engine.node import Node
 
-if TYPE_CHECKING:
-    sys.path.append('../engine')
-    from engine.road import Road
-    from engine.node import Node
-
-def readMap(name: str) -> (List[Road], List[Node]):
+def read_map(name: str) -> (List[Road], List[Node]):
 
     with open(name, mode='r', encoding='utf-8') as f:
-        nodes = [Node() for _ in range(int(f.readline()))]
+        nodes = [Node(0, 0) for _ in range(int(f.readline()))]
         roads = []
 
         for line in f:
@@ -24,11 +21,11 @@ def readMap(name: str) -> (List[Road], List[Node]):
             length = float(length)
             
             #TODO change speedlimit and remove second line
-            roads.append(Road(nodes[n1], nodes[n2], length, 30.0))
-            roads.append(Road(nodes[n2], nodes[n1], length, 30.0))
+            roads.append(Road(nodes[n1], nodes[n2], 8, length))
+            roads.append(Road(nodes[n2], nodes[n1], 8, length))
     return roads, nodes
 
-def readPaths(nodes: List[Node], name: str):
+def read_paths(nodes: List[Node], name: str):
     """ Read paths from a paths' file """
     currentNode :int = None
     with open(name, mode='r', encoding='utf-8') as f:
@@ -40,10 +37,10 @@ def readPaths(nodes: List[Node], name: str):
             else:
                 #TODO optim ?
                 l.pop(-1)
-                for n, previous in map(lambda x: x[1:-1].split(','), l):
-                    nodes[currentNode].paths[nodes[int(n)]] = nodes[previous]
+                for n, previous in map(lambda x: x.split(':'), l):
+                    nodes[currentNode].paths[nodes[int(n)]] = nodes[int(previous)]
 
-def findPath(n1: Node, n2: Node) -> List[Node]:
+def find_path(n1: Node, n2: Node) -> List[Node]:
     paths = n1.paths
     current = n2
     path = []
