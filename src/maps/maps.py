@@ -3,26 +3,34 @@ import sys
 from math import inf
 
 from typing import List
-
 sys.path.append('../engine')
+
 from engine.road import Road
 from engine.node import Node
 
 def read_map(name: str) -> (List[Road], List[Node]):
 
     with open(name, mode='r', encoding='utf-8') as f:
-        nodes = [Node(0, 0) for _ in range(int(f.readline()))]
+
+        
+        nodes = []
         roads = []
 
         for line in f:
-            n1, n2, length, *_ = line.split()
+
+            if line.strip() == "===":
+                break
+            x, y, *_ = line.split()
+            nodes.append(Node(float(x), float(y)))
+
+        for line in f:
+            n1, n2, *_ = line.split()
             n1 = int(n1)
             n2 = int(n2)
-            length = float(length)
             
             #TODO change speedlimit and remove second line
-            roads.append(Road(nodes[n1], nodes[n2], 8, length))
-            roads.append(Road(nodes[n2], nodes[n1], 8, length))
+            roads.append(Road(nodes[n1], nodes[n2], 8))
+            roads.append(Road(nodes[n2], nodes[n1], 8))
     return roads, nodes
 
 def read_paths(nodes: List[Node], name: str):

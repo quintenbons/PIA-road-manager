@@ -9,6 +9,7 @@
 
 #include <limits>
 #include <unordered_map>
+#include <math.h>
 
 class Road;
 constexpr double infinity = std::numeric_limits<double>::infinity();
@@ -17,10 +18,11 @@ class Node {
     private:
     /* data */
     public:
+        int x, y;
         std::vector<Road*> roadIn;
         std::vector<Road*> roadOut;
         int id;
-        Node(int id);
+        Node(int x, int y, int id);
         // ~dijkstra();
         void addRoadIn(Road*);
         void addRoadOut(Road*);
@@ -32,19 +34,20 @@ class Road {
         Node *end;
         double distance;
 
-        Road(Node* start, Node* end, double distance);
+        Road(Node* start, Node* end);
 
 };
 
-Road::Road(Node* start, Node* end, double distance)
-    : start {start}, end {end}, distance {distance} {
+Road::Road(Node* start, Node* end)
+    : start {start}, end {end} {
         start->addRoadOut(this);
         end->addRoadIn(this);
+        distance = std::sqrt((start->x - end->x)*(start->x - end->x) + (start->y - end->y)*(start->y - end->y));
     }
 
 
-Node::Node(int id)
-    : id{id} {}
+Node::Node(int x, int y, int id)
+    : x{x}, y{y}, id{id} {}
 
 void Node::addRoadIn(Road* road) {
     this->roadIn.push_back(road);
@@ -91,22 +94,29 @@ int main(int argc, char *argv[]) {
     file.open(fileName, std::ios::in);
 
     std::string line;
-    std::getline(file, line);
-    int nodeCount = std::stoi(line);
 
     std::vector<Node*> nodes;
-    for(int index = 0; index < nodeCount; ++index) {
-        nodes.push_back(new Node(index));
+
+    int node_id = 0;
+    while(std::getline(file, line)) {
+        if(line.compare("===") == 0) {
+            break;
+        }
+        std::vector<std::string> splited = split(line, ' ');
+        int x = std::stoi(splited[0]);
+        int y = std::stoi(splited[1]);
+
+        nodes.push_back(new Node(x, y, node_id++));
     }
+    int nodeCount = nodes.size();
 
     while (std::getline(file, line)) {
         std::vector<std::string> splited = split(line, ' ');
 
         int from = std::stoi(splited[0]);
         int to = std::stoi(splited[1]);
-        double distance = std::stod(splited[2]);
-        new Road(nodes[from], nodes[to], distance);
-        new Road(nodes[to], nodes[from], distance);
+        new Road(nodes[from], nodes[to]);
+        new Road(nodes[to], nodes[from]);
 
     }
 

@@ -20,6 +20,7 @@ mid = 0
 class Movable(Nodable):
 
     road: Road
+    node: Node
     lane: int = 0
     speed: float = 0.0
     acceleration: float = 0.0
@@ -28,6 +29,7 @@ class Movable(Nodable):
     latency: float = 0.0
     # Pos = 0 <=> start of the road, Pos = 1 <=> end of the road
     pos: float = 0.0
+    node_pos: tuple(float, float) = (0.0, 0.0)
     size: float = 1.0
 
     path: List[Node] = None
@@ -47,7 +49,7 @@ class Movable(Nodable):
         mid += 1
 
     def next_position(self):
-        return car_position(self.road.length, self.pos, self.speed)
+        return car_position(self.road.road_len, self.pos, self.speed)
     
     def handle_possible_collision(self, other: Movable):
         dx = (other.pos - 2*other.size) - (self.pos + 2*self.size)
@@ -72,14 +74,16 @@ class Movable(Nodable):
 
     def update(self) -> None:
         self.speed = car_speed(self.road.speedLimit, self.speed, self.current_acceleration)
-        self.pos = car_position(self.road.length, self.pos, self.speed)
+        self.pos = car_position(self.road.road_len, self.pos, self.speed)
 
-        if self.pos >= self.road.length:
+        if self.pos >= self.road.road_len:
             if len(self.path) == 0:
                 self.pos = 0
                 self.road.remove_movable(self)
                 self.road = None
                 return False
+            
+            #TODO move between nodes
             next_node = self.path.pop(-1)
             next_road = self.find_next_road(next_node)
             self.pos = 0

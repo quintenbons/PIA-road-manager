@@ -15,6 +15,11 @@ rid = 0
 class Road:
     start: Node
     end: Node
+
+    pos_start: tuple(float, float)
+    pos_end: tuple(float, float)
+    road_len: float
+
     bidirectional: bool = True
     length: float
     speedLimit: float = 50
@@ -28,11 +33,31 @@ class Road:
     # _avgSpeed: float = None
     lanes: List[BinarySearchTree[Movable]] = None
 
-    def __init__(self, start: Node, end: Node, speedLimit: float, length: float):
+    def __init__(self, start: Node, end: Node, speedLimit: float):
+        self.length = getLength(start.position, end.position)
+
+        assert(self.length > 30)
+
+        ux = end.position[0] - start.position[0]
+        uy = end.position[1] - start.position[1]
+        u_norm = (ux*ux+uy*uy)**0.5
+        ux /= u_norm
+        uy /= u_norm
+
+        vx = uy
+        vy = -ux
+
+        self.pos_start = list(start.position)
+        self.pos_end = list(end.position)
+        self.road_len = self.length - 10
+        self.pos_start[0] += 5*ux + 2*vx
+        self.pos_start[1] += 5*uy + 2*vy
+        self.pos_end[0] -= 5*ux + 2*vx
+        self.pos_end[1] -= 5*uy + 2*vy
+
+        
         self.start = start
         self.end = end
-        # self.length = getLength(start.position, end.position)
-        self.length = length
         self.speedLimit = speedLimit
 
         self.start.add_road_out(self)

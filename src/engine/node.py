@@ -1,6 +1,7 @@
 from __future__ import annotations
 from .road import Road
 from .traffic.flow_controller import FlowController
+from .movable.movable import Movable
 from typing import List
 
 nid = 0
@@ -12,6 +13,7 @@ class Node:
     controllers: List[FlowController]
 
     paths: dict[Node: Node]
+    movables: List[Movable]
     _id: int
 
     def __init__(self, x: float, y: float):
@@ -37,9 +39,6 @@ class Node:
         for controller in self.controllers:
             if controller.road_in == road_from  and road_to in controller.road_out:
                 return controller.is_open(road_to)
-
-    def is_allowed_to_travel(self, road_from, road_to):
-        return road_from 
 
     def add_road_in(self, road: Road):
         self.road_in.append(road)
