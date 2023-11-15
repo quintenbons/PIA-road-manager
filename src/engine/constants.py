@@ -1,0 +1,3 @@
+CROSSWALK_SPEED = 15
+ACCELERATION = 2 #m/s/s
+TIME = 0.01 #second

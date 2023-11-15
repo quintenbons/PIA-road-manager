@@ -3,7 +3,7 @@ from typing import TypeVar
 
 
 class BinarySearchTree:
-    root: Node
+    root: TreeNode
     count: int
 
     def __init__(self):
@@ -12,7 +12,7 @@ class BinarySearchTree:
 
     def insertCmp(self, cmpMin, cmpMax, obj) -> bool:
         if self.root is None:
-            self.root = Node(self, obj)
+            self.root = TreeNode(self, obj)
             self.count = 1
             return True
         if self.root.isAvailable(cmpMin, cmpMax):
@@ -24,7 +24,7 @@ class BinarySearchTree:
 
     def insert(self, obj: Nodable) -> bool:
         if self.root is None:
-            self.root = Node(self, obj)
+            self.root = TreeNode(self, obj)
             self.count = 1
             return True
         if self.root.isAvailable(obj.minValue(), obj.maxValue()):
@@ -33,7 +33,7 @@ class BinarySearchTree:
             return True
         return False
 
-    def search(self, minVal, maxVal) -> Node:
+    def search(self, minVal, maxVal) -> TreeNode:
         current = self.root
         # TODO optimize with precondition
         while current is not None and (current.obj.minValue() != minVal and current.obj.maxValue() != maxVal):
@@ -56,23 +56,23 @@ class BinarySearchTree:
         if self.root:
             yield from self.root.iterate()
 
-    def remove(self, node: Node):
-        assert (node._bst == self)
-        node.remove()
+    def remove(self, TreeNode: TreeNode):
+        assert (TreeNode._bst == self)
+        TreeNode.remove()
         self.count -= 1
     
     def __len__(self):
         return self.count
 
 
-class Node:
-    left: Node
-    right: Node
-    parent: Node
+class TreeNode:
+    left: TreeNode
+    right: TreeNode
+    parent: TreeNode
     obj: Nodable
     _bst: BinarySearchTree
 
-    def __init__(self, bst: BinarySearchTree, obj: Nodable, parent: Node = None, left=None, right=None) -> None:
+    def __init__(self, bst: BinarySearchTree, obj: Nodable, parent: TreeNode = None, left=None, right=None) -> None:
         assert (obj.minValue() < obj.maxValue())
         self._bst = bst
         self.obj = obj
@@ -87,12 +87,12 @@ class Node:
     def insert(self, bst: BinarySearchTree, obj: Nodable):
         if obj.maxValue() <= self.obj.minValue():
             if self.left is None:
-                self.left = Node(bst, obj, self)
+                self.left = TreeNode(bst, obj, self)
             else:
                 self.left.insert(bst, obj)
         elif obj.minValue() >= self.obj.maxValue():
             if self.right is None:
-                self.right = Node(bst, obj, self)
+                self.right = TreeNode(bst, obj, self)
             else:
                 self.right.insert(bst, obj)
 
@@ -105,20 +105,20 @@ class Node:
 
     def remove(self):
         if self.left is None:
-            self.shiftNode(self.right)
+            self.shiftTreeNode(self.right)
         elif self.right is None:
-            self.shiftNode(self.left)
+            self.shiftTreeNode(self.left)
         else:
             successor = self.successor()
             if successor.parent is not self:
-                successor.shiftNode(successor.right)
+                successor.shiftTreeNode(successor.right)
                 successor.right = self.right
                 successor.right.parent = successor
-            self.shiftNode(successor)
+            self.shiftTreeNode(successor)
             successor.left = self.left
             successor.left.parent = successor
 
-    def shiftNode(self, other: Node):
+    def shiftTreeNode(self, other: TreeNode):
         if self.parent is None:
             self._bst.root = other
         elif self == self.parent.left:
@@ -128,7 +128,7 @@ class Node:
         if other is not None:
             other.parent = self.parent
 
-    def successor(self) -> Node:
+    def successor(self) -> TreeNode:
         if self.right is not None:
             return self.right.minimum()
         x = self
@@ -139,7 +139,7 @@ class Node:
 
         return y
 
-    def predecessor(self) -> Node:
+    def predecessor(self) -> TreeNode:
         if self.left is not None:
             return self.left.maximum()
         x = self
@@ -151,13 +151,13 @@ class Node:
 
         return y
 
-    def maximum(self) -> Node:
+    def maximum(self) -> TreeNode:
         x = self
         while x.right is not None:
             x = x.right
         return x
 
-    def minimum(self) -> Node:
+    def minimum(self) -> TreeNode:
         x = self
         while x.left is not None:
             x = x.left
@@ -182,13 +182,14 @@ class Nodable:
     """Interface used by this BST"""
 
     def maxValue(self):
-        pass
+        raise NotImplementedError
 
     def minValue(self):
-        pass
+        raise NotImplementedError
 
-    def bindTree(self, node: Node):
-        pass
+    def bindTree(self, tree_node: TreeNode):
+        raise NotImplementedError
 
-    def getNode(self):
-        pass
+    def getTreeNode(self):
+        raise NotImplementedError
+

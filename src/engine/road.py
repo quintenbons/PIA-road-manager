@@ -2,6 +2,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, TYPE_CHECKING
 from .tree import BinarySearchTree
+from .utils import getLength
 
 if TYPE_CHECKING:
     from .movable.movable import Movable
@@ -9,27 +10,34 @@ if TYPE_CHECKING:
 
 rid = 0
 # @dataclass
+
+
 class Road:
     start: Node
     end: Node
+    bidirectional: bool = True
+    length: float
+    speedLimit: float = 50
+
     _id: int
-    _length: float
-    _speedLimit: float
+    # _length: float
+    # _speedLimit: float = 50
     _numberOfLane: int = 1
-    _isOneWay: bool = True
-    _trafficFlow: float = None
-    _avgSpeed: float = None
+    # _isOneWay: bool = True
+    # _trafficFlow: float = None
+    # _avgSpeed: float = None
     lanes: List[BinarySearchTree[Movable]] = None
-    
-    def __init__(self, start: Node, end: Node, length: float, speedLimit: float):
-        self.lanes = [BinarySearchTree() for _ in range(self._numberOfLane)]
+
+    def __init__(self, start: Node, end: Node, speedLimit: float, length: float):
         self.start = start
         self.end = end
-        self._length = length
-        self._speedLimit = speedLimit
-        start.addRoadOut(self)
-        end.addRoadIn(self)
-        #TODO remove it later
+        # self.length = getLength(start.position, end.position)
+        self.length = length
+        self.speedLimit = speedLimit
+
+        self.start.add_road_out(self)
+        self.end.add_road_in(self)
+        self.lanes = [BinarySearchTree() for _ in range(self._numberOfLane)]
         global rid
         self._id = rid
         rid += 1
@@ -39,22 +47,30 @@ class Road:
             previous: Movable = None
             for mov in lane:
                 mov: Movable
-                
                 self.collisionDetection(previous, mov)
                 mov.update()
+                previous = mov
+            if(previous):
+                previous.no_possible_collision(None)
 
+    # No need for collision detection??
     def collisionDetection(self, previous: Movable, nxt: Movable) -> float:
         if previous is None:
             return
-        if previous.nextPosition() + previous.size > nxt.nextPosition() - nxt.size:
-            previous.handlePossibleCollision(nxt)
+        if previous.next_position() + 2*previous.size > nxt.next_position() - 2*nxt.size:
+            previous.handle_possible_collision(nxt)
+        else:
+            previous.no_possible_collision(nxt)
 
-    def addMovable(self, movable: Movable, lane: int):
+    def add_movable(self, movable: Movable, lane: int):
         self.lanes[lane].insert(movable)
-        movable.setRoad(self)
-        
-    def removeMovable(self, mov: Movable):
-        mov.getNode().remove()
+        movable.set_road(self)
+
+    def remove_movable(self, mov: Movable):
+        mov.getTreeNode().remove()
+
+    def get_length(self):
+        return self.length
 
     def __str__(self) -> str:
-        return f"{self.start} -> {self.end} :  {self._id}"
+        return f'{{"start": {self.start._id}, "end": {self.end._id}, "length": {self.length}, "bidirectional": "{self.bidirectional}", "speedLimit": {self.speedLimit}}}'
