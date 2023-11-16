@@ -1,31 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Project Presentation</title>
-    <link rel="stylesheet" type="text/css" href="rapport2.css">
-  </head>
-  <body>
-    <header>
-      <img src="images/logo_ensimag.png" alt="Institute Logo" class="logo" />
-      <h1 class="title">Gestion du trafic par IA</h1>
-    </header>
-    <main>
-      <p class="subtitle">Présentation du projet</p>
-      <img
-        src="images/embouteillage.jpg"
-        alt="Traffic Image"
-        class="traffic-image"
-        style="height: 300px; width: auto;"
-      />
-      <img src="images/trafic-grenoble.png" alt="Map Image" class="map-image" height="2em" style="height: 300px; width: auto;"/>
-    </main>
-    <footer>
-      <div class="author">Clement Juventin</div>
-      <div class="author">Julien Bourseau</div>
-      <div class="author">Luca Bittudeau</div>
-      <div class="author">Quinten Bons</div>
-    </footer>
-  </body>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Header Example</title>
+<style>
+  body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  header {
+    text-align: center;
+    background-color: #f5f5f5;
+    padding: 20px;
+  }
+  .logo {
+    display: inline-block;
+    vertical-align: middle;
+    /* Replace with the actual width and height of your logo */
+    width: 150px; 
+    height: 50px;
+    background-image: url('logo.png'); /* Put the path to your logo image here */
+    background-size: contain;
+    background-repeat: no-repeat;
+  }
+  .title {
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 20px;
+    font-size: 24px;
+    color: #333;
+  }
+  .subtitle {
+    font-size: 18px;
+    color: #666;
+    margin-top: 5px;
+  }
+  .date {
+    font-size: 16px;
+    color: #666;
+    margin-top: 10px;
+  }
+  .images {
+    display: flex;
+    gap: 10em;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .images>img {
+    display: inline-block;
+    height: 300px; /* Adjust width as necessary */
+    vertical-align: middle;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"></div>
+  <div class="title-content">
+    <div class="title">Projet Intelligence Artificielle</div>
+    <div class="subtitle">Présentation du projet<br>Gestion du trafic par IA</div>
+  </div>
+
+  <div class="images">
+    <img src="images/embouteillage.jpg" alt="Traffic" class="traffic-image">
+    <img src="images/trafic-grenoble.png" alt="Map" class="map-image">
+  </div>
+</header>
+
+<h1>I Architecture Préliminaire de l’ITA</h1>
+
+<h2>1.1 Introduction</h2>
+<p>[text here]</p>
+
+<h2>1.2 Flux d’utilisation</h2>
+<p>[text here]</p>
+
+</body>
 </html>
