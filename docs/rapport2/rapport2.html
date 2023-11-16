@@ -1,68 +1,154 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Header Example</title>
-<style>
-  body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  header {
-    width: 100%;
-    height: 3em;
-    background-color: #666;
-    padding: 0 2em;
-    display: flex;
-    align-items: center;
-    gap: 1em;
-  }
-  main {
-    padding: 0 2em;
-  }
-  .logo {
-    height:80%;
-    display: inline-block;
-    background-size: contain;
-    background-repeat: no-repeat;
-  }
-  .title {
-    display: inline-block;
-    vertical-align: middle;
-    font-size: 24px;
-    color: white;
-  }
-  .subtitle {
-    font-size: 18px;
-    color: white;
-    margin-top: 5px;
-  }
-  .date {
-    font-size: 16px;
-    color: #666;
-    margin-top: 10px;
-  }
-</style>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Header Example</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      header {
+        width: 100%;
+        height: 3em;
+        background-color: #666;
+        padding: 0 2em;
+        display: flex;
+        align-items: center;
+        gap: 1em;
+      }
+      main {
+        padding: 0 2em;
+      }
+      .logo {
+        height: 80%;
+        display: inline-block;
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+      .title {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 24px;
+        color: white;
+      }
+      .subtitle {
+        font-size: 18px;
+        color: white;
+        margin-top: 5px;
+      }
+      .date {
+        font-size: 16px;
+        color: #666;
+        margin-top: 10px;
+      }
+      figure {
+        text-align: center;
+        margin: 2em;
+      }
+      figcaption {
+        margin-top: 0.5em;
+        font-style: italic;
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <img src="images/logo_ensimag.png" alt="Logo ensimag" class="logo" />
+      <div class="title">
+        Projet Intelligence Artificielle - Gestion du trafic par IA
+      </div>
+      <div class="subtitle">Présentation du projet</div>
+    </header>
 
-<header>
-  <img src="images/logo_ensimag.png" alt="Logo ensimag" class="logo" />
-  <div class="title">Projet Intelligence Artificielle - Gestion du trafic par IA</div>
-  <div class="subtitle">Présentation du projet</div>
-</header>
+    <main>
+      <h1>I - Architecture Préliminaire de l'IA</h1>
 
-<main>
-  <h1>I Architecture Préliminaire de l’ITA</h1>
+      <h2>I.1 - Introduction</h2>
 
-  <h2>1.1 Introduction</h2>
-  <p>[text here]</p>
+      <p>
+        La simulation du réseau routier de Grenoble est un projet complexe
+        visant à simuler fidèlement les conditions de circulation urbaine.
+        Initialement, notre projet envisageait de créer une intelligence
+        artificielle unique ayant la maîtrise sur l'ensemble des feux de
+        signalisation de la ville, décidant du comportement de chaque feu.
+        Cependant, cette méthode a soulevé deux problématiques majeures :
+        premièrement, la génération des données d'entrée était excessivement
+        longue, rendant cette approche peu pratique compte tenu du volume des
+        données requises. Deuxièmement, l'ampleur des données d'entrée soulevait
+        des inquiétudes quant à la capacité du système à converger vers une
+        solution efficace.
+      </p>
 
-  <h2>1.2 Flux d’utilisation</h2>
-  <p>[text here]</p>
-</main>
+      <p>
+        Pour pallier à ces défis, nous avons modifié notre stratégie. Plutôt que
+        d'avoir une seule IA pour tout le réseau, notre système se compose
+        désormais d'une multitude d'IA, chacune gérant un noeud spécifique du
+        réseau, c'est-à-dire une intersection avec ses feux de signalisation.
+        Ainsi, chaque IA est responsable de tous les feux d'une intersection
+        donnée et doit optimiser la circulation à ce point précis. Les noeuds
+        reçoivent des flux de véhicules sur les routes entrantes et chaque IA
+        s'efforce de minimiser la congestion en contrôlant efficacement les feux
+        de son intersection.
+      </p>
 
-</body>
+      <p>
+        Cette nouvelle méthode a pour objectif de trouver une optimisation
+        locale pour chaque scénario, qui dépend de divers facteurs comme le flux
+        de voitures, le nombre de routes connectées à l'intersection, et les
+        caractéristiques propres à chaque route. Nous espérons ainsi que les IA
+        trouvent les optimisations locales, ce qui (nous l'espérons) contribuera
+        à une amélioration globale et coordonnée de la circulation sur
+        l'ensemble du réseau routier.
+      </p>
+
+      <h2>I.2 - Flux d'utilisation</h2>
+
+      <figure>
+        <img src="./images/summary-drawing.png" alt="Plan global d'exécution" />
+        <figcaption>Plan global d'exécution</figcaption>
+      </figure>
+
+      <p>
+        L'intelligence artificielle utilisée est un réseau neuronal dense à 4
+        étages. Il utilisera donc 2 "hidden layers", chacun constitué de 64
+        neurones.
+      </p>
+
+      <ul>
+        <li>
+          L'entrée correspond à l'état d'une intersection, ainsi que des
+          évènements issus de la simulation sur les 15 minutes précédentes. Il
+          est important d'inclure dans cette entrée la stratégie précédemment
+          choisie, ainsi que la congestion (terme qui n'est pas encore défini
+          mathématiquement dans notre modèle).
+        </li>
+        <li>
+          La sortie correspond à un choix de stratégie (one hot, choisi avec un
+          softmax) à prendre pour les 15 prochaines minutes pour une
+          intersection donnée. Cette stratégie est un algorithme conçu par nos
+          soins. Il est important ici d'avoir des stratégies cohérentes avec le
+          monde réel, mais aussi adaptables au nombre d'entrées/sorties de
+          l'intersection sur laquelle on l'utilise.
+        </li>
+      </ul>
+
+      <p>
+        Cela signifie que l'IA aura un impact uniquement toutes les 15 minutes,
+        et qu'elle n'a d'informations que sur une seule intersection. Cela nous
+        semblait raisonable sous quelques hypothèses:
+      </p>
+      <ul>
+        <li>Le modèle du trafic ne varie pas beaucoup en 15 minutes</li>
+        <li>
+          Une intersection est affectée par les intersections environnentes,
+          mais il est possible de très bien gérer une intersection sans avoir à
+          communiquer avec les intersections voisines.
+        </li>
+      </ul>
+    </main>
+  </body>
 </html>
