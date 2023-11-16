@@ -54,6 +54,61 @@
         color: #555;
       }
     </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Function to convert number to Roman numerals
+        function toRoman(num) {
+          const roman = {
+            M: 1000,
+            CM: 900,
+            D: 500,
+            CD: 400,
+            C: 100,
+            XC: 90,
+            L: 50,
+            XL: 40,
+            X: 10,
+            IX: 9,
+            V: 5,
+            IV: 4,
+            I: 1,
+          };
+          let str = "";
+
+          for (let i of Object.keys(roman)) {
+            let q = Math.floor(num / roman[i]);
+            num -= q * roman[i];
+            str += i.repeat(q);
+          }
+
+          return str;
+        }
+
+        // Update h1 elements with Roman numerals
+        const h1s = document.getElementsByTagName("h1");
+        for (let i = 0; i < h1s.length; i++) {
+          h1s[i].textContent = toRoman(i + 1) + " - " + h1s[i].textContent;
+        }
+
+        // Update h2 elements with "Parent Roman numeral.Subsection number"
+        const h2s = document.getElementsByTagName("h2");
+        let currentH1Index = 0; // Start from the first h1 element
+        let h2Counter = 1; // Subsection counter
+
+        for (let h2 of h2s) {
+          // Check if this h2 is still under the current h1
+          if (
+            h2.previousElementSibling.tagName === "H1"
+          ) {
+            h2Counter = 1; // Reset counter for new section
+            currentH1Index++; // Move to next h1
+          }
+          h2.textContent =
+            toRoman(currentH1Index) + "." + h2Counter + " - " + h2.textContent;
+          h2Counter++;
+        }
+      });
+    </script>
   </head>
   <body>
     <header>
@@ -65,9 +120,9 @@
     </header>
 
     <main>
-      <h1>I - Architecture Préliminaire de l'IA</h1>
+      <h1>Architecture Préliminaire de l'IA</h1>
 
-      <h2>I.1 - Introduction</h2>
+      <h2>Introduction</h2>
 
       <p>
         La simulation du réseau routier de Grenoble est un projet complexe
@@ -105,7 +160,7 @@
         l'ensemble du réseau routier.
       </p>
 
-      <h2>I.2 - Flux d'utilisation</h2>
+      <h2>Flux d'utilisation</h2>
 
       <figure>
         <img src="./images/summary-drawing.png" alt="Plan global d'exécution" />
