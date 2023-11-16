@@ -468,6 +468,181 @@
         de permettre à l'intelligence artificielle d'apprendre à résoudre des
         dilemmes plus efficacement.
       </p>
+
+      <h1>Développement et Implémentation</h1>
+
+      <h2>Génération de la map</h2>
+      <p>Étapes de la Génération de Cartes:</p>
+      <ul>
+        <li>
+          Récupération des Données : Nous utilisons l'API de Overpass pour
+          obtenir un ensemble de points représentant le réseau routier de la
+          ville.
+        </li>
+        <li>
+          Reconstruction des Routes : À partir de ces points, nous
+          reconstruisons les routes et identifions les intersections.
+        </li>
+        <li>
+          Simplification des Routes : Chaque route, définie par l'ensemble de
+          points entre deux intersections, est simplifiée en un segment droit en
+          conservant seulement les points extrêmes.
+        </li>
+        <li>
+          Sélection du Plus Grand Graphe Connexe : Nous conservons uniquement le
+          plus grand graphe connexe du réseau routier. Ceci élimine les petits
+          graphes isolés qui résultent de l'exclusion des routes mineures (comme
+          les parkings et les sorties résidentielles) lors de la récupération
+          des données.
+        </li>
+      </ul>
+
+      <figure>
+        <img
+          src="./images/grenoble_map.png"
+          alt="Carte générée superposée à la carte réelle de Grenoble"
+          height="50%"
+        />
+        <figcaption>
+          Carte générée superposée à la carte réelle de Grenoble
+        </figcaption>
+      </figure>
+
+      <p>
+        La carte générée de Grenoble, bien que présentant quelques
+        approximations, reste largement cohérente avec la carte réelle de la
+        ville. Par exemple, bien que la route traversant le CEA au Nord-Ouest
+        soit légèrement décalée, notre modèle reproduit avec une précision
+        raisonnable l'architecture routière. Ces modifications d'échelle sont
+        dues aux approximations inhérentes à notre méthode de simplification,
+        mais elles n'affectent pas l'intégrité globale du complexe routier.
+        Cette fidélité à la structure réelle des routes est cruciale pour notre
+        objectif, qui est de simuler de manière réaliste la gestion du trafic
+        urbain.
+      </p>
+
+      <h2>Modèle Physique : Simulation</h2>
+      <p>Le modèle physique se découpe en plusieurs parties :</p>
+      <ul>
+        <li>Des routes</li>
+        <li>Des intersections</li>
+        <li>
+          Des objets qui se déplacent, pour la suite, on désignera cela par les
+          voitures
+        </li>
+        <li>Générateur de trafic</li>
+      </ul>
+
+      <p>
+        Le générateur de trafic génère une voiture, avec un itinéraire.
+        L'itinéraire est choisi avec un calcul de Dijkstra. Pour accélérer la
+        simulation, l'ensemble des calculs de chemin sont précalculés en
+        utilisant une techno plus rapide que le Python ici le C++.
+      </p>
+      <p>
+        Les routes doivent permettre de faire circuler des voitures et les
+        intersections permettent de bloquer ou de faire passer les voitures.
+      </p>
+      <p>
+        Les principales difficultés sont liées au comportement des voitures. Il
+        faut pouvoir ralentir en fonction de la vitesse des autres voitures, il
+        faut pouvoir dépasser une voiture trop lente.
+      </p>
+      <p>
+        Nous avons aussi imaginé un système de collision qui permet aux voitures
+        de réguler leurs allures en fonction du trafic et de traverser les
+        intersections de manière réaliste. Cette partie reste néanmoins une
+        problématique sur le plan technique car nous avons des inquiétudes quant
+        au fait que la gestion d'un tel degré de détail puisse ralentir
+        énormément les temps de simulation.
+      </p>
+
+      <h2>Modèles d'IA : Dense Neural Network</h2>
+      <p>
+        Afin de prendre en main pytorch, un court exercice a été fait :
+        entraîner un modèle de Pathfinding. Cela nous a aussi permis de faire
+        des premières estimations de performance (voir référence
+        <a href="#perf">perf</a>).
+      </p>
+      <p>
+        Une infrastructure d'entraînement pour le projet routier est déjà prête.
+        Elle contient :
+      </p>
+      <ul>
+        <li>Un module de manipulation des datasets</li>
+        <li>
+          Un module d'entraînement, prenant en entrée un dataloader, et le
+          modèle
+        </li>
+        <li>Possibilité de sauvegarder les datasets et modèles</li>
+      </ul>
+      <p>Il lui manque :</p>
+      <ul>
+        <li>
+          Des fonctionnalités de génération automatique de dataset à partir de
+          configs externes
+        </li>
+        <li>
+          Branchement à des cas concrets (transformation d'une situation réelle
+          en entrée du dataset)
+        </li>
+      </ul>
+
+      <h2 id="perf">Estimation Préliminaire des Performances</h2>
+      <p>
+        Il existe trois points critiques pour la performance de notre projet :
+      </p>
+      <ul>
+        <li>Génération de dataset</li>
+      </ul>
+      <p>Estimation :</p>
+      <p>
+        Pour générer 100,000 entrées (I, E) (on rappelle que le but est de
+        1,000,000 d'entrées) :
+      </p>
+      <p>
+        Il faut pouvoir exécuter 15 minutes de simulation dans un intervalle de
+        temps réel de l'ordre de la seconde. Si on utilise une solution naive,
+        il nous faudra (nombre de stratégies + 1) x temps de simulation de 15
+        minutes pour générer 1 entrée (I, E). (voir référence
+        <a href="#close-second">close-second</a>)
+      </p>
+      <p>
+        Avec 10 stratégies, on a donc 11 secondes par entrée, soit 305 heures.
+        Sur 8 coeurs cela revient à 38 heures de génération, ce qui est loin
+        d'être négligeable.
+      </p>
+      <p>En pratique :</p>
+      <p>
+        Le simulateur est écrit en python, et gère des intervalles de temps de
+        l'ordre de la seconde. Il est probable que l'objectif de 1 seconde pour
+        15 minutes de simulation est actuellement impossible. C'est pour cela
+        que nous devons porter une grande importance à la performance de la
+        simulation.
+      </p>
+      <ul>
+        <li>Entraînement</li>
+      </ul>
+      <p>
+        L'entraînement consiste à faire un forward + backward sur des batch
+        générés par un dataloader. La complexité de cette tâche est de l'ordre
+        de la taille du dataset utilisé. En pratique, l'entraînement d'un DNN à
+        64 neurones par couche sur un dataset de 100,000 entrées peut se faire
+        en 5 minutes sans même utiliser de GPU (mesuré avec un exercice de
+        pathfinding).
+      </p>
+      <ul>
+        <li>Coût de fonctionnement</li>
+      </ul>
+      <p>
+        L'IA en pratique serait utilisée une fois par croisement, toutes les 15
+        minutes. La performance n'est pas requise temporellement. Cependant, une
+        meilleure performance permet de réduire la consommation énergétique, ce
+        qui est un des buts principaux du projet. En effet, si l'énergie
+        consommée n'était pas importante, il suffirait de lancer notre
+        algorithme naïf toutes les 15 minutes sur la simulation.
+      </p>
+
     </main>
   </body>
 </html>
