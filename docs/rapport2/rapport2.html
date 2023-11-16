@@ -231,6 +231,105 @@
           communiquer avec les intersections voisines.
         </li>
       </ul>
+
+      <!-- TODO missing part: strategies -->
+
+      <h1>Entraînement du Modèle</h1>
+
+      <h2>Format des Données d'entraînement</h2>
+
+      <p>
+        Pour entraîner efficacement notre modèle d'intelligence artificielle
+        basé sur PyTorch, il est essentiel d'avoir des datasets structurés pour
+        une utilisation avec des dataloaders. Ces datasets permettront de
+        nourrir et d'affiner le modèle d'IA, en fournissant une source de
+        données cohérente et structurée, adaptée aux spécificités de
+        l'apprentissage automatique.
+      </p>
+      <p>
+        Nous estimons qu'un volume conséquent, de plusieurs millions d'exemples
+        au moins, sera nécessaire pour atteindre une efficacité optimale.
+      </p>
+
+      <p>Le dataset sera constitué de tuples (I, E).</p>
+      <ul>
+        <li>
+          I (input) correspond à une entrée du réseau neuronal pour une
+          intersection donnée. I contient aussi des informations sur les
+          évènements des 15 minutes précédentes.
+        </li>
+        <li>
+          E (expected) correspond au résultat attendu "expected", qui devra être
+          généré algorithmiquement.
+        </li>
+      </ul>
+
+      <p>
+        Cette approche structurée permettra à notre modèle de s'adapter et
+        d'apprendre efficacement à partir d'un large éventail de scénarios de
+        trafic.
+      </p>
+
+      <h2>Génération des données d'entrée</h2>
+
+      <figure>
+        <img
+          src="./images/dataset-generation.png"
+          alt="Génération d'une entrée du dataset"
+          style="height: 20%"
+        />
+        <figcaption>Génération d'une entrée du dataset</figcaption>
+      </figure>
+
+      <p>
+        La génération de jeux de données pour entraîner notre IA est un
+        processus clé, impliquant la création de configurations spécifiques pour
+        simuler divers scénarios de trafic urbain. Il est important de rappeler
+        que notre modèle n'est conscient que d'une seule intersection, ce qui
+        nous permet de simplifier drastiquement la génération des datasets, en
+        limiant la simulation à un seul noeud.
+      </p>
+
+      <p>
+        Pour générer une entrée de dataset (I, E), la simulation est d'abord
+        exécutée pendant 15 minutes avec une stratégie sélectionnée
+        uniformément, sur une configuration aléatoire. À l'issue de cette
+        période, le paramètre I de l'entrée de dataset peut être calculé à
+        partir des informations mesurées pendant l'exécution.
+      </p>
+
+      <p>
+        Il faut ensuite générer le paramètre E, qui correspond au meilleur choix
+        possible de stratégie pour les 15 minutes suivantes. Pour cela, nous
+        pouvons simplement exécuter les stratégies une par une, et récupérer
+        celle qui obtient le meilleur score (le moins de congestion). Attention
+        ici à bien utiliser la même configuration de trafic que pour les 15
+        minutes initiales pour ne pas enfreindre notre hypothèse de consistence
+        du trafic.
+      </p>
+
+      <figure id="close-second">
+        <img
+          src="./images/dataset-hesitation.png"
+          alt="Hésitation sur la sortie attendue"
+          style="height: 20%"
+        />
+        <figcaption>Hésitation sur la sortie attendue</figcaption>
+      </figure>
+
+      <p>
+        Un cas particulier est à prévoir (voir
+        <a href="#close-second">@close-second</a>) : si plusieurs stratégies
+        sont correctes, pénaliser le modèle lors du backwards peut être néfaste.
+        C'est pourquoi nous détecterons ces situations afin de les exclure du
+        dataset.
+      </p>
+
+      <p>
+        Il est possible à l'avenir que nous reviendrons sur cette décision afin
+        de permettre à l'intelligence artificielle d'apprendre à résoudre des
+        dilemmes plus efficacement.
+      </p>
     </main>
   </body>
 </html>
