@@ -85,7 +85,7 @@
         }
 
         // Update h1 elements with Roman numerals
-        const h1s = document.getElementsByTagName("h1");
+        let h1s = document.getElementsByTagName("h1");
         for (let i = 0; i < h1s.length; i++) {
           h1s[i].textContent = toRoman(i + 1) + " - " + h1s[i].textContent;
         }
@@ -97,9 +97,7 @@
 
         for (let h2 of h2s) {
           // Check if this h2 is still under the current h1
-          if (
-            h2.previousElementSibling.tagName === "H1"
-          ) {
+          if (h2.previousElementSibling.tagName === "H1") {
             h2Counter = 1; // Reset counter for new section
             currentH1Index++; // Move to next h1
           }
@@ -107,6 +105,33 @@
             toRoman(currentH1Index) + "." + h2Counter + " - " + h2.textContent;
           h2Counter++;
         }
+
+        const mainElement = document.getElementById("summary");
+        h1s = document.getElementsByTagName("h1");
+        let summaryHTML = "<h2>Sommaire</h2><ul>";
+
+        // Iterate over each h1 to create main list items
+        for (let i = 0; i < h1s.length; i++) {
+          summaryHTML += `<li>${h1s[i].textContent}</li>`;
+          let nextElem = h1s[i].nextElementSibling;
+          let h2List = "";
+
+          // Iterate over sibling elements to find all h2s following this h1
+          while (nextElem && nextElem.tagName !== "H1") {
+            if (nextElem.tagName === "H2") {
+              h2List += `<li>${nextElem.textContent}</li>`;
+            }
+            nextElem = nextElem.nextElementSibling;
+          }
+
+          // If there were h2s, add them as a nested list
+          if (h2List) {
+            summaryHTML += `<ul>${h2List}</ul>`;
+          }
+        }
+
+        summaryHTML += "</ul>";
+        mainElement.innerHTML = summaryHTML;
       });
     </script>
   </head>
@@ -120,6 +145,8 @@
     </header>
 
     <main>
+      <section id="summary"></section>
+
       <h1>Architecture Préliminaire de l'IA</h1>
 
       <h2>Introduction</h2>
