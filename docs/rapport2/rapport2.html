@@ -233,6 +233,144 @@
       </ul>
 
       <!-- TODO missing part: strategies -->
+      <h2>Les stratégies</h2>
+
+      <p>
+        Jusqu'à présent nous avons dégagé un total de cinq stratégies primaires.
+        Ces stratégies représentent les logiques s'appliquant aux feux. Les
+        règles de circulation classiques telles que les priorités à droite ou
+        les distances de sécurité s'appliquent en priorité sur les stratégies.
+      </p>
+
+      <p>
+        Chaque stratégie peut être représentée par un graphe d'état cyclique.
+        Nous pensons faire des variantes de ces graphes dans lesquelles l'IA
+        pourra choisir le temps nécessaire pour passer à l'état suivant. Cela a
+        pour but de donner à l'IA de la flexibilité et de s'adapter lorsque les
+        routes d'entrée des carrefours ont des débits de véhicules différents.
+      </p>
+
+      <h3>Open</h3>
+      <p>
+        La stratégie "Open" consiste à laisser tous les feux au vert. De cette
+        façon le trafic se régule de manière autonome.
+      </p>
+      <p>
+        Dans l'exemple suivant, les flux possibles sont représentés en orange.
+      </p>
+
+      <figure>
+        <img
+          src="./images/open_strategy.png"
+          alt="Flux suivant la stratégie Open sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Open’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <p>
+        Les stratégies peuvent changer au cours du temps, en pratique un feu de
+        signalisation reste en place, choisir cette stratégie revient à faire en
+        sorte que tous les feux de signalisation de l'intersection soient
+        oranges et clignotent.
+      </p>
+
+      <h3>Open corridor</h3>
+      <p>
+        La stratégie "Open corridor" correspond à un feu qui restera toujours
+        vert tandis que les autres feux de signalisation alterneront chacun leur
+        tour à temps égal.
+      </p>
+      <p>
+        Dans l'exemple suivant, le feu de signalisation qui restera en vert est
+        aussi représenté par cette couleur tandis que les feux rouges et bleus
+        alternent.
+      </p>
+
+      <figure>
+        <img
+          src="./images/open_corridor_strategy.png"
+          alt="Flux suivant la stratégie Open corridor sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Open corridor’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <h3>Piece of cake</h3>
+      <p>
+        La stratégie "Piece of cake": si on représente le temps total disponible
+        avec un gâteau, cette stratégie partage équitablement le gâteau entre
+        tous les feux de signalisation. Ainsi, lorsqu'un feu est au vert, les
+        autres sont au rouge.
+      </p>
+      <p>
+        Dans l'exemple suivant les feux de signalisations sont représentés par
+        les traits de couleur rouge, vert et bleu.
+      </p>
+
+      <figure>
+        <img
+          src="./images/piece_of_cake_strategy.png"
+          alt="Flux suivant la stratégie Piece of cake sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Piece of cake’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <h3>Cross duplex</h3>
+      <p>
+        La stratégie "Cross duplex" est la plus intuitive. Elle correspond au
+        carrefour typique et permet de faire alterner les feux de signalisation
+        des routes parallèles avec ceux des routes perpendiculaires.
+      </p>
+      <p>
+        Dans l'exemple suivant sont représentés en bleu et rouge les groupes de
+        feux de signalisation. Le groupe bleu et le groupe rouge s'allument
+        chacun leur tour.
+      </p>
+
+      <figure>
+        <img
+          src="./images/cross_duplex_strategy.png"
+          alt="Flux suivant la stratégie Cross duplex sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Cross duplex’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <h3>Soft cross duplex</h3>
+      <p>
+        Enfin, la stratégie "Soft cross duplex" est une variante de la stratégie
+        "Cross duplex" dans laquelle les véhicules peuvent s'insérer en ignorant
+        les feux de signalisation pour directement tourner à droite après les
+        feux. Cette stratégie permet de modéliser les feux à clignotement
+        orange.
+      </p>
+
+      <p>
+        Dans ce dernier exemple, les véhicules suivant une trajectoire orange
+        doivent respecter la signalisation en vert et rouge tandis que ceux
+        suivant les trajectoires bleues peuvent s'insérer sans attendre.
+      </p>
+
+      <figure>
+        <img
+          src="./images/soft_cross_duplex_strategy.png"
+          alt="Flux suivant la stratégie Soft cross duplex sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Soft cross duplex’ sur une intersection.
+        </figcaption>
+      </figure>
 
       <h1>Entraînement du Modèle</h1>
 
