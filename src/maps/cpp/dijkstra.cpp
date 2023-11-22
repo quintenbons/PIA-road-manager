@@ -121,6 +121,7 @@ int main(int argc, char *argv[]) {
     }
 
     for (Node* n : nodes) {
+        // Dijkstra
         std::vector<bool> usedNodes(nodeCount, false);
         std::vector<double> distances(nodeCount, infinity);
         std::unordered_map<int, int> previous;
