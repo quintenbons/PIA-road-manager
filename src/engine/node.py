@@ -2,6 +2,7 @@ from __future__ import annotations
 from .road import Road
 from .traffic.flow_controller import FlowController
 from .movable.movable import Movable
+from .utils import circleCollision, vecteur, scalaire, norm
 from typing import List
 
 nid = 0
@@ -26,10 +27,52 @@ class Node:
         self.controllers = []
         self.position = (x, y)
         self.paths = {}
+        self.movables = []
 
     def update(self, time) -> None:
         for controller in self.controllers:
             controller.update(time)
+        n = len(self.movables)
+        # print(n)
+        for i in range(n):
+            for j in range(i + 1, n):
+                movable1 = self.movables[i]
+                movable2 = self.movables[j]
+                # if circleCollision(movable1.node_pos, movable2.node_pos, movable1.size, movable2.size):
+                    # print("Col in node")
+                    # exit(0)
+                pos1, speed1, node_pos1 = movable1.next_node_position()
+                pos2, speed2, node_pos2 = movable2.next_node_position()
+
+                if circleCollision(node_pos1, node_pos2, movable1.size, movable2.size):
+                    print("collision")
+                    #TODO gérer cela, par exemple, si une voiture attend à un feu on peut ignorer
+                    # exit(0)
+                A = movable1.node_pos
+                B = movable2.node_pos
+                O = vecteur(A, B)
+                U = vecteur(node_pos1, A)
+                V = vecteur(node_pos2, B)
+
+                t = (V[0]*O[1]-O[0]*V[1])
+
+                det = V[1]*U[0]-V[0]*U[1]
+                if det != 0:
+                    t /= det
+                
+                    P = (A[0] + t*U[0], A[1] + t*U[1])
+
+                    AP = vecteur(P, A)
+                    BP = vecteur(P, B)
+
+                    sca1 = scalaire(AP, U)
+                    sca2 = scalaire(BP, V)
+
+                    if sca1 >= 0 and sca2 >= 0:
+                        if norm(AP) < norm(U) and norm(BP) < norm(V):
+                            print("Collision ici")
+                            # exit(0)
+
 
     def try_to_travel_to(self, road_from, road_to):
         if road_from not in self.road_in:
