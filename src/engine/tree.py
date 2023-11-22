@@ -52,14 +52,20 @@ class BinarySearchTree:
         if self.root:
             self.root.printTree()
 
-    def __iter__(self):
-        if self.root:
-            yield from self.root.iterate()
+    # def __iter__(self):
+    #     if self.root:
+    #         yield from self.root.iterate()
+
+    def iter(self, reverse = False):
+        if self.root and not reverse:
+            yield from self.root.iterate(reverse)
+        elif self.root:
+            yield from self.root.iterate(reverse)
 
     def remove(self, TreeNode: TreeNode):
         assert (TreeNode._bst == self)
         TreeNode.remove()
-        self.count -= 1
+        # self.count -= 1
     
     def __len__(self):
         return self.count
@@ -104,6 +110,7 @@ class TreeNode:
         return False
 
     def remove(self):
+        self._bst.count -= 1
         if self.left is None:
             self.shiftTreeNode(self.right)
         elif self.right is None:
@@ -163,12 +170,19 @@ class TreeNode:
             x = x.left
         return x
 
-    def iterate(self) -> object:
-        if self.left:
-            yield from self.left.iterate()
-        yield self.obj
-        if self.right:
-            yield from self.right.iterate()
+    def iterate(self, reverse) -> object:
+        if not reverse:
+            if self.left:
+                yield from self.left.iterate(reverse)
+            yield self.obj
+            if self.right:
+                yield from self.right.iterate(reverse)
+        else:
+            if self.right:
+                yield from self.right.iterate(reverse)
+            yield self.obj
+            if self.left:
+                yield from self.left.iterate(reverse)
 
     def printTree(self):
         if self.left:

@@ -52,8 +52,8 @@ class Road:
         self.road_len = self.length - 10
         self.pos_start[0] += 5*ux + 2*vx
         self.pos_start[1] += 5*uy + 2*vy
-        self.pos_end[0] -= 5*ux + 2*vx
-        self.pos_end[1] -= 5*uy + 2*vy
+        self.pos_end[0] += -5*ux + 2*vx
+        self.pos_end[1] += -5*uy + 2*vy
 
         
         self.start = start
@@ -70,26 +70,40 @@ class Road:
     def update(self) -> None:
         for lane in self.lanes:
             previous: Movable = None
-            for mov in lane:
+            # TODO iterate the other way (from last to first ! This is the way)
+            # for mov in lane:
+            #     mov: Movable
+            #     self.collisionDetection(previous, mov)
+            #     assert(previous != mov)
+            #     previous = mov
+            # if(previous):
+            #     previous.no_possible_collision(None)
+            for mov in lane.iter(True):
                 mov: Movable
-                self.collisionDetection(previous, mov)
-                mov.update()
+                assert(previous != mov)
+                if previous is None:
+                    mov.no_possible_collision(None)
+                else:
+                    self.collisionDetection(previous, mov)
                 previous = mov
-            if(previous):
-                previous.no_possible_collision(None)
 
     # No need for collision detection??
     def collisionDetection(self, previous: Movable, nxt: Movable) -> float:
+        # previous is ahead and nxt is behind on the road
         if previous is None:
             return
-        if previous.next_position() + 2*previous.size > nxt.next_position() - 2*nxt.size:
-            previous.handle_possible_collision(nxt)
+        if nxt.next_position()[0] + 2*nxt.size > previous.next_position()[0] - 2*previous.size:
+            nxt.handle_possible_collision(previous)
         else:
-            previous.no_possible_collision(nxt)
+            nxt.no_possible_collision(previous)
 
     def add_movable(self, movable: Movable, lane: int):
-        self.lanes[lane].insert(movable)
-        movable.set_road(self)
+        assert(movable.tree_node is None)
+        if self.lanes[lane].insert(movable):
+            movable.set_road(self)
+            return True
+        # print("Can't add movable")
+        return False
 
     def remove_movable(self, mov: Movable):
         mov.getTreeNode().remove()

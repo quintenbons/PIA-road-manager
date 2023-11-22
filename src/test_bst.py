@@ -18,6 +18,12 @@ class ImplemNodable(Nodable):
         return self.minVal
     def maxValue(self):
         return self.maxVal
+    
+    def bindTree(self, tree_node):
+        pass
+    def getTreeNode(self):
+        pass
+    
     def __str__(self) -> str:
         return str(self.val)
 def main():
@@ -44,9 +50,14 @@ def main():
 
     print("iterate")
     msg = ""
-    for n in bst:
+    for n in bst.iter(False):
         msg += str(n)
     assert(msg == "abcd")
+
+    msg = ""
+    for n in bst.iter(True):
+        msg += str(n)
+    assert(msg == "dcba")
 
     print("removing root...")
     n = bst.root.right
@@ -56,7 +67,7 @@ def main():
     bst.printTree()
     print("iterate")
     msg = ""
-    for n in bst:
+    for n in bst.iter():
         msg += str(n)
     assert(msg == "abd")
 
