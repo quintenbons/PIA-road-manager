@@ -75,6 +75,11 @@ class Movable(Nodable):
         assert(speed <= self.road.speedLimit)
         return pos, speed
 
+    def handle_first_movable(self):
+        # check for end of road
+        # check for movable inside the node
+        ...
+
     def handle_possible_collision(self, other: Movable):
         dx = (other.next_position()[0] - 2*other.size) - (self.next_position()[0] + 2*self.size)
         if dx <= 0:
@@ -97,6 +102,7 @@ class Movable(Nodable):
 
     def update_road(self) -> None:
         self.pos, self.speed = self.next_position()
+        #TODO handle going further road_len
         if self.pos >= self.road.road_len:
             if len(self.path) == 0:
                 self.pos = 0

@@ -82,7 +82,7 @@ class Road:
                 mov: Movable
                 assert(previous != mov)
                 if previous is None:
-                    mov.no_possible_collision(None)
+                    mov.handle_first_movable()
                 else:
                     self.collisionDetection(previous, mov)
                 previous = mov
