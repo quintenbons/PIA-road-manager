@@ -19,7 +19,7 @@ def main():
     nodes: List[Node]
     read_paths(nodes, "src/maps/cpp/paths_roads0.txt")
 
-    seed(0)
+    seed(0) #TODO check that random is still the same for everyone
     
     ms = []
 
@@ -29,9 +29,11 @@ def main():
         if r.add_movable(m, 0):
             m.get_path(nodes[randint(0, 4)])
             ms.append(m)
-    print("start")
+    # print("start")
     time = 0
-    while(True):
+    from time import perf_counter
+    t1 = perf_counter()
+    while(time < 900):
         time += TIME
         print("time : ", time)
         for r in roads:
@@ -55,7 +57,7 @@ def main():
                         print("erreur ici")
                     else:
                         prev = mov
-
+    print(perf_counter() - t1)
 
 if __name__ == "__main__":
     main()
