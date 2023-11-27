@@ -31,7 +31,7 @@ class Road:
     def __init__(self, start: Node, end: Node, speedLimit: float):
         self.length = getLength(start.position, end.position)
 
-        assert(self.length > 30)
+        # assert(self.length > 30)
 
         ux = end.position[0] - start.position[0]
         uy = end.position[1] - start.position[1]
@@ -89,7 +89,7 @@ class Road:
         if self.lanes[lane].insert(movable):
             movable.set_road(self)
             return True
-        print("Can't add movable")
+        # print("Can't add movable")
         return False
 
     def remove_movable(self, mov: Movable):

@@ -20,10 +20,10 @@ def main():
     step = 0
     grid_size = 50
 
-    roads, nodes = read_map("src/maps/cpp/test_roads0.txt")
+    roads, nodes = read_map("src/maps/cpp/eybens_map.csv")
     roads: List[Road]
     nodes: List[Node]
-    read_paths(nodes, "src/maps/cpp/paths_roads0.txt")
+    read_paths(nodes, "src/maps/cpp/eybens_paths_roads.txt")
 
     seed(0) #TODO check that random is still the same for everyone
     
@@ -35,9 +35,9 @@ def main():
     running = True
 
 
-    for _ in range(30):
-        r = roads[randint(0, 4)]
-        m = Movable(1, 2, random(), 0.5*(r.road_len), 2)
+    for _ in range(300):
+        r = roads[randint(0, len(roads)-1)]
+        m = Movable(1, 2, random(), random()*(r.road_len), 2)
         if r.add_movable(m, 0):
             m.get_path(nodes[randint(0, 4)])
             ms.append(m)

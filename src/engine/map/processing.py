@@ -8,6 +8,8 @@ from fetching import fetch_road_data
 from file_manager import save_to_csv
 from utils import timing, BUILD_DIR
 
+from file_manager import ROADS_FILE, SIMPLIFIED_ROADS_FILE, INTERSECTIONS_FILE, LARGEST_CONNECTED_COMPONENT, FINAL_ROADS_FILE, MAP_FILE
+
 @timing
 def find_intersections(roads):
     intersections = set()
@@ -65,7 +67,25 @@ def simplify_roads_csv(input_filepath, output_filepath):
     return simplified_roads
 
 @timing
-def extract_connex_roads(roads):
+def simplify_roads(roads):
+    simplified_roads = []
+    for road in roads:
+        if road:
+            simplified_road = [road[0], road[-1]]
+            simplified_roads.append(simplified_road)
+    return simplified_roads
+
+@timing
+def create_raw_data(largest_connected_component):
+    raw_data = []
+    for road in largest_connected_component:
+        if len(road) == 2:  # Assurez-vous que chaque route a deux points (début et fin)
+            start, end = road
+            raw_data.append((f'"{start[0]}, {start[1]}"', f'"{end[0]}, {end[1]}"'))
+    return raw_data
+
+@timing
+def extract_connex_roads_from_csv(roads):
     G = nx.Graph()
 
     for road in roads:
@@ -76,7 +96,7 @@ def extract_connex_roads(roads):
     largest_subgraph = G.subgraph(largest_cc)
 
     road_complex = []
-    filename = os.path.join(BUILD_DIR, 'largest_connected_component.csv')
+    filename = os.path.join(BUILD_DIR, LARGEST_CONNECTED_COMPONENT)
     with open(filename, mode='w', newline='') as csvfile:
         writer = csv.writer(csvfile)
 
@@ -89,10 +109,65 @@ def extract_connex_roads(roads):
             road = [node1, node2]
             road_complex.append(road)
     return road_complex
-            
+
+def extract_connex_roads(roads):
+    G = nx.Graph()
+
+    # Ajout des routes au graphe
+    for road in roads:
+        G.add_edge(road[0], road[1])
+
+    # Trouver le plus grand composant connecté
+    largest_cc = max(nx.connected_components(G), key=len)
+    largest_subgraph = G.subgraph(largest_cc).edges()
+
+    # Extraire les routes correspondant au plus grand composant connecté
+    road_complex = [(edge[0], edge[1]) for edge in largest_subgraph]
+
+    return road_complex
+
+def read_raw_data():
+    filename = os.path.join(BUILD_DIR, FINAL_ROADS_FILE)
+    with open(filename, 'r') as file:
+        return [line.strip().split('","') for line in file]
 
 @timing
-def process_road_data(city_name):
+def create_nodes_and_routes(raw_data):
+    nodes = {}
+    routes = []
+    node_index = 0
+
+    for pair in raw_data:
+        start, end = pair
+        start = start.replace('"', '')
+        end = end.replace('"', '')
+
+        if start not in nodes:
+            nodes[start] = node_index
+            node_index += 1
+        if end not in nodes:
+            nodes[end] = node_index
+            node_index += 1
+
+        routes.append((nodes[start], nodes[end]))
+
+    return nodes, routes
+
+def write_to_csv(nodes, routes, output_file):
+    output_filepath = os.path.join(BUILD_DIR, output_file)
+    with open(output_filepath, 'w') as file:
+        for node, index in nodes.items():
+            x, y = node[1:-1].split(', ')
+            file.write(f"{x} {y} : {index}\n")
+
+        file.write("===\n")
+
+        for start, end in routes:
+            file.write(f"{start} {end}\n")
+
+
+@timing
+def process_road_data(city_name, GENERATE_CSV=False):
     road_data = fetch_road_data(city_name)
 
     print("Parsing data...")
@@ -100,24 +175,37 @@ def process_road_data(city_name):
              for element in road_data['elements']
              if element['type'] == 'node'}
 
-    roads = []
-    for element in road_data['elements']:
-        if element['type'] == 'way':
-            road_nodes = [nodes[node_id] for node_id in element['nodes']]
-            roads.append(road_nodes)
+    roads = [ [nodes[node_id] for node_id in element['nodes']] 
+              for element in road_data['elements']
+              if element['type'] == 'way']
 
     print("Finding intersections...")
     intersections = find_intersections(roads)
 
-    print("Saving data...")
-    save_to_csv('intersections.csv', intersections)
-    save_to_csv('roads.csv', [[point for point in road] for road in roads])
+    if GENERATE_CSV:
+        print("Saving data...")
+        save_to_csv(INTERSECTIONS_FILE, intersections)
+        save_to_csv(ROADS_FILE, [[point for point in road] for road in roads])
 
-    input_filepath = 'roads.csv'
-    output_filepath = 'simplified_roads.csv'
-    roads = simplify_roads_csv(input_filepath, output_filepath)
+        roads = simplify_roads_csv(ROADS_FILE, SIMPLIFIED_ROADS_FILE)
 
-    print("Extract largest connected component...")
-    roads = extract_connex_roads(roads)
+        print("Extract largest connected component...")
+        roads = extract_connex_roads_from_csv(roads)
+        # write roads to file
+        save_to_csv(FINAL_ROADS_FILE, [[point for point in road] for road in roads])
+        
+        raw_data = read_raw_data()
+        nodes, routes = create_nodes_and_routes(raw_data)
+        write_to_csv(nodes, routes, MAP_FILE)
+    else:
+        roads = simplify_roads(roads)
+
+        largest_connected_component = extract_connex_roads(roads)
+
+        raw_data = create_raw_data(largest_connected_component)
+
+        nodes, routes = create_nodes_and_routes(raw_data)
+
+        write_to_csv(nodes, routes, MAP_FILE)
 
     return roads

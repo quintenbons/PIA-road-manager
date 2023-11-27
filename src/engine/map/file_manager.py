@@ -2,9 +2,12 @@ import os
 import csv
 from utils import timing, BUILD_DIR
 
-ROADS_FILE = 'roads.csv'
-SIMPLIFIED_ROADS_FILE = 'simplified_roads.csv'
-INTERSECTIONS_FILE = 'intersections.csv'
+ROADS_FILE = '0_roads.csv'
+SIMPLIFIED_ROADS_FILE = '1_simplified_roads.csv'
+INTERSECTIONS_FILE = '2_intersections.csv'
+LARGEST_CONNECTED_COMPONENT = '3_largest_connected_component.csv'
+FINAL_ROADS_FILE = '4_final_roads.csv'
+MAP_FILE = 'map.csv'
 
 @timing
 def save_to_csv(filename, data, directory=BUILD_DIR):

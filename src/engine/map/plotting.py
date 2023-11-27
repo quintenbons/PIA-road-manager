@@ -4,7 +4,7 @@ from utils import BUILD_DIR
 import os
 
 
-@timing
+# @timing
 def plot_roads_and_intersections(roads):
     """
     Plot the roads on a graph. Intersections are identified by the endpoints of the roads.
