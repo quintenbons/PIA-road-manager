@@ -238,6 +238,21 @@ class Movable(Nodable):
     def bindTree(self, tree_node: TreeNode):
         self.tree_node = tree_node
 
+    def to_coord_xy(self):        
+        road = self.road
+        pos_start = road.pos_start
+        pos_end = road.pos_end
+        ux, uy = pos_end[0] - pos_start[0], pos_end[1] - pos_start[1]
+
+        length = (ux*ux + uy*uy)**0.5
+        ux, uy = ux/length, uy/length
+        pos = self.pos
+
+        x = pos_start[0] + pos*ux
+        y = pos_start[1] + pos*uy
+
+        return x, y
+
     def __str__(self):
         return f'{{"pos": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "road": {self.road}}}'
 

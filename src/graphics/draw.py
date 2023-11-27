@@ -17,7 +17,7 @@ def draw_node(screen, node:Node):
     pygame.draw.circle(screen, NODE_COLOR, node.position, NODE_RADIUS)
 
 def draw_movable(movable: Movable, screen):
-    x, y = movable.node_pos if movable.node else (movable.road.pos_start[0] + movable.pos, movable.road.pos_start[1])
+    x, y = movable.to_coord_xy()
     pygame.draw.circle(screen, (255, 0, 0), (int(x), int(y)), 5)
 
 def draw_grid(screen, grid_size, window_size):

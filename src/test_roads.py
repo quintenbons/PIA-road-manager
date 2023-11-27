@@ -15,7 +15,7 @@ from engine.node import Node
 from typing import List
 
 def main():
-    DEBUG_MODE = True
+    DEBUG_MODE = False
     step = 0
     grid_size = 50
     window_size = (1200, 800)
@@ -59,6 +59,12 @@ def main():
                     r.update()
                 for n in nodes:
                     n.update(0)
+                for m in ms.copy():
+                    m: Movable
+
+                    if not m.update():
+                        if m.road.add_movable(m, 0):
+                            m.get_path(nodes[randint(0, 4)])
             step -= 1 if step > 0 else 0
 
         screen.fill((255, 255, 255))
