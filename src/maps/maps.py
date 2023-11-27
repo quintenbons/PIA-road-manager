@@ -8,6 +8,17 @@ sys.path.append('../engine')
 from engine.road import Road
 from engine.node import Node
 
+def normalize_coordinates(nodes, width, height):
+    min_x = min(node.position[0] for node in nodes)
+    min_y = min(node.position[1] for node in nodes)
+    max_x = max(node.position[0] for node in nodes)
+    max_y = max(node.position[1] for node in nodes)
+
+    for node in nodes:
+        x = (node.position[0] - min_x) / (max_x - min_x) * width
+        y = (node.position[1] - min_y) / (max_y - min_y) * height
+        node.position = (x, y)
+
 def read_map(name: str) -> (List[Road], List[Node]):
 
     with open(name, mode='r', encoding='utf-8') as f:
@@ -23,6 +34,9 @@ def read_map(name: str) -> (List[Road], List[Node]):
             x, y, *_ = line.split()
             nodes.append(Node(float(x), float(y)))
 
+
+        normalize_coordinates(nodes, 1200, 800)
+
         for line in f:
             n1, n2, *_ = line.split()
             n1 = int(n1)
@@ -31,6 +45,14 @@ def read_map(name: str) -> (List[Road], List[Node]):
             #TODO change speedlimit and remove second line
             roads.append(Road(nodes[n1], nodes[n2], 8))
             roads.append(Road(nodes[n2], nodes[n1], 8))
+    print("before:")
+    for node in nodes:
+        print(node)
+    print("after:")
+    for node in nodes:
+        print(node)
+
+    
     return roads, nodes
 
 def read_paths(nodes: List[Node], name: str):

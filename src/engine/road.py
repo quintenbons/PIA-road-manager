@@ -102,7 +102,7 @@ class Road:
         if self.lanes[lane].insert(movable):
             movable.set_road(self)
             return True
-        # print("Can't add movable")
+        print("Can't add movable")
         return False
 
     def remove_movable(self, mov: Movable):
