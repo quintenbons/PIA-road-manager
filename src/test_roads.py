@@ -5,6 +5,7 @@ import os
 import pygame
 from engine.constants import TIME
 from graphics.draw import draw_movable, draw_node, draw_road, draw_grid
+from graphics.init_pygame import pygame_init
 sys.path.append(os.path.dirname(__file__))
 
 from random import randint, random, seed
@@ -18,7 +19,6 @@ def main():
     DEBUG_MODE = False
     step = 0
     grid_size = 50
-    window_size = (1200, 800)
 
     roads, nodes = read_map("src/maps/cpp/test_roads0.txt")
     roads: List[Road]
@@ -29,14 +29,13 @@ def main():
     
     ms = []
 
-    pygame.init()
-    screen = pygame.display.set_mode(window_size)
+    screen = pygame_init()
     pygame.display.set_caption("Simulation de réseau routier")
     clock = pygame.time.Clock()
     running = True
 
 
-    for _ in range(3):
+    for _ in range(30):
         r = roads[randint(0, 4)]
         m = Movable(1, 2, random(), 0.5*(r.road_len), 2)
         if r.add_movable(m, 0):
@@ -53,7 +52,6 @@ def main():
                         step = 10
 
         if not DEBUG_MODE or step > 0:
-            print("step")
             for _ in range(step or 1):  # Exécute 1 ou 10 étapes
                 for r in roads:
                     r.update()
@@ -68,7 +66,7 @@ def main():
             step -= 1 if step > 0 else 0
 
         screen.fill((255, 255, 255))
-        draw_grid(screen, grid_size, window_size)
+        draw_grid(screen, grid_size, screen.get_size())
 
         for road in roads:
             draw_road(screen, road)
