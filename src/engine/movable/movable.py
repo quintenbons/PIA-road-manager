@@ -3,9 +3,8 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
-from .utils import car_speed, car_position, mov_node_position
 
-from ..utils import getLength
+from ..utils import getLength, vecteur_norm, scalaire
 
 from ..constants import TIME
 
@@ -73,25 +72,73 @@ class Movable(Nodable):
             pos = TIME*TIME*self.current_acceleration/2 + self.speed*TIME + self.pos
             speed = sp
         assert(speed <= self.road.speedLimit)
+        #TODO remove : debug purpose
+        if self.road.block_traffic():
+            assert(pos <= self.road.road_len)
+
         return pos, speed
 
     def handle_first_movable(self):
         # check for end of road
         # check for movable inside the node
-        ...
+
+        future_pos, _ = self.next_position()
+
+        dx = self.road.road_len - future_pos
+        self.current_acceleration = max(0, self.current_acceleration)
+
+        if self.road.block_traffic():
+            da = 1.75*dx/TIME/TIME if dx > 0 else  2.5*dx/TIME/TIME
+            self.current_acceleration = min(self.acceleration, self.current_acceleration + da)
+            return
+        if future_pos > self.road.road_len and len(self.path) > 0:
+            # Leaving the road
+            # Check if it can leave or not
+            # Check for slowing down
+            next_road = self.find_next_road(self.path[-1])
+            direction = vecteur_norm(self.road.pos_end, next_road.pos_start)
+            
+            if not self.road.end.position_available(self.road.pos_end, self.size):
+                da = 2.5*dx/TIME/TIME # < 0
+                self.current_acceleration = min(self.acceleration, self.current_acceleration + da)
+
+            #TODO add a way to check for other roads
+
+        
+    def handle_node_collision(self, other: Movable):
+        ortho = (self.node_dir[1], -self.node_dir[0])
+        scal = scalaire(ortho, other.node_dir)
+        if scal > 0:
+            # Priotité à droite
+            if other.speed == 0 and other.current_acceleration <= 0:
+                #TODO test if it works
+                self.current_acceleration = self.acceleration
+            else:
+                self.speed = 0
+                self.current_acceleration = 0
+        else:
+            # On a la priorité
+            if self.speed == 0 and self.current_acceleration <= 0:
+                #TODO test if it works
+                other.current_acceleration = other.acceleration
+            else:
+                other.speed = 0
+                other.current_acceleration = 0
 
     def handle_possible_collision(self, other: Movable):
-        dx = (other.next_position()[0] - 2*other.size) - (self.next_position()[0] + 2*self.size)
+        dx = (other.next_position()[0] - 1*other.size) - (self.next_position()[0] + 1*self.size)
         if dx <= 0:
-            self.speed = 0
-            self.current_acceleration = 0
+            da = 2.5*dx/TIME/TIME
+            self.current_acceleration += da
         else:
-            self.current_acceleration = -1/dx
+            da = 2.5*dx/TIME/TIME
+            self.current_acceleration -= da
 
     def no_possible_collision(self, other: Movable):
         if not other:
             self.current_acceleration = self.acceleration
         else:
+            self.current_acceleration = max(0, self.current_acceleration)
             future_other = other.next_position()[0] - other.size
             future_self = self.next_position()[0] + self.size
             dx = min(future_other - future_self, future_other - future_self - self.size)
@@ -108,7 +155,6 @@ class Movable(Nodable):
                 self.pos = 0
                 self.road.remove_movable(self)
                 self.tree_node = None
-                # self.road = None
                 self.node = None
                 return False
             

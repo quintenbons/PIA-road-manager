@@ -24,7 +24,9 @@ def main():
     roads: List[Road]
     nodes: List[Node]
     read_paths(nodes, "src/maps/cpp/paths_roads0.txt")
-    seed(0)
+
+    seed(0) #TODO check that random is still the same for everyone
+    
     ms = []
 
     pygame.init()
