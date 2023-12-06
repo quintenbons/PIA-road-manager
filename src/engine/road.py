@@ -25,18 +25,13 @@ class Road:
     speedLimit: float = 50
 
     _id: int
-    # _length: float
-    # _speedLimit: float = 50
     _numberOfLane: int = 1
-    # _isOneWay: bool = True
-    # _trafficFlow: float = None
-    # _avgSpeed: float = None
     lanes: List[BinarySearchTree[Movable]] = None
 
     def __init__(self, start: Node, end: Node, speedLimit: float):
         self.length = getLength(start.position, end.position)
 
-        assert(self.length > 30)
+        # assert(self.length > 30)
 
         ux = end.position[0] - start.position[0]
         uy = end.position[1] - start.position[1]
@@ -70,25 +65,17 @@ class Road:
     def update(self) -> None:
         for lane in self.lanes:
             previous: Movable = None
-            # TODO iterate the other way (from last to first ! This is the way)
-            # for mov in lane:
-            #     mov: Movable
-            #     self.collisionDetection(previous, mov)
-            #     assert(previous != mov)
-            #     previous = mov
-            # if(previous):
-            #     previous.no_possible_collision(None)
             for mov in lane.iter(True):
                 mov: Movable
                 assert(previous != mov)
                 if previous is None:
                     mov.handle_first_movable()
                 else:
-                    self.collisionDetection(previous, mov)
+                    self.collision_detection(previous, mov)
                 previous = mov
 
     # No need for collision detection??
-    def collisionDetection(self, previous: Movable, nxt: Movable) -> float:
+    def collision_detection(self, previous: Movable, nxt: Movable) -> float:
         # previous is ahead and nxt is behind on the road
         if previous is None:
             return
@@ -110,6 +97,10 @@ class Road:
 
     def get_length(self):
         return self.length
+
+    def block_traffic(self):
+        # end if locked
+        return False
 
     def __str__(self) -> str:
         return f'{{"start": {self.start._id}, "end": {self.end._id}, "length": {self.length}, "bidirectional": "{self.bidirectional}", "speedLimit": {self.speedLimit}}}'

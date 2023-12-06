@@ -7,8 +7,8 @@ start = time.time()
 
 # roads = process_road_data("Saint-Trinit")
 # roads = process_road_data("Revest-du-Bion")
-# roads = process_road_data("Eybens")
-roads = process_road_data("Grenoble")
+roads = process_road_data("Eybens", GENERATE_CSV=True)  #  laissez à true pour le moment, false pas encore totalement fonctionnel
+# roads = process_road_data("Grenoble", True)
 
 print("Time of processing road creation: ", time.time() - start)
 

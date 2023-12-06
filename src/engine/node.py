@@ -2,7 +2,7 @@ from __future__ import annotations
 from .road import Road
 from .traffic.flow_controller import FlowController
 from .movable.movable import Movable
-from .utils import circleCollision, vecteur, scalaire, norm
+from .utils import circle_collision, vecteur, scalaire, norm
 from typing import List
 
 nid = 0
@@ -38,14 +38,15 @@ class Node:
             for j in range(i + 1, n):
                 movable1 = self.movables[i]
                 movable2 = self.movables[j]
-                # if circleCollision(movable1.node_pos, movable2.node_pos, movable1.size, movable2.size):
+                # if circle_collision(movable1.node_pos, movable2.node_pos, movable1.size, movable2.size):
                     # print("Col in node")
                     # exit(0)
                 pos1, speed1, node_pos1 = movable1.next_node_position()
                 pos2, speed2, node_pos2 = movable2.next_node_position()
 
-                if circleCollision(node_pos1, node_pos2, movable1.size, movable2.size):
-                    print("collision")
+                if circle_collision(node_pos1, node_pos2, movable1.size, movable2.size):
+                    # print("collision")
+                    pass
                     #TODO gérer cela, par exemple, si une voiture attend à un feu on peut ignorer
                     # exit(0)
                 A = movable1.node_pos
@@ -70,18 +71,17 @@ class Node:
 
                     if sca1 >= 0 and sca2 >= 0:
                         if norm(AP) < norm(U) and norm(BP) < norm(V):
-                            print("Collision ici")
+                            # print("Collision ici")
                             # exit(0)
+                            pass
 
 
-    def try_to_travel_to(self, road_from, road_to):
-        if road_from not in self.road_in:
-            return False
-        if road_to not in self.road_out:
-            return False
-        for controller in self.controllers:
-            if controller.road_in == road_from  and road_to in controller.road_out:
-                return controller.is_open(road_to)
+    def position_available(self, pos, size):
+        for m in self.movables:
+            #TODO use next node pos
+            if circle_collision(m.node_pos, pos, m.size, size):
+                return False
+        return True
 
     def add_road_in(self, road: Road):
         self.road_in.append(road)
