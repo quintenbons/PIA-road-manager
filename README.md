@@ -26,6 +26,7 @@ S'assurer d'être au root du repo.
   - On reste appuyer sur `d` tout en cliquant sur un node pour le supprimer ainsi que toutes les routes qui y sont liées.
 
   La map a utilisé sera stockée dans `src/maps/build/GUI/<nom_choisi>/map.csv` et les chemins dans `src/maps/build/GUI/<nom_choisi>/paths.csv`.
+  Attention à bien faire un graph totalement connecté.
 
 #### Lancer une simulation
 

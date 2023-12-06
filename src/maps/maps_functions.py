@@ -14,9 +14,15 @@ def normalize_coordinates(nodes, width, height):
     max_x = max(node.position[0] for node in nodes)
     max_y = max(node.position[1] for node in nodes)
 
+    padding_x = width * 0.05
+    padding_y = height * 0.05
+
+    scaled_width = width - 2 * padding_x
+    scaled_height = height - 2 * padding_y
+
     for node in nodes:
-        x = (node.position[0] - min_x) / (max_x - min_x) * width
-        y = (node.position[1] - min_y) / (max_y - min_y) * height
+        x = (node.position[0] - min_x) / (max_x - min_x) * scaled_width + padding_x
+        y = (node.position[1] - min_y) / (max_y - min_y) * scaled_height + padding_y
         node.position = (x, y)
 
 def read_map(name: str) -> (List[Road], List[Node]):
@@ -35,7 +41,7 @@ def read_map(name: str) -> (List[Road], List[Node]):
             nodes.append(Node(float(x), float(y)))
 
 
-        normalize_coordinates(nodes, 1200, 800)
+        normalize_coordinates(nodes, 1200, 800) # todo: remove hard coded values
 
         for line in f:
             n1, n2, *_ = line.split()
