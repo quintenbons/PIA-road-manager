@@ -14,6 +14,7 @@ from engine.movable.movable import Movable
 from engine.road import Road
 from engine.node import Node
 from typing import List
+import time
 
 def main():
     DEBUG_MODE = False
@@ -35,14 +36,16 @@ def main():
     running = True
 
 
-    for _ in range(300):
+    # Ajout de voitures
+    for _ in range(1):
         r = roads[randint(0, len(roads)-1)]
         m = Movable(1, 2, random(), random()*(r.road_len), 2)
         if r.add_movable(m, 0):
-            m.get_path(nodes[randint(0, 4)])
+            m.get_path(nodes[randint(0, len(nodes)-1)])
             ms.append(m)
     print("start")
 
+    # Boucle principale
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -52,6 +55,7 @@ def main():
                         step = 10
 
         if not DEBUG_MODE or step > 0:
+            # time.sleep(1/5*TIME)
             for _ in range(step or 1):  # Exécute 1 ou 10 étapes
                 for r in roads:
                     r.update()
@@ -62,11 +66,11 @@ def main():
 
                     if not m.update():
                         if m.road.add_movable(m, 0):
-                            m.get_path(nodes[randint(0, 4)])
+                            m.get_path(nodes[randint(0, len(nodes)-1)])
             step -= 1 if step > 0 else 0
 
         screen.fill((255, 255, 255))
-        draw_grid(screen, grid_size, screen.get_size())
+        # draw_grid(screen, grid_size, screen.get_size())
 
         for road in roads:
             draw_road(screen, road)

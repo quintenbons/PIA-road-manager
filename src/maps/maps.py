@@ -45,13 +45,6 @@ def read_map(name: str) -> (List[Road], List[Node]):
             #TODO change speedlimit and remove second line
             roads.append(Road(nodes[n1], nodes[n2], 8))
             roads.append(Road(nodes[n2], nodes[n1], 8))
-    print("before:")
-    for node in nodes:
-        print(node)
-    print("after:")
-    for node in nodes:
-        print(node)
-
     
     return roads, nodes
 

@@ -4,13 +4,13 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 
 ROAD_WIDTH = 5
-NODE_RADIUS = 8
+NODE_RADIUS = 6
 
 # Colors
 BACKGROUND_COLOR = (0, 0, 0)    # Black
 ROAD_COLOR = (150, 150, 150)    # Gray
 CAR_COLOR = (0, 0, 200) # Blue
-NODE_COLOR = (0, 200, 0)    # Green
+NODE_COLOR = (100, 150, 100)    # Green
 
 BLUE_CAR = None
 RED_CAR = None
