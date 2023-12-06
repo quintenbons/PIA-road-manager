@@ -116,6 +116,7 @@ while True:
         if generate_paths == 'y':
             path_filename = os.path.join(BUILD_DIR+filename, filename.split('.')[0] + "_paths.txt")
             os.system(f"./src/maps/cpp/dijkstra {file_path} > {path_filename}")
+            print("commande: ", f"./src/maps/cpp/dijkstra {file_path} > {path_filename}")
             print(f"Paths file generated: '{path_filename}'")
         break
 

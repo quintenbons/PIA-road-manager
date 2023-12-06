@@ -9,7 +9,7 @@ from graphics.init_pygame import pygame_init
 sys.path.append(os.path.dirname(__file__))
 
 from random import randint, random, seed
-from maps.maps import read_map, read_paths
+from maps.maps_functions import read_map, read_paths
 from engine.movable.movable import Movable
 from engine.road import Road
 from engine.node import Node

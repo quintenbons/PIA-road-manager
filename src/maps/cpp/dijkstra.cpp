@@ -134,7 +134,7 @@ int main(int argc, char *argv[]) {
         while(unusedNodes.size() > 0) {
             auto nodeRef = findMinDist(unusedNodes, distances);
             if(nodeRef == unusedNodes.end()) {
-                std::cout << "Erreur de format" << std::endl;
+                std::cout << "Format error: the graph is not fully connected" << std::endl;
                 return 0;
             }
             int n = *nodeRef;
