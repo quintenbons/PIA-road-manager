@@ -2,7 +2,7 @@
 import pygame
 import sys
 import os
-BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build')
+BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build/GUI/')
 
 # Initialisation de pygame
 pygame.init()
@@ -18,7 +18,7 @@ RED = (255, 0, 0)
 nodes = []
 links = []
 
-def save_to_file(nodes, links, filename="map.txt"):
+def save_to_file(nodes, links, filename):
     with open(filename, 'w') as file:
         # Écrire les nœuds
         for i, node in enumerate(nodes):
@@ -86,29 +86,41 @@ pygame.quit()
 
 
 while True:
-    should_save = input("Do you want to save the map? (yes/no) ").lower()
+    should_save = input("Do you want to save the map? (y/n) ").lower()
     
-    if should_save == 'yes':
+    if should_save == 'y':
         filename = input("Enter the filename to save: ")
-        file_path = os.path.join(BUILD_DIR, filename)
+        file_path = os.path.join(BUILD_DIR+filename, filename)
+
+        # Create the folder for this city if it doesn't exist, and if it does ask the user if he wants to overwrite it
+        if not os.path.exists(os.path.dirname(file_path)):
+            os.makedirs(os.path.dirname(file_path))
+        else:
+            overwrite = input(f"The folder '{file_path}' already exists. Do you want to overwrite it? (y/n) ").lower()
+            if overwrite != 'y':
+                continue
+            else:
+                os.remove(file_path)
         
         if os.path.exists(file_path):
-            overwrite = input(f"The file '{filename}' already exists. Do you want to overwrite it? (yes/no) ").lower()
-            if overwrite != 'yes':
+            overwrite = input(f"The file '{filename}' already exists. Do you want to overwrite it? (y/n) ").lower()
+            if overwrite != 'y':
                 continue
+            else:
+                exit()
         
         save_to_file(nodes, links, file_path)
         print(f"Map saved to '{filename}'")
 
-        generate_paths = input("Do you want to generate the corresponding paths file? (yes/no) ").lower()
-        if generate_paths == 'yes':
-            path_filename = os.path.join(BUILD_DIR, filename.split('.')[0] + "_paths.txt")
+        generate_paths = input("Do you want to generate the corresponding paths file? (y/n) ").lower()
+        if generate_paths == 'y':
+            path_filename = os.path.join(BUILD_DIR+filename, filename.split('.')[0] + "_paths.txt")
             os.system(f"./src/maps/cpp/dijkstra {file_path} > {path_filename}")
             print(f"Paths file generated: '{path_filename}'")
         break
 
-    elif should_save == 'no':
+    elif should_save == 'n':
         break
 
     else:
-        print("Please answer 'yes' or 'no'.")
+        print("Please answer 'y' or 'n'.")
