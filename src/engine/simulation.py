@@ -7,7 +7,7 @@ from engine.constants import TIME
 from graphics.draw import draw_movable, draw_node, draw_road, draw_grid
 from graphics.init_pygame import pygame_init
 from random import randint, random, seed
-from maps.maps import read_map, read_paths
+from maps.maps_functions import read_map, read_paths
 from engine.movable.movable import Movable
 from engine.road import Road
 from engine.node import Node

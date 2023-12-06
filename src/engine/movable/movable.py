@@ -216,7 +216,7 @@ class Movable(Nodable):
         self.speed = 0
 
     def get_path(self, arrival: Node):
-        from maps.maps import find_path
+        from maps.maps_functions import find_path
         self.path = find_path(self.road.end, arrival)
         assert(self.road.end == self.path.pop(-1))
 

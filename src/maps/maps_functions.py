@@ -75,11 +75,10 @@ def find_path(n1: Node, n2: Node) -> List[Node]:
     return path
 
 """
-I don't knows how to mark function as deprecated
-
-Don't use above functions as they are for test purpose only
+Deprecated function. It's our only one so no need to use a decorator, just print a warning
 """
 def calculatePath(nodes: List[Node]):
+    print("Warning: calculatePath is deprecated and used for testing purpose only, use read_paths instead")
     for node in nodes:
         P = []
         d = {n:inf for n in nodes}
