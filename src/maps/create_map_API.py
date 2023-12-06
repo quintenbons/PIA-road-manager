@@ -64,10 +64,9 @@ while True:
 
     if create_paths == "y":
         start = time.time()
-        path_filename = os.path.join(BUILD_DIR+city_name, city_name.split('.')[0] + "_paths.txt")
+        path_filename = os.path.join(BUILD_DIR+city_name, "paths.csv")
         os.system(f"./src/maps/cpp/dijkstra {file_path}/map.csv > {path_filename}")
         # print la commande
-        print(f"./src/maps/cpp/dijkstra {file_path} > {path_filename}")
         print(f"Paths file generated: '{path_filename}'")
         print("Path creation time : ", time.time() - start)
         break

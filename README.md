@@ -2,7 +2,40 @@
 
 ## Quick start
 
-`./src/main.py`
+Avant tout:
+  ```bash
+  cd src/maps/cpp && make all
+  ```
+
+#### Créer une map
+On a besoin de deux fichiers, une map et la liste des chemins correspondants.
+S'assurer d'être au root du repo.
+
+- Via l'API:
+  ```bash
+  python3 src/maps/create_map_API.py <Nom_de_la_ville>
+  ```
+  puis suivre les instructions. La map a utilisé sera stockée dans `src/maps/build/API/<Nom_de_la_ville>/map.csv` et les chemins dans `src/maps/build/API/<Nom_de_la_ville>/paths.csv`.
+
+- Via l'interface graphique:
+  ```bash
+  python3 src/maps/create_map_GUI.py 
+  ```
+  - On clic pour ajouter un node.
+  - On reste appuyer sur `Espace` tout en cliquant sur 2 nodes pour créer une route entre eux.
+  - On reste appuyer sur `d` tout en cliquant sur un node pour le supprimer ainsi que toutes les routes qui y sont liées.
+
+  La map a utilisé sera stockée dans `src/maps/build/GUI/<nom_choisi>/map.csv` et les chemins dans `src/maps/build/GUI/<nom_choisi>/paths.csv`.
+
+#### Lancer une simulation
+
+```bash
+  python3 src/main.py --nb_movables <int> --map_file src/maps/build/GUI/<nom>/map.csv 
+```
+
+- `--nb_movables`: Nombre de véhicules à placer
+- `--map_file`: Chemin vers le fichier de la map
+- `--paths_file`: Chemin vers le fichier des chemins, si non spécifié, on prendra le fichier `paths.csv` dans le même dossier que `map.csv`
 
 ## Structure
 

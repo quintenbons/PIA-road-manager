@@ -15,18 +15,11 @@ from typing import List
 import time
 
 class Simulation:
-    def __init__(self, map_file: str=None, paths_file: str=None,debug_mode: bool = False, grid_size: int = 50, nb_movables: int = 1):
+    def __init__(self, map_file: str, paths_file: str,debug_mode: bool = False, grid_size: int = 50, nb_movables: int = 1):
         self.debug_mode = debug_mode
         self.grid_size = grid_size
         self.nb_movables = nb_movables
         print("\n\n ---------------------------------- \n")
-        
-        if not map_file:
-            map_file = "src/maps/cpp/eybens_map.csv"
-            print("No map file specified, using default map: " + map_file)
-        if not paths_file:
-            paths_file = "src/maps/cpp/eybens_paths_roads.txt"
-            print("No paths file specified, using default paths: " + paths_file)
 
         self.roads, self.nodes = read_map(map_file)
         read_paths(self.nodes, paths_file)
