@@ -3,7 +3,6 @@ media/
 manim.log
 *.mp4
 *.gif
-*.png
 
 # Python artifacts
 __pycache__/
