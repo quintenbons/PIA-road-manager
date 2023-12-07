@@ -38,7 +38,7 @@ class Simulation:
     def add_movables(self, count: int = 1):
         for _ in range(count):
             r = self.roads[randint(0, len(self.roads) - 1)]
-            m = Movable(1, 2, random(), random() * (r.road_len), 2)
+            m = Movable(5, 2, random(), random() * (r.road_len), 2)
             if r.add_movable(m, 0):
                 m.get_path(self.nodes[randint(0, len(self.nodes) - 1)])
                 self.movables.append(m)
@@ -48,8 +48,9 @@ class Simulation:
         seed(0)
         self.add_movables(self.nb_movables)
         print("Start simulation \n ----------------------------------")
-
+        loop_timer = 0
         while self.running:
+            loop_timer += 1
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
@@ -64,9 +65,15 @@ class Simulation:
                     for n in self.nodes:
                         n.update(0)
                     for m in self.movables.copy():
+
                         if not m.update():
+                            # self.movables.remove(m)
+                            # m.pos = m.road.road_len - 5
+                            # m.pos = 0
                             if m.road.add_movable(m, 0):
-                                m.get_path(self.nodes[randint(0, len(self.nodes) - 1)])
+                                u = randint(0, len(self.nodes) - 1)
+                                # print(u)
+                                m.get_path(self.nodes[u])
                 step -= 1 if step > 0 else 0
 
             self.screen.fill((255, 255, 255))
@@ -80,7 +87,7 @@ class Simulation:
                 draw_movable(movable, self.screen)
 
             pygame.display.flip()
-            self.clock.tick(60)  # 60 FPS
+            self.clock.tick(30)  # 60 FPS
 
         pygame.quit()
 

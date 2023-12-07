@@ -81,9 +81,13 @@ class Movable(Nodable):
     def handle_first_movable(self):
         # check for end of road
         # check for movable inside the node
+        # TODO gérer le problème de si une voiture à une vitesse nulle ici
 
         future_pos, _ = self.next_position()
-
+        if self.pos == future_pos:
+            self.current_acceleration = self.acceleration
+        future_pos, _ = self.next_position()
+        
         dx = self.road.road_len - future_pos
         self.current_acceleration = max(0, self.current_acceleration)
 
@@ -103,7 +107,7 @@ class Movable(Nodable):
                 self.current_acceleration = min(self.acceleration, self.current_acceleration + da)
 
             #TODO add a way to check for other roads
-
+    
         
     def handle_node_collision(self, other: Movable):
         ortho = (self.node_dir[1], -self.node_dir[0])
@@ -152,7 +156,7 @@ class Movable(Nodable):
         #TODO handle going further road_len
         if self.pos >= self.road.road_len:
             if len(self.path) == 0:
-                self.pos = 0
+                self.pos = self.road.road_len
                 self.road.remove_movable(self)
                 self.tree_node = None
                 self.node = None
@@ -195,15 +199,20 @@ class Movable(Nodable):
 
         if self.pos >= self.node_len:
             self.pos = 0
-            self.node.movables.remove(self)
-            self.node = None
+            if not self.road.add_movable(self, 0):
+                self.pos = self.node_len
+            else:
+                self.node.movables.remove(self)
+                self.node = None
+
+            
+
 
     def update(self):
         if self.tree_node is None and self.node is None:
             return False
         if self.node is None and self.road:
-            self.update_road()
-            return True
+            return self.update_road()
         elif self.node:
             self.update_node()
             return True
