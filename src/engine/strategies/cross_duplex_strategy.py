@@ -1,0 +1,103 @@
+from ..traffic.traffic_light import TrafficLight
+from ..node import Node
+from typing import List
+from .strategy import Strategy
+import math
+
+class TrafficGroup:
+    traffic_lights: set[TrafficLight]
+    pos: tuple[float, float]
+
+    def __init__(self):
+        self.traffic_lights = set()
+        self.pos = (None, None)
+
+    def add_traffic_light(self, traffic_light: TrafficLight):
+        self.traffic_lights.add(traffic_light)
+        if self.pos is None:
+            self.pos = traffic_light.pos
+        else:
+            # This is wrong code, it should set the position to the center of all traffic lights, we need to discuss together to find the correct way to do it
+            self.pos = (0, 0)
+            x = 0
+            y = 0
+            for traffic_light in self.traffic_lights:
+                x += traffic_light.pos[0]
+                y += traffic_light.pos[1]
+            x /= len(self.traffic_lights)
+            y /= len(self.traffic_lights)
+            self.pos = (x, y)
+
+
+class CrossDuplexStrategy(Strategy):
+    traffic_lights_group: List[TrafficGroup]
+    node_pos: tuple[float, float]
+    opposit_degree_treshold :int= 15
+
+    # 
+    def __init__(self, node: Node):
+        super().__init__(node)
+
+        self.traffic_lights_group = []
+        self.node_pos = node.position
+
+        # print("--------- node pos -----------", self.node_pos)
+        # print("traffic lights")
+        # i = 0
+        # for traffic_light in self.trafficLights:
+        #     print(i, traffic_light.pos)
+        #     i += 1
+
+        for traffic_light in self.trafficLights:
+            self.associate_to_group(traffic_light)
+
+        # print("traffic lights group")
+        # i = 0
+        # for group in self.traffic_lights_group:
+        #     print(i, group.pos)
+        #     for traffic_light in group.traffic_lights:
+        #         print("    ", traffic_light.pos)
+        #     i += 1
+        # print("-------------------------------")
+
+    def associate_to_group(self, traffic_light: TrafficLight):
+        for group in self.traffic_lights_group:
+            if self.is_opposit(self.node_pos, traffic_light.road_in.pos_end, group.pos):
+                group.add_traffic_light(traffic_light)
+                return
+        group = TrafficGroup()
+        group.add_traffic_light(traffic_light)
+        self.traffic_lights_group.append(group)
+
+    def is_opposit(self, center:tuple[float, float], a:tuple[float, float], b:tuple[float, float]) -> bool:
+        return abs(self.get_angle(center, a) % 180 - self.get_angle(center, b) % 180) < self.opposit_degree_treshold
+    
+    def get_angle(self, center:tuple[float, float], point:tuple[float, float]) -> float:
+        x, y = point[0] - center[0], point[1] - center[1]
+        angle_rad = math.atan2(y, x)
+        angle_deg = math.degrees(angle_rad)
+        return angle_deg
+    
+    def set_corridor(self, index: int):
+        if index < len(self.trafficLights):
+            self.corridor = self.trafficLights[index]
+            self.corridor.set_flag(True, 0)
+            for i in range(len(self.trafficLights)):
+                if i != index:
+                    self.otherTrafficLights.append(self.trafficLights[i])
+            if len(self.otherTrafficLights) > 0:
+                self.otherTrafficLights[0].set_flag(True, 0)
+            self.stateCount = min(len(self.otherTrafficLights), 1)
+        else:
+            raise IndexError("Index out of range")
+
+
+    def next(self):
+        if self.otherTrafficLights is None:
+            raise Exception("Corridor not set")
+        super().next()
+        for trafficLight in self.otherTrafficLights:
+            trafficLight.set_flag(False, 0)
+        if len(self.otherTrafficLights) > 0:
+            self.otherTrafficLights[self.currentState].set_flag(True, 0)     
+            
