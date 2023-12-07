@@ -3,6 +3,9 @@ import sys
 from math import inf
 
 from typing import List
+from engine.strategies.cross_duplex_strategy import CrossDuplexStrategy
+
+from engine.traffic.traffic_light import TrafficLight
 sys.path.append('../engine')
 
 from engine.road import Road
@@ -28,8 +31,6 @@ def normalize_coordinates(nodes, width, height):
 def read_map(name: str) -> (List[Road], List[Node]):
 
     with open(name, mode='r', encoding='utf-8') as f:
-
-        
         nodes = []
         roads = []
 
@@ -39,7 +40,6 @@ def read_map(name: str) -> (List[Road], List[Node]):
                 break
             x, y, *_ = line.split()
             nodes.append(Node(float(x), float(y)))
-
 
         normalize_coordinates(nodes, 1200, 800) # todo: remove hard coded values
 
@@ -68,6 +68,16 @@ def read_paths(nodes: List[Node], name: str):
                 l.pop(-1)
                 for n, previous in map(lambda x: x.split(':'), l):
                     nodes[currentNode].paths[nodes[int(n)]] = nodes[int(previous)]
+
+def set_traffic_lights(nodes: List[Node]):
+    for node in nodes:
+        for road in node.road_in:
+            trafficLight = TrafficLight(road, node.road_out)
+            node.controllers.append(trafficLight)
+
+def set_strategies(nodes: List[Node]):
+    for node in nodes:
+        CrossDuplexStrategy(node)
 
 def find_path(n1: Node, n2: Node) -> List[Node]:
     paths = n1.paths

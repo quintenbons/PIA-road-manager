@@ -6,6 +6,7 @@ from ..road import Road
 class FlowController:
     vehicle_queue: List[Car] = []
     hiker_queue: List[Hiker] = []
+    pos = tuple[float, float]
     road_in: Road = None
     road_out: List[Road] = []
 

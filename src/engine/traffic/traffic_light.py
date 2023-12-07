@@ -10,6 +10,7 @@ class TrafficLight(FlowController):
         self.crosswalk = crosswalk
         self.road_in = road_in
         self.road_out = road_out
+        self.pos = road_in.pos_end
 
         for road in self.road_out:
             self.flags.append(True)
