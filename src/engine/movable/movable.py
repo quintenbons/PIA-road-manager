@@ -72,9 +72,9 @@ class Movable(Nodable):
             pos = TIME*TIME*self.current_acceleration/2 + self.speed*TIME + self.pos
             speed = sp
         assert(speed <= self.road.speedLimit)
-        #TODO remove : debug purpose
-        if self.road.block_traffic():
-            assert(pos <= self.road.road_len)
+        # #TODO remove : debug purpose
+        # if self.road.block_traffic:
+            # assert(pos <= self.road.road_len)
 
         return pos, speed
 
@@ -91,7 +91,7 @@ class Movable(Nodable):
         dx = self.road.road_len - future_pos
         self.current_acceleration = max(0, self.current_acceleration)
 
-        if self.road.block_traffic():
+        if self.road.block_traffic:
             da = 1.75*dx/TIME/TIME if dx > 0 else  2.5*dx/TIME/TIME
             self.current_acceleration = min(self.acceleration, self.current_acceleration + da)
             return

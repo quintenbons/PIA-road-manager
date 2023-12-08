@@ -60,6 +60,8 @@ class CrossDuplexStrategy(Strategy):
         #     i += 1
         # print("-------------------------------")
 
+        self.stateCount = len(self.traffic_lights_group)
+
     def associate_to_group(self, traffic_light: TrafficLight):
         for group in self.traffic_lights_group:
             if self.is_opposit(self.node_pos, traffic_light.road_in.pos_end, group.pos):
@@ -78,26 +80,13 @@ class CrossDuplexStrategy(Strategy):
         angle_deg = math.degrees(angle_rad)
         return angle_deg
     
-    def set_corridor(self, index: int):
-        if index < len(self.trafficLights):
-            self.corridor = self.trafficLights[index]
-            self.corridor.set_flag(True, 0)
-            for i in range(len(self.trafficLights)):
-                if i != index:
-                    self.otherTrafficLights.append(self.trafficLights[i])
-            if len(self.otherTrafficLights) > 0:
-                self.otherTrafficLights[0].set_flag(True, 0)
-            self.stateCount = min(len(self.otherTrafficLights), 1)
-        else:
-            raise IndexError("Index out of range")
-
-
     def next(self):
-        if self.otherTrafficLights is None:
-            raise Exception("Corridor not set")
         super().next()
-        for trafficLight in self.otherTrafficLights:
-            trafficLight.set_flag(False, 0)
-        if len(self.otherTrafficLights) > 0:
-            self.otherTrafficLights[self.currentState].set_flag(True, 0)     
-            
+        activeGroup = self.traffic_lights_group[self.currentState]
+        for traffic_light in activeGroup.traffic_lights:
+            traffic_light.set_flag(True)
+
+        for i in range(len(self.traffic_lights_group)):
+            if i != self.currentState:
+                for traffic_light in self.traffic_lights_group[i].traffic_lights:
+                    traffic_light.set_flag(False)

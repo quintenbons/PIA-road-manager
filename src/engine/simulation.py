@@ -24,7 +24,7 @@ class Simulation:
         self.roads, self.nodes = read_map(map_file)
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
-        set_strategies(self.nodes)
+        self.strategies = set_strategies(self.nodes)
 
         if self.debug_mode:
             print("Debug mode enabled")
@@ -63,6 +63,8 @@ class Simulation:
                 for _ in range(step or 1):
                     for r in self.roads:
                         r.update()
+                    for s in self.strategies:
+                        s.update(loop_timer)
                     for n in self.nodes:
                         n.update(0)
                     for m in self.movables.copy():

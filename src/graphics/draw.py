@@ -6,9 +6,6 @@ from engine.node import Node
 from engine.movable.movable import Movable
 from . import constants
 
-
-
-
 def draw_car(screen, coord):
     x, y = coord
     car_width, car_height = constants.BLUE_CAR.get_size()
@@ -17,7 +14,10 @@ def draw_car(screen, coord):
     screen.blit(constants.BLUE_CAR, (centered_x, centered_y))
 
 def draw_road(screen, road: Road):
-    pygame.draw.line(screen, ROAD_COLOR, road.pos_start, road.pos_end, ROAD_WIDTH)
+    if road.block_traffic:
+        pygame.draw.line(screen, CLOSED_ROAD_COLOR, road.pos_start, road.pos_end, ROAD_WIDTH)
+    else:
+        pygame.draw.line(screen, ROAD_COLOR, road.pos_start, road.pos_end, ROAD_WIDTH)
 
 def draw_node(screen, node:Node):
     pygame.draw.circle(screen, NODE_COLOR, node.position, NODE_RADIUS)

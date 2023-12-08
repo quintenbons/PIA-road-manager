@@ -4,6 +4,9 @@ from math import inf
 
 from typing import List
 from engine.strategies.cross_duplex_strategy import CrossDuplexStrategy
+from engine.strategies.open_corridor_strategy import OpenCorridorStrategy
+from engine.strategies.open_strategy import OpenStrategy
+from engine.strategies.piece_of_cake_strategy import PieceOfCakeStrategy
 
 from engine.traffic.traffic_light import TrafficLight
 sys.path.append('../engine')
@@ -76,8 +79,11 @@ def set_traffic_lights(nodes: List[Node]):
             node.controllers.append(trafficLight)
 
 def set_strategies(nodes: List[Node]):
+    strategies = []
     for node in nodes:
-        CrossDuplexStrategy(node)
+        strategy = CrossDuplexStrategy(node)
+        strategies.append(strategy)
+    return strategies
 
 def find_path(n1: Node, n2: Node) -> List[Node]:
     paths = n1.paths

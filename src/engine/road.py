@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 rid = 0
 # @dataclass
 
-
 class Road:
     start: Node
     end: Node
@@ -23,6 +22,8 @@ class Road:
     bidirectional: bool = True
     length: float
     speedLimit: float = 50
+
+    block_traffic: bool = False
 
     _id: int
     _numberOfLane: int = 1
@@ -97,10 +98,6 @@ class Road:
 
     def get_length(self):
         return self.length
-
-    def block_traffic(self):
-        # end if locked
-        return False
 
     def __str__(self) -> str:
         return f'{{"start": {self.start._id}, "end": {self.end._id}, "length": {self.length}, "bidirectional": "{self.bidirectional}", "speedLimit": {self.speedLimit}}}'
