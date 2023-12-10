@@ -1,7 +1,7 @@
 from engine.constants import TIME
+from engine.traffic.flow_controller import FlowController
 from ..traffic.traffic_light import TrafficLight
 from typing import List
-from ..node import Node
 
 class Strategy:
     trafficLights: List[TrafficLight]
@@ -11,9 +11,9 @@ class Strategy:
     last_time: int = 0
     is_initialized: bool = False
 
-    def __init__(self, node:Node):
+    def __init__(self, controllers:List[FlowController], cycles:List[int]):
         self.trafficLights = []
-        for trafficLight in node.controllers:
+        for trafficLight in controllers:
             if isinstance(trafficLight, TrafficLight):
                 self.trafficLights.append(trafficLight)
 

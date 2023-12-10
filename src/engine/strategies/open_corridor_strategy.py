@@ -1,5 +1,4 @@
 from ..traffic.traffic_light import TrafficLight
-from ..node import Node
 from typing import List
 from .strategy import Strategy
 
@@ -7,8 +6,8 @@ class OpenCorridorStrategy(Strategy):
     corridor: TrafficLight = None
     otherTrafficLights: List[TrafficLight] = []
 
-    def __init__(self, node: Node):
-        super().__init__(node)
+    def __init__(self, controllers:List[TrafficLight], cycles:List[int]):
+        super().__init__(controllers, cycles)
 
     def set_corridor(self, index: int):
         if index < len(self.trafficLights):

@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 import sys
 import os
+
+from engine.strategies.strategies_manager import StrategyManager
 sys.path.append(os.path.dirname(__file__))
 import pygame
 from engine.constants import TIME
@@ -15,16 +17,20 @@ from typing import List
 import time
 
 class Simulation:
+    strategy_manager: StrategyManager
+
     def __init__(self, map_file: str, paths_file: str,debug_mode: bool = False, grid_size: int = 50, nb_movables: int = 1):
         self.debug_mode = debug_mode
         self.grid_size = grid_size
         self.nb_movables = nb_movables
         print("\n\n ---------------------------------- \n")
 
+        self.strategy_manager = StrategyManager()
+
         self.roads, self.nodes = read_map(map_file)
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
-        self.strategies = set_strategies(self.nodes)
+        set_strategies(self.nodes, self.strategy_manager)
 
         if self.debug_mode:
             print("Debug mode enabled")
@@ -63,10 +69,8 @@ class Simulation:
                 for _ in range(step or 1):
                     for r in self.roads:
                         r.update()
-                    for s in self.strategies:
-                        s.update(loop_timer)
                     for n in self.nodes:
-                        n.update(0)
+                        n.update(loop_timer)
                     for m in self.movables.copy():
 
                         if not m.update():

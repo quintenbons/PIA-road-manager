@@ -1,5 +1,4 @@
 from ..traffic.traffic_light import TrafficLight
-from ..node import Node
 from typing import List
 from .strategy import Strategy
 import math
@@ -35,11 +34,11 @@ class CrossDuplexStrategy(Strategy):
     opposit_degree_treshold :int= 15
 
     # 
-    def __init__(self, node: Node):
-        super().__init__(node)
+    def __init__(self, controllers:List[TrafficLight], position: tuple[float, float], cycles:List[int]):
+        super().__init__(controllers, cycles)
 
         self.traffic_lights_group = []
-        self.node_pos = node.position
+        self.node_pos = position
 
         # print("--------- node pos -----------", self.node_pos)
         # print("traffic lights")
