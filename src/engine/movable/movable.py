@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import sys
+import random
+import pygame
 from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
 
 from ..utils import getLength, vecteur_norm, scalaire
 
 from ..constants import TIME
+from graphics.constants import ROAD_WIDTH
 
 sys.path.append('../maps')
 
@@ -48,6 +51,10 @@ class Movable(Nodable):
         self.latency = latency
         self.pos = pos
         self.size = size
+
+        from graphics.constants import BLUE_CAR, RED_CAR, GREEN_CAR     # TODO fix that
+        self.car_asset = random.choice([BLUE_CAR])
+        self.width, self.height = self.car_asset.get_size()
 
         global mid
         self._id = mid
@@ -261,6 +268,13 @@ class Movable(Nodable):
         y = pos_start[1] + pos*uy
 
         return x, y
+    
+    def get_rect(self):
+        x, y = self.to_coord_xy()
+        centered_x = x
+        centered_y = y
+        return pygame.Rect(centered_x, centered_y, self.width, self.height)
+
 
     def __str__(self):
         return f'{{"pos": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "road": {self.road}}}'

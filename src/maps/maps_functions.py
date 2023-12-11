@@ -10,6 +10,8 @@ from engine.strategies.piece_of_cake_strategy import PieceOfCakeStrategy
 from engine.strategies.strategies_manager import StrategyManager
 from engine.strategies.strategy_mutator import StrategyTypes
 
+from graphics.constants import SCREEN_WIDTH, SCREEN_HEIGHT
+
 from engine.traffic.traffic_light import TrafficLight
 sys.path.append('../engine')
 
@@ -46,7 +48,7 @@ def read_map(name: str) -> (List[Road], List[Node]):
             x, y, *_ = line.split()
             nodes.append(Node(float(x), float(y)))
 
-        normalize_coordinates(nodes, 1200, 800) # todo: remove hard coded values
+        normalize_coordinates(nodes, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         for line in f:
             n1, n2, *_ = line.split()

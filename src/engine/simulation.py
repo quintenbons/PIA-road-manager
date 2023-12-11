@@ -6,7 +6,7 @@ from engine.strategies.strategies_manager import StrategyManager
 sys.path.append(os.path.dirname(__file__))
 import pygame
 from engine.constants import TIME
-from graphics.draw import draw_movable, draw_node, draw_road, draw_grid
+from graphics.draw import draw_movable, draw_node, draw_road, create_grid_surface
 from graphics.init_pygame import pygame_init
 from random import randint, random, seed
 from maps.maps_functions import read_map, read_paths, set_strategies, set_traffic_lights
@@ -19,26 +19,31 @@ import time
 class Simulation:
     strategy_manager: StrategyManager
 
-    def __init__(self, map_file: str, paths_file: str,debug_mode: bool = False, grid_size: int = 50, nb_movables: int = 1):
+    def __init__(self, map_file: str, paths_file: str,debug_mode: bool = False, nb_movables: int = 1):
         self.debug_mode = debug_mode
-        self.grid_size = grid_size
         self.nb_movables = nb_movables
         print("\n\n ---------------------------------- \n")
 
         self.strategy_manager = StrategyManager()
 
+        self.roads: List[Road]
+        self.nodes: List[Node]
         self.roads, self.nodes = read_map(map_file)
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
         set_strategies(self.nodes, self.strategy_manager)
 
+        
+        self.movables: List[Movable] = []
+        self.screen = pygame_init()
+
+        pygame.display.set_caption("Simulation de réseau routier")
         if self.debug_mode:
             print("Debug mode enabled")
-            print("press space to advance 10 steps")
-        
-        self.movables = []
-        self.screen = pygame_init()
-        pygame.display.set_caption("Simulation de réseau routier")
+            print("press Space to advance 10 steps")
+            self.grid_surface = create_grid_surface(self.screen)
+
+
         self.clock = pygame.time.Clock()
         self.running = True
 
@@ -49,6 +54,20 @@ class Simulation:
             if r.add_movable(m, 0):
                 m.get_path(self.nodes[randint(0, len(self.nodes) - 1)])
                 self.movables.append(m)
+
+    def get_clicked_movable(self, pos: tuple[int, int]) -> Movable:
+        for m in self.movables:
+            if m.get_rect().collidepoint(pos):
+                return m
+        return None
+
+    def get_clicked_node(self, pos: tuple[int, int]) -> Node:
+        for node in self.nodes:
+            print(node.position)
+            if node.get_rect().collidepoint(pos):
+                return node
+        return None
+
 
     def run(self):
         step = 0
@@ -64,6 +83,16 @@ class Simulation:
                 elif event.type == pygame.KEYDOWN and self.debug_mode:
                     if event.key == pygame.K_SPACE:
                         step = 10
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        pos = pygame.mouse.get_pos()
+                        clicked_movable = self.get_clicked_movable(pos)
+                        if clicked_movable and self.debug_mode:
+                            print("Clicked on car: ", clicked_movable)
+                            break
+                        clicked_node = self.get_clicked_node(pos)
+                        if clicked_node:
+                            print("Clicked on node: ", clicked_node)
 
             if not self.debug_mode or step > 0:
                 for _ in range(step or 1):
@@ -84,8 +113,8 @@ class Simulation:
                 step -= 1 if step > 0 else 0
 
             self.screen.fill((255, 255, 255))
-            # if self.debug_mode:
-            #     draw_grid(self.roads, self.nodes, self.grid_size)
+            if self.debug_mode:
+                self.screen.blit(self.grid_surface, (0, 0)) 
             for road in self.roads:
                 draw_road(self.screen, road)
             for node in self.nodes:
@@ -94,7 +123,7 @@ class Simulation:
                 draw_movable(movable, self.screen)
 
             pygame.display.flip()
-            self.clock.tick(30)  # 60 FPS
+            self.clock.tick(30)  # FPS
 
         pygame.quit()
 
