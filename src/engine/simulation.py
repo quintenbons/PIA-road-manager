@@ -26,6 +26,8 @@ class Simulation:
 
         self.strategy_manager = StrategyManager()
 
+        self.roads: List[Road]
+        self.nodes: List[Node]
         self.roads, self.nodes = read_map(map_file)
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
@@ -59,6 +61,14 @@ class Simulation:
                 return m
         return None
 
+    def get_clicked_node(self, pos: tuple[int, int]) -> Node:
+        for node in self.nodes:
+            print(node.position)
+            if node.get_rect().collidepoint(pos):
+                return node
+        return None
+
+
     def run(self):
         step = 0
         seed(0)
@@ -73,13 +83,16 @@ class Simulation:
                 elif event.type == pygame.KEYDOWN and self.debug_mode:
                     if event.key == pygame.K_SPACE:
                         step = 10
-                elif event.type == pygame.MOUSEBUTTONDOWN and self.debug_mode:
+                elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         pos = pygame.mouse.get_pos()
                         clicked_movable = self.get_clicked_movable(pos)
-                        if clicked_movable:
+                        if clicked_movable and self.debug_mode:
                             print("Clicked on car: ", clicked_movable)
-                            self.selected_movable = clicked_movable
+                            break
+                        clicked_node = self.get_clicked_node(pos)
+                        if clicked_node:
+                            print("Clicked on node: ", clicked_node)
 
             if not self.debug_mode or step > 0:
                 for _ in range(step or 1):
