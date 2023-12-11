@@ -160,7 +160,7 @@ class Movable(Nodable):
     def update_road(self) -> None:
         self.pos, self.speed = self.next_position()
         #TODO handle going further road_len
-        if self.pos >= self.road.road_len:
+        if self.pos >= self.road.road_len and not self.road.block_traffic:
             if len(self.path) == 0:
                 self.pos = self.road.road_len
                 self.road.remove_movable(self)

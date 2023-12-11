@@ -7,7 +7,10 @@ class OpenCorridorStrategy(Strategy):
     otherTrafficLights: List[TrafficLight] = []
 
     def __init__(self, controllers:List[TrafficLight], cycles:List[int]):
+        self.otherTrafficLights = []
         super().__init__(controllers, cycles)
+        corridor_index = cycles.index(None)
+        self.set_corridor(corridor_index)
 
     def set_corridor(self, index: int):
         if index < len(self.trafficLights):

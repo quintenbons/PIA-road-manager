@@ -32,7 +32,6 @@ class Simulation:
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
         set_strategies(self.nodes, self.strategy_manager)
-
         
         self.movables: List[Movable] = []
         self.screen = pygame_init()
@@ -42,7 +41,6 @@ class Simulation:
             print("Debug mode enabled")
             print("press Space to advance 10 steps")
             self.grid_surface = create_grid_surface(self.screen)
-
 
         self.clock = pygame.time.Clock()
         self.running = True
