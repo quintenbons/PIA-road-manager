@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import sys
-import random
 from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
 

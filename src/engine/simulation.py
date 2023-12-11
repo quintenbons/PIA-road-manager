@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import sys
 import os
+from engine.constants import GENERATION_SEGMENT_DUARTION, TIME
 
 from engine.strategies.strategies_manager import StrategyManager
 sys.path.append(os.path.dirname(__file__))
-from random import randint, random, seed
+import random
 from maps.maps_functions import read_map, read_paths, set_strategies, set_traffic_lights
 from engine.movable.movable import Movable
 from engine.road import Road
@@ -30,14 +31,17 @@ class Simulation:
 
     def add_movables(self, count: int = 1):
         for _ in range(count):
-            r = self.roads[randint(0, len(self.roads) - 1)]
-            m = Movable(5, 2, random(), random() * (r.road_len), 2)
+            r = self.roads[random.randint(0, len(self.roads) - 1)]
+            m = Movable(5, 2, random.random(), random.random() * (r.road_len), 2)
             if r.add_movable(m, 0):
-                m.get_path(self.nodes[randint(0, len(self.nodes) - 1)])
+                m.get_path(self.nodes[random.randint(0, len(self.nodes) - 1)])
                 self.movables.append(m)
 
-    def run(self):
-        seed(0)
+    def run(self, sim_duration: int = GENERATION_SEGMENT_DUARTION):
+        start_tick = self.current_tick
+
+        while (self.current_tick - start_tick) * TIME < sim_duration:
+            self.run_tick()
 
     def run_tick(self):
         for r in self.roads:
@@ -51,9 +55,11 @@ class Simulation:
                 # m.pos = m.road.road_len - 5
                 # m.pos = 0
                 if m.road.add_movable(m, 0):
-                    u = randint(0, len(self.nodes) - 1)
+                    u = random.randint(0, len(self.nodes) - 1)
                     # print(u)
                     m.get_path(self.nodes[u])
+
+        self.current_tick += 1
 
 if __name__ == "__main__":
     simulation = Simulation()

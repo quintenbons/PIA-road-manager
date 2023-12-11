@@ -25,6 +25,7 @@ class Road:
 
     block_traffic: bool = False
 
+    ai_flow_count: List[int] # road in, road out
     _id: int
     _numberOfLane: int = 1
     lanes: List[BinarySearchTree[Movable]] = None
@@ -59,6 +60,7 @@ class Road:
         self.start.add_road_out(self)
         self.end.add_road_in(self)
         self.lanes = [BinarySearchTree() for _ in range(self._numberOfLane)]
+        self.ai_flow_count = [0, 0]
         global rid
         self._id = rid
         rid += 1
@@ -88,6 +90,7 @@ class Road:
     def add_movable(self, movable: Movable, lane: int):
         assert(movable.tree_node is None)
         if self.lanes[lane].insert(movable):
+            self.ai_flow_count[0] += 1
             movable.set_road(self)
             return True
         # print("Can't add movable")
