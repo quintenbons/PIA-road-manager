@@ -60,7 +60,6 @@ class PygameDisplay:
                             print("Clicked on node: ", clicked_node)
 
             if not self.debug_mode:
-                print("Running simulation")
                 self.simulation.run_tick()
 
             self.screen.fill((255, 255, 255))
