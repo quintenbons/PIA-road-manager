@@ -15,8 +15,7 @@ class Simulation:
     strategy_manager: StrategyManager
     current_tick: int = 0
 
-    def __init__(self, map_file: str, paths_file: str,debug_mode: bool = False):
-        self.debug_mode = debug_mode
+    def __init__(self, map_file: str, paths_file: str):
         print("\n\n ---------------------------------- \n")
 
         self.strategy_manager = StrategyManager()
@@ -57,5 +56,5 @@ class Simulation:
                     m.get_path(self.nodes[u])
 
 if __name__ == "__main__":
-    simulation = Simulation(debug_mode=True)
+    simulation = Simulation()
     simulation.run()

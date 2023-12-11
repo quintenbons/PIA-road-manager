@@ -3,7 +3,7 @@ import pygame
 SCREEN_WIDTH = 1200
 SCREEN_HEIGHT = 800
 
-ROAD_WIDTH = 15
+ROAD_WIDTH = 2
 NODE_RADIUS = 11
 
 # Colors

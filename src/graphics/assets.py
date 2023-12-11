@@ -28,7 +28,6 @@ class AssetManager:
         self.car_assets = list(map(load_resource, [BLUE_CAR, RED_CAR, GREEN_CAR]))
 
     def get_car_asset(self, car: Movable) -> pygame.Surface:
-        print("car assets", self.car_assets)
         if not car._id in self.cars:
             car_asset = self.car_assets[car._id % len(self.car_assets)]
             self.cars[car._id] = car_asset

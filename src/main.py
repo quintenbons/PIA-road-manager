@@ -16,9 +16,9 @@ def main():
         parent_dir = os.path.dirname(args.map_file)
         args.paths_file = os.path.join(parent_dir, "paths.csv")
 
-    simulation = Simulation(debug_mode=args.debug, map_file=args.map_file, paths_file=args.paths_file)
+    simulation = Simulation(map_file=args.map_file, paths_file=args.paths_file)
     simulation.add_movables(args.nb_movables)
-    display = PygameDisplay(simulation)
+    display = PygameDisplay(simulation, debug_mode=args.debug)
     display.run()
 
 if __name__ == "__main__":

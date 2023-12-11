@@ -6,6 +6,7 @@ import pygame
 import random
 from engine.simulation import Simulation
 from graphics.assets import AssetManager
+from graphics.utils import get_clicked_movable, get_clicked_node
 
 from graphics.init_pygame import pygame_init
 from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road
@@ -29,13 +30,13 @@ class PygameDisplay:
         if self.debug_mode:
             print("Debug mode enabled")
             print("press Space to advance 10 steps")
-            self.grid_surface = create_grid_surface(self.screen)
 
         self.clock = pygame.time.Clock()
 
     def run(self):
         print("Start simulation \n ----------------------------------")
         self.screen = pygame_init()
+        self.grid_surface = create_grid_surface(self.screen)
         running = True
 
         while running:
@@ -45,20 +46,22 @@ class PygameDisplay:
                     break
                 elif event.type == pygame.KEYDOWN and self.debug_mode:
                     if event.key == pygame.K_SPACE:
-                        step = 10
+                        for _ in range(10):
+                            self.simulation.run_tick()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         pos = pygame.mouse.get_pos()
-                        clicked_movable = self.get_clicked_movable(pos)
+                        clicked_movable = get_clicked_movable(movables=self.simulation.movables, pos=pos)
                         if clicked_movable and self.debug_mode:
                             print("Clicked on car: ", clicked_movable)
                             break
-                        clicked_node = self.get_clicked_node(pos)
+                        clicked_node = get_clicked_node(nodes=self.simulation.nodes, pos=pos)
                         if clicked_node:
                             print("Clicked on node: ", clicked_node)
 
-            # if not self.debug_mode:
-            self.simulation.run_tick()
+            if not self.debug_mode:
+                print("Running simulation")
+                self.simulation.run_tick()
 
             self.screen.fill((255, 255, 255))
             if self.debug_mode:

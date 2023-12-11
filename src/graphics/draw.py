@@ -3,12 +3,15 @@ from .constants import *
 from engine.road import Road
 from engine.node import Node
 from engine.movable.movable import Movable
+from graphics.assets import NODE_RADIUS
 
 def draw_car(movable: Movable, screen: pygame.Surface, asset: pygame.Surface):
     x, y = movable.to_coord_xy()
     centered_x = x
     centered_y = y
-    screen.blit(asset, (centered_x, centered_y))
+    pygame.draw.circle(screen, CAR_COLOR, (centered_x, centered_y), 4)
+    # draw also the rect
+    pygame.draw.rect(screen, (255, 0, 0), get_rect(movable), 1)
 
 def draw_road(screen, road: Road):
     if road.block_traffic:
@@ -27,9 +30,9 @@ def get_rect(obj):
         return pygame.Rect(obj.position[0] - NODE_RADIUS, obj.position[1] - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2)
     elif isinstance(obj, Movable):
         x, y = obj.to_coord_xy()
-        centered_x = x
-        centered_y = y
-        return pygame.Rect(centered_x, centered_y, obj.width, obj.height)
+        centered_x = x  - NODE_RADIUS
+        centered_y = y  - NODE_RADIUS
+        return pygame.Rect(centered_x, centered_y, NODE_RADIUS * 2, NODE_RADIUS * 2)
 
 def create_grid_surface(screen):
     grid_size = 50
