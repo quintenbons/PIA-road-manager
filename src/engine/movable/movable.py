@@ -8,7 +8,6 @@ from engine.tree import Nodable, TreeNode
 from ..utils import getLength, vecteur_norm, scalaire
 
 from ..constants import TIME
-from graphics.constants import ROAD_WIDTH
 
 sys.path.append('../maps')
 
@@ -50,10 +49,6 @@ class Movable(Nodable):
         self.latency = latency
         self.pos = pos
         self.size = size
-
-        from graphics.constants import BLUE_CAR, RED_CAR, GREEN_CAR     # TODO fix that
-        self.car_asset = random.choice([BLUE_CAR])
-        self.width, self.height = self.car_asset.get_size()
 
         global mid
         self._id = mid

@@ -1,5 +1,4 @@
 from __future__ import annotations
-from graphics.constants import NODE_RADIUS
 from engine.strategies.strategy import Strategy
 
 from engine.strategies.strategy_mutator import StrategyTypes

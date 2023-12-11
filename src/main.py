@@ -2,6 +2,7 @@
 import argparse
 import os
 from engine.simulation import Simulation
+from graphics.display import PygameDisplay
 
 def main():
     parser = argparse.ArgumentParser(description='Lancez une simulation de réseau routier.')
@@ -15,9 +16,10 @@ def main():
         parent_dir = os.path.dirname(args.map_file)
         args.paths_file = os.path.join(parent_dir, "paths.csv")
 
-
-    simulation = Simulation(debug_mode=args.debug, nb_movables=args.nb_movables, map_file=args.map_file, paths_file=args.paths_file)
-    simulation.run()
+    simulation = Simulation(debug_mode=args.debug, map_file=args.map_file, paths_file=args.paths_file)
+    simulation.add_movables(args.nb_movables)
+    display = PygameDisplay(simulation)
+    display.run()
 
 if __name__ == "__main__":
     main()

@@ -1,15 +1,14 @@
 import pygame
 from .constants import *
 from engine.road import Road
-from engine.movable.car import Car
 from engine.node import Node
 from engine.movable.movable import Movable
 
-def draw_car(movable: Movable, screen):
+def draw_car(movable: Movable, screen: pygame.Surface, asset: pygame.Surface):
     x, y = movable.to_coord_xy()
     centered_x = x
     centered_y = y
-    screen.blit(movable.car_asset, (centered_x, centered_y))
+    screen.blit(asset, (centered_x, centered_y))
 
 def draw_road(screen, road: Road):
     if road.block_traffic:
@@ -20,8 +19,8 @@ def draw_road(screen, road: Road):
 def draw_node(screen, node:Node):
     pygame.draw.circle(screen, NODE_COLOR, node.position, NODE_RADIUS)
 
-def draw_movable(movable: Movable, screen):
-    draw_car(movable, screen)
+def draw_movable(movable: Movable, screen, asset: pygame.Surface):
+    draw_car(movable, screen, asset)
 
 def get_rect(obj):
     if isinstance(obj, Node):
