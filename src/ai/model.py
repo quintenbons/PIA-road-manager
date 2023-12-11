@@ -3,10 +3,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
-
-INPUT_DIM = 32
-HIDDEN_DIM = 64
-OUTPUT_DIM = 5 # strategies
+from ai.model_constants import *
 
 class CrossRoadModel(nn.Module):
     def __init__(self):
