@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 import time
 from tqdm import tqdm
 from engine.constants import GENERATION_SEGMENT_DUARTION
+import random
 
 from engine.node import Node
 from engine.simulation import Simulation
@@ -43,24 +44,26 @@ def entry_from_node(node: Node, tqdm_disable=True):
             break
 
         if num < len(node.road_in):
-            tensor[num * 2] = node.road_in[num].ai_flow_count[0]
+            tensor[num * 2] = node.road_in[num].ai_flow_count[1]
         if num < len(node.road_out):
-            tensor[num * 2 + 1] = node.road_out[num].ai_flow_count[1]
+            tensor[num * 2 + 1] = node.road_out[num].ai_flow_count[0]
     return tensor
 
 def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
     sim_seed = int(time.time())
     map_file = "src/maps/build/GUI/Star/map.csv"
     paths_file = "src/maps/build/GUI/Star/paths.csv"
+    central_node = 1
 
     batch = []
     sim_seeds = []
 
     for _ in tqdm(range(size), disable=tqdm_disable):
-        simulation = Simulation(debug_mode=False, nb_movables=15, map_file=map_file, paths_file=paths_file)
-        simulation.run(nb_seconds=GENERATION_SEGMENT_DUARTION, sim_seed=sim_seed)
+        random.seed(sim_seed)
+        simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
+        simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
         sim_seeds.append(sim_seed)
-        batch.append(entry_from_node(simulation.nodes[0]))
+        batch.append(entry_from_node(simulation.nodes[central_node]))
         sim_seed += 1
 
     return torch.stack(batch), torch.tensor([1]), torch.tensor(sim_seeds)
