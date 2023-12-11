@@ -34,16 +34,14 @@ def get_rect(obj):
 def create_grid_surface(screen):
     grid_size = 50
     window_size = screen.get_size()
-    grid_surface = pygame.Surface(window_size, pygame.SRCALPHA)  # Créez une surface transparente
-    grid_surface.fill((0, 0, 0, 0))  # Remplissez la surface avec une couleur transparente
+    grid_surface = pygame.Surface(window_size, pygame.SRCALPHA)
+    grid_surface.fill((0, 0, 0, 0))
 
-    # Dessinez les lignes de la grille sur la surface de la grille
     for x in range(0, window_size[0], grid_size):
         pygame.draw.line(grid_surface, (200, 200, 200), (x, 0), (x, window_size[1]))
     for y in range(0, window_size[1], grid_size):
         pygame.draw.line(grid_surface, (200, 200, 200), (0, y), (window_size[0], y))
 
-    # Dessinez les coordonnées à toutes les intersections
     for x in range(0, window_size[0], grid_size):
         for y in range(0, window_size[1], grid_size):
             font = pygame.font.Font(None, 14)
