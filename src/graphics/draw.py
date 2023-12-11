@@ -23,6 +23,15 @@ def draw_node(screen, node:Node):
 def draw_movable(movable: Movable, screen):
     draw_car(movable, screen)
 
+def get_rect(obj):
+    if isinstance(obj, Node):
+        return pygame.Rect(obj.position[0] - NODE_RADIUS, obj.position[1] - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2)
+    elif isinstance(obj, Movable):
+        x, y = obj.to_coord_xy()
+        centered_x = x
+        centered_y = y
+        return pygame.Rect(centered_x, centered_y, obj.width, obj.height)
+
 def create_grid_surface(screen):
     grid_size = 50
     window_size = screen.get_size()

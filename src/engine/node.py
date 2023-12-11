@@ -1,5 +1,4 @@
 from __future__ import annotations
-import pygame
 from graphics.constants import NODE_RADIUS
 from engine.strategies.strategy import Strategy
 
@@ -122,9 +121,6 @@ class Node:
         for p in self.paths:
             print(f"{p._id,self.paths[p]._id}", end='|')
         print("")
-
-    def get_rect(self):
-        return pygame.Rect(self.position[0] - NODE_RADIUS, self.position[1] - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2)
-
+        
     def set_strategy(self, strategy: Strategy):
         self.strategy = strategy

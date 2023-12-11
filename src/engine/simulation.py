@@ -55,20 +55,6 @@ class Simulation:
                 m.get_path(self.nodes[randint(0, len(self.nodes) - 1)])
                 self.movables.append(m)
 
-    def get_clicked_movable(self, pos: tuple[int, int]) -> Movable:
-        for m in self.movables:
-            if m.get_rect().collidepoint(pos):
-                return m
-        return None
-
-    def get_clicked_node(self, pos: tuple[int, int]) -> Node:
-        for node in self.nodes:
-            print(node.position)
-            if node.get_rect().collidepoint(pos):
-                return node
-        return None
-
-
     def run(self):
         step = 0
         seed(0)
