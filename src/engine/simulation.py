@@ -34,9 +34,9 @@ class Simulation:
 
         if self.debug_mode:
             print("Debug mode enabled")
-            print("press space to advance 10 steps")
+            print("press Space to advance 10 steps")
         
-        self.movables = []
+        self.movables: List[Movable] = []
         self.screen = pygame_init()
         pygame.display.set_caption("Simulation de réseau routier")
         self.clock = pygame.time.Clock()
@@ -49,6 +49,12 @@ class Simulation:
             if r.add_movable(m, 0):
                 m.get_path(self.nodes[randint(0, len(self.nodes) - 1)])
                 self.movables.append(m)
+
+    def get_clicked_movable(self, pos: tuple[int, int]) -> Movable:
+        for m in self.movables:
+            if m.get_rect().collidepoint(pos):
+                return m
+        return None
 
     def run(self):
         step = 0
@@ -64,6 +70,13 @@ class Simulation:
                 elif event.type == pygame.KEYDOWN and self.debug_mode:
                     if event.key == pygame.K_SPACE:
                         step = 10
+                elif event.type == pygame.MOUSEBUTTONDOWN and self.debug_mode:
+                    if event.button == 1:
+                        pos = pygame.mouse.get_pos()
+                        clicked_movable = self.get_clicked_movable(pos)
+                        if clicked_movable:
+                            print("Clicked on car: ", clicked_movable)
+                            self.selected_movable = clicked_movable
 
             if not self.debug_mode or step > 0:
                 for _ in range(step or 1):
@@ -84,8 +97,8 @@ class Simulation:
                 step -= 1 if step > 0 else 0
 
             self.screen.fill((255, 255, 255))
-            # if self.debug_mode:
-            #     draw_grid(self.roads, self.nodes, self.grid_size)
+            if self.debug_mode:
+                draw_grid(self.screen, self.grid_size)
             for road in self.roads:
                 draw_road(self.screen, road)
             for node in self.nodes:
@@ -94,7 +107,7 @@ class Simulation:
                 draw_movable(movable, self.screen)
 
             pygame.display.flip()
-            self.clock.tick(30)  # 60 FPS
+            self.clock.tick(30)  # FPS
 
         pygame.quit()
 

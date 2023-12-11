@@ -3,6 +3,7 @@ Main interface for the display.
 """
 import pygame
 from .draw import draw_car, draw_road
+from graphics.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class PygameDisplay:
     def __init__(self, simulation):
@@ -10,7 +11,7 @@ class PygameDisplay:
 
     def run(self):
         pygame.init()
-        screen = pygame.display.set_mode((800, 600))
+        screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
         while True:
             for event in pygame.event.get():
