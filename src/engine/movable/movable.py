@@ -2,7 +2,6 @@ from __future__ import annotations
 
 import sys
 import random
-import pygame
 from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
 
@@ -268,13 +267,6 @@ class Movable(Nodable):
         y = pos_start[1] + pos*uy
 
         return x, y
-    
-    def get_rect(self):
-        x, y = self.to_coord_xy()
-        centered_x = x
-        centered_y = y
-        return pygame.Rect(centered_x, centered_y, self.width, self.height)
-
 
     def __str__(self):
         return f'{{"pos": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "road": {self.road}}}'
