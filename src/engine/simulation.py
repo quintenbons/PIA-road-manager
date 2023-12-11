@@ -6,7 +6,7 @@ from engine.strategies.strategies_manager import StrategyManager
 sys.path.append(os.path.dirname(__file__))
 import pygame
 from engine.constants import TIME
-from graphics.draw import draw_movable, draw_node, draw_road, draw_grid
+from graphics.draw import draw_movable, draw_node, draw_road, create_grid_surface
 from graphics.init_pygame import pygame_init
 from random import randint, random, seed
 from maps.maps_functions import read_map, read_paths, set_strategies, set_traffic_lights
@@ -19,9 +19,8 @@ import time
 class Simulation:
     strategy_manager: StrategyManager
 
-    def __init__(self, map_file: str, paths_file: str,debug_mode: bool = False, grid_size: int = 50, nb_movables: int = 1):
+    def __init__(self, map_file: str, paths_file: str,debug_mode: bool = False, nb_movables: int = 1):
         self.debug_mode = debug_mode
-        self.grid_size = grid_size
         self.nb_movables = nb_movables
         print("\n\n ---------------------------------- \n")
 
@@ -32,13 +31,17 @@ class Simulation:
         set_traffic_lights(self.nodes)
         set_strategies(self.nodes, self.strategy_manager)
 
-        if self.debug_mode:
-            print("Debug mode enabled")
-            print("press Space to advance 10 steps")
         
         self.movables: List[Movable] = []
         self.screen = pygame_init()
+
         pygame.display.set_caption("Simulation de réseau routier")
+        if self.debug_mode:
+            print("Debug mode enabled")
+            print("press Space to advance 10 steps")
+            self.grid_surface = create_grid_surface(self.screen)
+
+
         self.clock = pygame.time.Clock()
         self.running = True
 
@@ -98,7 +101,7 @@ class Simulation:
 
             self.screen.fill((255, 255, 255))
             if self.debug_mode:
-                draw_grid(self.screen, self.grid_size)
+                self.screen.blit(self.grid_surface, (0, 0)) 
             for road in self.roads:
                 draw_road(self.screen, road)
             for node in self.nodes:

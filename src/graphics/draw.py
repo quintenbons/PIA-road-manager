@@ -23,15 +23,24 @@ def draw_node(screen, node:Node):
 def draw_movable(movable: Movable, screen):
     draw_car(movable, screen)
 
-def draw_grid(screen, grid_size):
+def create_grid_surface(screen):
+    grid_size = 50
     window_size = screen.get_size()
+    grid_surface = pygame.Surface(window_size, pygame.SRCALPHA)  # Créez une surface transparente
+    grid_surface.fill((0, 0, 0, 0))  # Remplissez la surface avec une couleur transparente
+
+    # Dessinez les lignes de la grille sur la surface de la grille
     for x in range(0, window_size[0], grid_size):
-        pygame.draw.line(screen, (200, 200, 200), (x, 0), (x, window_size[1]))
+        pygame.draw.line(grid_surface, (200, 200, 200), (x, 0), (x, window_size[1]))
     for y in range(0, window_size[1], grid_size):
-        pygame.draw.line(screen, (200, 200, 200), (0, y), (window_size[0], y))
+        pygame.draw.line(grid_surface, (200, 200, 200), (0, y), (window_size[0], y))
+
+    # Dessinez les coordonnées à toutes les intersections
     for x in range(0, window_size[0], grid_size):
         for y in range(0, window_size[1], grid_size):
-            coord_text = f"{x},{y}"
             font = pygame.font.Font(None, 14)
+            coord_text = f"{x},{y}"
             text = font.render(coord_text, True, (200, 200, 200))
-            screen.blit(text, (x + 5, y + 5))
+            grid_surface.blit(text, (x + 5, y + 5))
+
+    return grid_surface
