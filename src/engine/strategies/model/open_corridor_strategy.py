@@ -1,4 +1,4 @@
-from ..traffic.traffic_light import TrafficLight
+from ...traffic.traffic_light import TrafficLight
 from typing import List
 from .strategy import Strategy
 

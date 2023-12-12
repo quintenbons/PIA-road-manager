@@ -3,12 +3,7 @@ import sys
 from math import inf
 
 from typing import List
-from engine.strategies.cross_duplex_strategy import CrossDuplexStrategy
-from engine.strategies.open_corridor_strategy import OpenCorridorStrategy
-from engine.strategies.open_strategy import OpenStrategy
-from engine.strategies.piece_of_cake_strategy import PieceOfCakeStrategy
 from engine.strategies.strategies_manager import StrategyManager
-from engine.strategies.strategy_mutator import StrategyTypes
 
 from graphics.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 

@@ -69,9 +69,10 @@ class PygameDisplay:
                 draw_road(self.screen, road)
             for node in self.simulation.nodes:
                 draw_node(self.screen, node)
-            for movable in self.simulation.movables:
-                asset = self.asset_manager.get_car_asset(movable)
-                draw_movable(movable, self.screen, asset)
+            for spawner in self.simulation.spawners:
+                for movable in spawner.movables:
+                    asset = self.asset_manager.get_car_asset(movable)
+                    draw_movable(movable, self.screen, asset)
 
             pygame.display.flip()
             self.clock.tick(30)  # FPS

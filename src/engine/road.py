@@ -96,6 +96,14 @@ class Road:
         # print("Can't add movable")
         return False
 
+    def spawn_movable(self, movable: Movable, lane: int):
+        assert(movable.tree_node is None)
+        if self.lanes[lane].insert(movable):
+
+            movable.set_road(self)
+            return True
+        return False
+
     def remove_movable(self, mov: Movable):
         mov.getTreeNode().remove()
 

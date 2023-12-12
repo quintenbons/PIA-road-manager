@@ -1,6 +1,6 @@
 from engine.constants import TIME
 from engine.traffic.flow_controller import FlowController
-from ..traffic.traffic_light import TrafficLight
+from ...traffic.traffic_light import TrafficLight
 from typing import List
 
 class Strategy:
