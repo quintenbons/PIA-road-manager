@@ -43,8 +43,8 @@ class PygameDisplay:
             draw_node(self.screen, node)
         for spawner in self.simulation.spawners:
             for movable in spawner.movables:
-                asset = self.asset_manager.get_car_asset(movable)
-                draw_movable(movable, self.screen, asset)
+                color = self.asset_manager.get_car_asset(movable)
+                draw_movable(movable, self.screen, color)
         
         draw_hud(self)
 

@@ -3,7 +3,6 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
-from random import randint
 from ..utils import getLength, vecteur_norm, scalaire
 
 from ..constants import TIME
@@ -37,7 +36,6 @@ class Movable(Nodable):
     node_len: float 
     size: float = 1.0
 
-    color: int
     path: List[Node] = None
     tree_node = None
     _id : int
@@ -55,7 +53,6 @@ class Movable(Nodable):
         global mid
         self._id = mid
         mid += 1
-        self.color = randint(0, 255)
 
 
     def update_position(self):

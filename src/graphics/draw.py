@@ -7,12 +7,11 @@ from engine.movable.movable import Movable
 from graphics.assets import NODE_RADIUS
 from engine.constants import TIME
 
-def draw_car(movable: Movable, screen: pygame.Surface, asset: pygame.Surface):
+def draw_car(movable: Movable, screen: pygame.Surface, color: int):
     x, y = movable.to_coord_xy()
     centered_x = x
     centered_y = y
-    c = movable.color
-    pygame.draw.circle(screen, ((c * 26)%255, (c * 12)%255, (c*3)%255), (centered_x, centered_y), 4)
+    pygame.draw.circle(screen, ((color * 26)%255, (color * 12)%255, (color*3)%255), (centered_x, centered_y), 4)
     # draw also the rect
     pygame.draw.rect(screen, (255, 0, 0), get_rect(movable), 1)
 
@@ -25,8 +24,8 @@ def draw_road(screen, road: Road):
 def draw_node(screen, node:Node):
     pygame.draw.circle(screen, NODE_COLOR, node.position, NODE_RADIUS)
 
-def draw_movable(movable: Movable, screen, asset: pygame.Surface):
-    draw_car(movable, screen, asset)
+def draw_movable(movable: Movable, screen, color: int):
+    draw_car(movable, screen, color)
 
 def get_rect(obj):
     if isinstance(obj, Node):
