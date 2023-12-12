@@ -31,7 +31,7 @@ class Simulation:
         set_strategies(self.nodes, self.strategy_manager)
 
         self.spawners: List[Spawner] = []
-        spawner = Spawner(self.roads, self.nodes, every_ten_seconds, nb_movables)
+        spawner = Spawner(self.roads, self.roads, every_ten_seconds, nb_movables)
         self.spawners.append(spawner)
 
 
@@ -46,10 +46,10 @@ class Simulation:
             r.update()
         for n in self.nodes:
             n.update(self.current_tick)
-        for s in self.spawners:
-            s.update(self.current_tick)
-
         self.current_tick += 1
+        for s in self.spawners:
+            s.update(self.current_tick * TIME)
+
 
 if __name__ == "__main__":
     simulation = Simulation()

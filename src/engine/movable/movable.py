@@ -3,7 +3,7 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
-
+from random import randint
 from ..utils import getLength, vecteur_norm, scalaire
 
 from ..constants import TIME
@@ -37,9 +37,12 @@ class Movable(Nodable):
     node_len: float 
     size: float = 1.0
 
+    color: int
     path: List[Node] = None
     tree_node = None
     _id : int
+
+    road_goal: List(Road, float) = None
 
     def __init__(self, speed, acceleration, latency, pos, size):
         self.speed = speed
@@ -52,6 +55,7 @@ class Movable(Nodable):
         global mid
         self._id = mid
         mid += 1
+        self.color = randint(0, 255)
 
 
     def update_position(self):
@@ -72,16 +76,9 @@ class Movable(Nodable):
             pos = TIME*TIME*self.current_acceleration/2 + self.speed*TIME + self.pos
             speed = sp
         assert(speed <= self.road.speedLimit)
-        # #TODO remove : debug purpose
-        # if self.road.block_traffic:
-            # assert(pos <= self.road.road_len)
-
         return pos, speed
 
     def handle_first_movable(self):
-        # check for end of road
-        # check for movable inside the node
-        # TODO gérer le problème de si une voiture à une vitesse nulle ici
 
         future_pos, _ = self.next_position()
         if self.pos == future_pos:
@@ -154,13 +151,13 @@ class Movable(Nodable):
     def update_road(self) -> None:
         self.pos, self.speed = self.next_position()
         #TODO handle going further road_len
+        if self.road == self.road_goal[0] and self.pos > self.road_goal[1]:
+            self.pos = self.road.road_len
+            self.road.remove_movable(self)
+            self.tree_node = None
+            self.node = None
+            return False
         if self.pos >= self.road.road_len and not self.road.block_traffic:
-            if len(self.path) == 0:
-                self.pos = self.road.road_len
-                self.road.remove_movable(self)
-                self.tree_node = None
-                self.node = None
-                return False
             
             next_node = self.path.pop(-1)
             self.node = next_node
@@ -205,8 +202,6 @@ class Movable(Nodable):
                 self.node.movables.remove(self)
                 self.node = None
 
-            
-
 
     def update(self):
         if self.tree_node is None and self.node is None:
@@ -224,10 +219,15 @@ class Movable(Nodable):
     def stop(self):
         self.speed = 0
 
-    def get_path(self, arrival: Node):
+    def set_road_path(self, arrival: Road):
         from maps.maps_functions import find_path
-        self.path = find_path(self.road.end, arrival)
+        self.path = [arrival.end]
+        self.path += find_path(self.road.end, arrival.start)
         assert(self.road.end == self.path.pop(-1))
+
+    def set_road_goal(self, arrival: Road, pos):
+        self.road_goal = [arrival, pos]
+        self.set_road_path(arrival)
 
     def find_next_road(self, next_node: Node):
         current_node = self.road.end
