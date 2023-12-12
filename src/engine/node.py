@@ -1,4 +1,7 @@
 from __future__ import annotations
+from engine.strategies.strategy import Strategy
+
+from engine.strategies.strategy_mutator import StrategyTypes
 from .road import Road
 from .traffic.flow_controller import FlowController
 from .movable.movable import Movable
@@ -12,6 +15,7 @@ class Node:
     road_in: List[Road]
     road_out: List[Road]
     controllers: List[FlowController]
+    strategy: Strategy = None
 
     paths: dict[Node: Node]
     movables: List[Movable]
@@ -30,8 +34,8 @@ class Node:
         self.movables = []
 
     def update(self, time) -> None:
-        for controller in self.controllers:
-            controller.update(time)
+        self.strategy.update(time)
+        
         n = len(self.movables)
         # print(n)
         for i in range(n):
@@ -116,3 +120,6 @@ class Node:
         for p in self.paths:
             print(f"{p._id,self.paths[p]._id}", end='|')
         print("")
+        
+    def set_strategy(self, strategy: Strategy):
+        self.strategy = strategy

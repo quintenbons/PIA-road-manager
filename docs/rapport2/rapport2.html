@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Header Example</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      header {
+        width: 100%;
+        height: 3em;
+        background-color: #666;
+        padding: 0 2em;
+        display: flex;
+        align-items: center;
+        gap: 1em;
+      }
+      main {
+        padding: 0 20vw;
+      }
+      .logo {
+        height: 80%;
+        display: inline-block;
+        background-size: contain;
+        background-repeat: no-repeat;
+      }
+      .title {
+        display: inline-block;
+        vertical-align: middle;
+        font-size: 24px;
+        color: white;
+      }
+      .subtitle {
+        font-size: 18px;
+        color: white;
+        margin-top: 5px;
+      }
+      .date {
+        font-size: 16px;
+        color: #666;
+        margin-top: 10px;
+      }
+      figure {
+        text-align: center;
+        margin: 2em;
+      }
+      figcaption {
+        margin-top: 0.5em;
+        font-style: italic;
+        color: #555;
+      }
+    </style>
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // Function to convert number to Roman numerals
+        function toRoman(num) {
+          const roman = {
+            M: 1000,
+            CM: 900,
+            D: 500,
+            CD: 400,
+            C: 100,
+            XC: 90,
+            L: 50,
+            XL: 40,
+            X: 10,
+            IX: 9,
+            V: 5,
+            IV: 4,
+            I: 1,
+          };
+          let str = "";
+
+          for (let i of Object.keys(roman)) {
+            let q = Math.floor(num / roman[i]);
+            num -= q * roman[i];
+            str += i.repeat(q);
+          }
+
+          return str;
+        }
+
+        // Update h1 elements with Roman numerals
+        let h1s = document.getElementsByTagName("h1");
+        for (let i = 0; i < h1s.length; i++) {
+          h1s[i].textContent = toRoman(i + 1) + " - " + h1s[i].textContent;
+        }
+
+        // Update h2 elements with "Parent Roman numeral.Subsection number"
+        const h2s = document.getElementsByTagName("h2");
+        let currentH1Index = 0; // Start from the first h1 element
+        let h2Counter = 1; // Subsection counter
+
+        for (let h2 of h2s) {
+          // Check if this h2 is still under the current h1
+          if (h2.previousElementSibling.tagName === "H1") {
+            h2Counter = 1; // Reset counter for new section
+            currentH1Index++; // Move to next h1
+          }
+          h2.textContent =
+            toRoman(currentH1Index) + "." + h2Counter + " - " + h2.textContent;
+          h2Counter++;
+        }
+
+        const mainElement = document.getElementById("summary");
+        h1s = document.getElementsByTagName("h1");
+        let summaryHTML = "<h2>Sommaire</h2><ul>";
+
+        // Iterate over each h1 to create main list items
+        for (let i = 0; i < h1s.length; i++) {
+          summaryHTML += `<li>${h1s[i].textContent}</li>`;
+          let nextElem = h1s[i].nextElementSibling;
+          let h2List = "";
+
+          // Iterate over sibling elements to find all h2s following this h1
+          while (nextElem && nextElem.tagName !== "H1") {
+            if (nextElem.tagName === "H2") {
+              h2List += `<li>${nextElem.textContent}</li>`;
+            }
+            nextElem = nextElem.nextElementSibling;
+          }
+
+          // If there were h2s, add them as a nested list
+          if (h2List) {
+            summaryHTML += `<ul>${h2List}</ul>`;
+          }
+        }
+
+        summaryHTML += "</ul>";
+        mainElement.innerHTML = summaryHTML;
+      });
+    </script>
+  </head>
+  <body>
+    <header>
+      <img src="images/logo_ensimag.png" alt="Logo ensimag" class="logo" />
+      <div class="title">
+        Projet Intelligence Artificielle - Gestion du trafic par IA
+      </div>
+      <div class="subtitle">Présentation du projet</div>
+    </header>
+
+    <main>
+      <section id="summary"></section>
+
+      <h1>Architecture Préliminaire de l'IA</h1>
+
+      <h2>Introduction</h2>
+
+      <p>
+        La simulation du réseau routier de Grenoble est un projet complexe
+        visant à simuler fidèlement les conditions de circulation urbaine.
+        Initialement, notre projet envisageait de créer une intelligence
+        artificielle unique ayant la maîtrise sur l'ensemble des feux de
+        signalisation de la ville, décidant du comportement de chaque feu.
+        Cependant, cette méthode a soulevé deux problématiques majeures :
+        premièrement, la génération des données d'entrée était excessivement
+        longue, rendant cette approche peu pratique compte tenu du volume des
+        données requises. Deuxièmement, l'ampleur des données d'entrée soulevait
+        des inquiétudes quant à la capacité du système à converger vers une
+        solution efficace.
+      </p>
+
+      <p>
+        Pour pallier à ces défis, nous avons modifié notre stratégie. Plutôt que
+        d'avoir une seule IA pour tout le réseau, notre système se compose
+        désormais d'une multitude d'IA, chacune gérant un noeud spécifique du
+        réseau, c'est-à-dire une intersection avec ses feux de signalisation.
+        Ainsi, chaque IA est responsable de tous les feux d'une intersection
+        donnée et doit optimiser la circulation à ce point précis. Les noeuds
+        reçoivent des flux de véhicules sur les routes entrantes et chaque IA
+        s'efforce de minimiser la congestion en contrôlant efficacement les feux
+        de son intersection.
+      </p>
+
+      <p>
+        Cette nouvelle méthode a pour objectif de trouver une optimisation
+        locale pour chaque scénario, qui dépend de divers facteurs comme le flux
+        de voitures, le nombre de routes connectées à l'intersection, et les
+        caractéristiques propres à chaque route. Nous espérons ainsi que les IA
+        trouvent les optimisations locales, ce qui (nous l'espérons) contribuera
+        à une amélioration globale et coordonnée de la circulation sur
+        l'ensemble du réseau routier.
+      </p>
+
+      <h2>Flux d'utilisation</h2>
+
+      <figure>
+        <img src="./images/summary-drawing.png" alt="Plan global d'exécution" width="100%" />
+        <figcaption>Plan global d'exécution</figcaption>
+      </figure>
+
+      <p>
+        L'intelligence artificielle utilisée est un réseau neuronal dense à 4
+        étages. Il utilisera donc 2 "hidden layers", chacun constitué de 64
+        neurones.
+      </p>
+
+      <ul>
+        <li>
+          L'entrée correspond à l'état d'une intersection, ainsi que des
+          évènements issus de la simulation sur les 15 minutes précédentes. Il
+          est important d'inclure dans cette entrée la stratégie précédemment
+          choisie, ainsi que la congestion (terme qui n'est pas encore défini
+          mathématiquement dans notre modèle).
+        </li>
+        <li>
+          La sortie correspond à un choix de stratégie (one hot, choisi avec un
+          softmax) à prendre pour les 15 prochaines minutes pour une
+          intersection donnée. Cette stratégie est un algorithme conçu par nos
+          soins. Il est important ici d'avoir des stratégies cohérentes avec le
+          monde réel, mais aussi adaptables au nombre d'entrées/sorties de
+          l'intersection sur laquelle on l'utilise.
+        </li>
+      </ul>
+
+      <p>
+        Cela signifie que l'IA aura un impact uniquement toutes les 15 minutes,
+        et qu'elle n'a d'informations que sur une seule intersection. Cela nous
+        semblait raisonable sous quelques hypothèses:
+      </p>
+      <ul>
+        <li>Le modèle du trafic ne varie pas beaucoup en 15 minutes</li>
+        <li>
+          Une intersection est affectée par les intersections environnentes,
+          mais il est possible de très bien gérer une intersection sans avoir à
+          communiquer avec les intersections voisines.
+        </li>
+      </ul>
+
+      <!-- TODO missing part: strategies -->
+      <h2>Les stratégies</h2>
+
+      <p>
+        Jusqu'à présent nous avons dégagé un total de cinq stratégies primaires.
+        Ces stratégies représentent les logiques s'appliquant aux feux. Les
+        règles de circulation classiques telles que les priorités à droite ou
+        les distances de sécurité s'appliquent en priorité sur les stratégies.
+      </p>
+
+      <p>
+        Chaque stratégie peut être représentée par un graphe d'état cyclique.
+        Nous pensons faire des variantes de ces graphes dans lesquelles l'IA
+        pourra choisir le temps nécessaire pour passer à l'état suivant. Cela a
+        pour but de donner à l'IA de la flexibilité et de s'adapter lorsque les
+        routes d'entrée des carrefours ont des débits de véhicules différents.
+      </p>
+
+      <h3>Open</h3>
+      <p>
+        La stratégie "Open" consiste à laisser tous les feux au vert. De cette
+        façon le trafic se régule de manière autonome.
+      </p>
+      <p>
+        Dans l'exemple suivant, les flux possibles sont représentés en orange.
+      </p>
+
+      <figure>
+        <img
+          src="./images/open_strategy.png"
+          alt="Flux suivant la stratégie Open sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Open’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <p>
+        Les stratégies peuvent changer au cours du temps, en pratique un feu de
+        signalisation reste en place, choisir cette stratégie revient à faire en
+        sorte que tous les feux de signalisation de l'intersection soient
+        oranges et clignotent.
+      </p>
+
+      <h3>Open corridor</h3>
+      <p>
+        La stratégie "Open corridor" correspond à un feu qui restera toujours
+        vert tandis que les autres feux de signalisation alterneront chacun leur
+        tour à temps égal.
+      </p>
+      <p>
+        Dans l'exemple suivant, le feu de signalisation qui restera en vert est
+        aussi représenté par cette couleur tandis que les feux rouges et bleus
+        alternent.
+      </p>
+
+      <figure>
+        <img
+          src="./images/open_corridor_strategy.png"
+          alt="Flux suivant la stratégie Open corridor sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Open corridor’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <h3>Piece of cake</h3>
+      <p>
+        La stratégie "Piece of cake": si on représente le temps total disponible
+        avec un gâteau, cette stratégie partage équitablement le gâteau entre
+        tous les feux de signalisation. Ainsi, lorsqu'un feu est au vert, les
+        autres sont au rouge.
+      </p>
+      <p>
+        Dans l'exemple suivant les feux de signalisations sont représentés par
+        les traits de couleur rouge, vert et bleu.
+      </p>
+
+      <figure>
+        <img
+          src="./images/piece_of_cake_strategy.png"
+          alt="Flux suivant la stratégie Piece of cake sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Piece of cake’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <h3>Cross duplex</h3>
+      <p>
+        La stratégie "Cross duplex" est la plus intuitive. Elle correspond au
+        carrefour typique et permet de faire alterner les feux de signalisation
+        des routes parallèles avec ceux des routes perpendiculaires.
+      </p>
+      <p>
+        Dans l'exemple suivant sont représentés en bleu et rouge les groupes de
+        feux de signalisation. Le groupe bleu et le groupe rouge s'allument
+        chacun leur tour.
+      </p>
+
+      <figure>
+        <img
+          src="./images/cross_duplex_strategy.png"
+          alt="Flux suivant la stratégie Cross duplex sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Cross duplex’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <h3>Soft cross duplex</h3>
+      <p>
+        Enfin, la stratégie "Soft cross duplex" est une variante de la stratégie
+        "Cross duplex" dans laquelle les véhicules peuvent s'insérer en ignorant
+        les feux de signalisation pour directement tourner à droite après les
+        feux. Cette stratégie permet de modéliser les feux à clignotement
+        orange.
+      </p>
+
+      <p>
+        Dans ce dernier exemple, les véhicules suivant une trajectoire orange
+        doivent respecter la signalisation en vert et rouge tandis que ceux
+        suivant les trajectoires bleues peuvent s'insérer sans attendre.
+      </p>
+
+      <figure>
+        <img
+          src="./images/soft_cross_duplex_strategy.png"
+          alt="Flux suivant la stratégie Soft cross duplex sur une intersection."
+          width="60%"
+        />
+        <figcaption>
+          Flux suivant la stratégie ‘Soft cross duplex’ sur une intersection.
+        </figcaption>
+      </figure>
+
+      <h1>Entraînement du Modèle</h1>
+
+      <h2>Format des Données d'entraînement</h2>
+
+      <p>
+        Pour entraîner efficacement notre modèle d'intelligence artificielle
+        basé sur PyTorch, il est essentiel d'avoir des datasets structurés pour
+        une utilisation avec des dataloaders. Ces datasets permettront de
+        nourrir et d'affiner le modèle d'IA, en fournissant une source de
+        données cohérente et structurée, adaptée aux spécificités de
+        l'apprentissage automatique.
+      </p>
+      <p>
+        Nous estimons qu'un volume conséquent, de plusieurs millions d'exemples
+        au moins, sera nécessaire pour atteindre une efficacité optimale.
+      </p>
+
+      <p>Le dataset sera constitué de tuples (I, E).</p>
+      <ul>
+        <li>
+          I (input) correspond à une entrée du réseau neuronal pour une
+          intersection donnée. I contient aussi des informations sur les
+          évènements des 15 minutes précédentes.
+        </li>
+        <li>
+          E (expected) correspond au résultat attendu "expected", qui devra être
+          généré algorithmiquement.
+        </li>
+      </ul>
+
+      <p>
+        Cette approche structurée permettra à notre modèle de s'adapter et
+        d'apprendre efficacement à partir d'un large éventail de scénarios de
+        trafic.
+      </p>
+
+      <h2>Génération des données d'entrée</h2>
+
+      <figure>
+        <img
+          src="./images/dataset-generation.png"
+          alt="Génération d'une entrée du dataset"
+          style="height: 20%"
+        />
+        <figcaption>Génération d'une entrée du dataset</figcaption>
+      </figure>
+
+      <p>
+        La génération de jeux de données pour entraîner notre IA est un
+        processus clé, impliquant la création de configurations spécifiques pour
+        simuler divers scénarios de trafic urbain. Il est important de rappeler
+        que notre modèle n'est conscient que d'une seule intersection, ce qui
+        nous permet de simplifier drastiquement la génération des datasets, en
+        limiant la simulation à un seul noeud.
+      </p>
+
+      <p>
+        Pour générer une entrée de dataset (I, E), la simulation est d'abord
+        exécutée pendant 15 minutes avec une stratégie sélectionnée
+        uniformément, sur une configuration aléatoire. À l'issue de cette
+        période, le paramètre I de l'entrée de dataset peut être calculé à
+        partir des informations mesurées pendant l'exécution.
+      </p>
+
+      <p>
+        Il faut ensuite générer le paramètre E, qui correspond au meilleur choix
+        possible de stratégie pour les 15 minutes suivantes. Pour cela, nous
+        pouvons simplement exécuter les stratégies une par une, et récupérer
+        celle qui obtient le meilleur score (le moins de congestion). Attention
+        ici à bien utiliser la même configuration de trafic que pour les 15
+        minutes initiales pour ne pas enfreindre notre hypothèse de consistence
+        du trafic.
+      </p>
+
+      <figure id="close-second">
+        <img
+          src="./images/dataset-hesitation.png"
+          alt="Hésitation sur la sortie attendue"
+          style="height: 20%"
+        />
+        <figcaption>Hésitation sur la sortie attendue</figcaption>
+      </figure>
+
+      <p>
+        Un cas particulier est à prévoir (voir
+        <a href="#close-second">@close-second</a>) : si plusieurs stratégies
+        sont correctes, pénaliser le modèle lors du backwards peut être néfaste.
+        C'est pourquoi nous détecterons ces situations afin de les exclure du
+        dataset.
+      </p>
+
+      <p>
+        Il est possible à l'avenir que nous reviendrons sur cette décision afin
+        de permettre à l'intelligence artificielle d'apprendre à résoudre des
+        dilemmes plus efficacement.
+      </p>
+
+      <h1>Développement et Implémentation</h1>
+
+      <h2>Génération de la map</h2>
+      <p>Étapes de la Génération de Cartes:</p>
+      <ul>
+        <li>
+          Récupération des Données : Nous utilisons l'API de Overpass pour
+          obtenir un ensemble de points représentant le réseau routier de la
+          ville.
+        </li>
+        <li>
+          Reconstruction des Routes : À partir de ces points, nous
+          reconstruisons les routes et identifions les intersections.
+        </li>
+        <li>
+          Simplification des Routes : Chaque route, définie par l'ensemble de
+          points entre deux intersections, est simplifiée en un segment droit en
+          conservant seulement les points extrêmes.
+        </li>
+        <li>
+          Sélection du Plus Grand Graphe Connexe : Nous conservons uniquement le
+          plus grand graphe connexe du réseau routier. Ceci élimine les petits
+          graphes isolés qui résultent de l'exclusion des routes mineures (comme
+          les parkings et les sorties résidentielles) lors de la récupération
+          des données.
+        </li>
+      </ul>
+
+      <figure>
+        <img
+          src="./images/grenoble_map.png"
+          alt="Carte générée superposée à la carte réelle de Grenoble"
+          height="50%"
+        />
+        <figcaption>
+          Carte générée superposée à la carte réelle de Grenoble
+        </figcaption>
+      </figure>
+
+      <p>
+        La carte générée de Grenoble, bien que présentant quelques
+        approximations, reste largement cohérente avec la carte réelle de la
+        ville. Par exemple, bien que la route traversant le CEA au Nord-Ouest
+        soit légèrement décalée, notre modèle reproduit avec une précision
+        raisonnable l'architecture routière. Ces modifications d'échelle sont
+        dues aux approximations inhérentes à notre méthode de simplification,
+        mais elles n'affectent pas l'intégrité globale du complexe routier.
+        Cette fidélité à la structure réelle des routes est cruciale pour notre
+        objectif, qui est de simuler de manière réaliste la gestion du trafic
+        urbain.
+      </p>
+
+      <h2>Modèle Physique : Simulation</h2>
+      <p>Le modèle physique se découpe en plusieurs parties :</p>
+      <ul>
+        <li>Des routes</li>
+        <li>Des intersections</li>
+        <li>
+          Des objets qui se déplacent, pour la suite, on désignera cela par les
+          voitures
+        </li>
+        <li>Générateur de trafic</li>
+      </ul>
+
+      <p>
+        Le générateur de trafic génère une voiture, avec un itinéraire.
+        L'itinéraire est choisi avec un calcul de Dijkstra. Pour accélérer la
+        simulation, l'ensemble des calculs de chemin sont précalculés en
+        utilisant une techno plus rapide que le Python ici le C++.
+      </p>
+      <p>
+        Les routes doivent permettre de faire circuler des voitures et les
+        intersections permettent de bloquer ou de faire passer les voitures.
+      </p>
+      <p>
+        Les principales difficultés sont liées au comportement des voitures. Il
+        faut pouvoir ralentir en fonction de la vitesse des autres voitures, il
+        faut pouvoir dépasser une voiture trop lente.
+      </p>
+      <p>
+        Nous avons aussi imaginé un système de collision qui permet aux voitures
+        de réguler leurs allures en fonction du trafic et de traverser les
+        intersections de manière réaliste. Cette partie reste néanmoins une
+        problématique sur le plan technique car nous avons des inquiétudes quant
+        au fait que la gestion d'un tel degré de détail puisse ralentir
+        énormément les temps de simulation.
+      </p>
+
+      <h2>Modèles d'IA : Dense Neural Network</h2>
+      <p>
+        Afin de prendre en main pytorch, un court exercice a été fait :
+        entraîner un modèle de Pathfinding. Cela nous a aussi permis de faire
+        des premières estimations de performance (voir référence
+        <a href="#perf">perf</a>).
+      </p>
+      <p>
+        Une infrastructure d'entraînement pour le projet routier est déjà prête.
+        Elle contient :
+      </p>
+      <ul>
+        <li>Un module de manipulation des datasets</li>
+        <li>
+          Un module d'entraînement, prenant en entrée un dataloader, et le
+          modèle
+        </li>
+        <li>Possibilité de sauvegarder les datasets et modèles</li>
+      </ul>
+      <p>Il lui manque :</p>
+      <ul>
+        <li>
+          Des fonctionnalités de génération automatique de dataset à partir de
+          configs externes
+        </li>
+        <li>
+          Branchement à des cas concrets (transformation d'une situation réelle
+          en entrée du dataset)
+        </li>
+      </ul>
+
+      <h2 id="perf">Estimation Préliminaire des Performances</h2>
+      <p>
+        Il existe trois points critiques pour la performance de notre projet :
+      </p>
+      <ul>
+        <li>Génération de dataset</li>
+      </ul>
+      <p>Estimation :</p>
+      <p>
+        Pour générer 100,000 entrées (I, E) (on rappelle que le but est de
+        1,000,000 d'entrées) :
+      </p>
+      <p>
+        Il faut pouvoir exécuter 15 minutes de simulation dans un intervalle de
+        temps réel de l'ordre de la seconde. Si on utilise une solution naive,
+        il nous faudra (nombre de stratégies + 1) x temps de simulation de 15
+        minutes pour générer 1 entrée (I, E). (voir référence
+        <a href="#close-second">close-second</a>)
+      </p>
+      <p>
+        Avec 10 stratégies, on a donc 11 secondes par entrée, soit 305 heures.
+        Sur 8 coeurs cela revient à 38 heures de génération, ce qui est loin
+        d'être négligeable.
+      </p>
+      <p>En pratique :</p>
+      <p>
+        Le simulateur est écrit en python, et gère des intervalles de temps de
+        l'ordre de la seconde. Il est probable que l'objectif de 1 seconde pour
+        15 minutes de simulation soit actuellement inatteignable. C'est pour cela
+        que nous devons porter une grande importance à la performance de la
+        simulation.
+      </p>
+      <ul>
+        <li>Entraînement</li>
+      </ul>
+      <p>
+        L'entraînement consiste à faire un forward + backward sur des batch
+        générés par un dataloader. La complexité de cette tâche est de l'ordre
+        de la taille du dataset utilisé. En pratique, l'entraînement d'un DNN à
+        64 neurones par couche sur un dataset de 100,000 entrées peut se faire
+        en 5 minutes sans même utiliser de GPU (mesuré avec un exercice de
+        pathfinding).
+      </p>
+      <ul>
+        <li>Coût de fonctionnement</li>
+      </ul>
+      <p>
+        L'IA en pratique serait utilisée une fois par croisement, toutes les 15
+        minutes. La performance n'est pas requise temporellement. Cependant, une
+        meilleure performance permet de réduire la consommation énergétique, ce
+        qui est un des buts principaux du projet. En effet, si l'énergie
+        consommée n'était pas importante, il suffirait de lancer notre
+        algorithme naïf toutes les 15 minutes sur la simulation.
+      </p>
+
+      <h1>Conclusion</h1>
+      <p>
+        Le développement du modèle et de la simulation ont avancé en parallèle.
+        Les deux blocs de ce projet sont donc dans un état avancé. Cependant, la
+        chaîne de dépendance des tâches nous oblige à encore patienter avant de
+        pouvoir brancher les deux parties.
+      </p>
+      <p>
+        Il est important à présent de se concentrer sur la génération de
+        datasets afin d'avoir d'affiner nos estimations, et éventuellement
+        prendre des mesures pour rendre la génération plus rapide.
+      </p>
+
+      <h1>Références</h1>
+      <ul>
+        <li>
+          Github Ens'IA
+          <a
+            href="https://github.com/YannSia"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://github.com/YannSia</a
+          >
+        </li>
+        <li>
+          Medium - Simple CNN with numpy
+          <a
+            href="https://medium.com/analytics-vidhya/simple-cnn-using-numpy-part-i-introduction-data-processing-b6652615604d"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://medium.com/analytics-vidhya/simple-cnn-using-numpy-part-i-introduction-data-processing-b6652615604d</a
+          >
+        </li>
+        <li>
+          TP ens'IA
+          <a
+            href="https://gitlab.ensimag.fr/francoj/vorf"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://gitlab.ensimag.fr/francoj/vorf</a
+          >
+        </li>
+        <li>
+          PyTorch introduction (3h)
+          <a
+            href="https://youtu.be/c36lUUr864M?si=RYYo9ozEjq-OqBtU"
+            target="_blank"
+            rel="noopener noreferrer"
+            >https://youtu.be/c36lUUr864M?si=RYYo9ozEjq-OqBtU</a
+          >
+        </li>
+        <li>
+          Overpass API Turbo:
+          <a
+            href="http://overpass-api.de/"
+            target="_blank"
+            rel="noopener noreferrer"
+            >http://overpass-api.de/</a
+          >
+        </li>
+      </ul>
+
+      <p>Icones flaticon:</p>
+      <ul>
+        <li>AltoCreative</li>
+        <li>Muhammad Atif</li>
+      </ul>
+
+      <p>Les cartes proviennent de Google Maps.</p>
+    </main>
+  </body>
+</html>

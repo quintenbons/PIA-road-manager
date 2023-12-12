@@ -10,9 +10,6 @@ class FlowController:
     road_in: Road = None
     road_out: List[Road] = []
 
-    def update(self, time) -> None:
-        pass
-
     def __init__(self):
         self.vehicle_queue = []
         self.hiker_queue = []

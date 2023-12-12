@@ -1,97 +1,58 @@
 #!/usr/bin/env python3
 import sys
 import os
+from engine.constants import GENERATION_SEGMENT_DUARTION, TIME
+
+from engine.strategies.strategies_manager import StrategyManager
 sys.path.append(os.path.dirname(__file__))
-import pygame
-from engine.constants import TIME
-from graphics.draw import draw_movable, draw_node, draw_road, draw_grid
-from graphics.init_pygame import pygame_init
-from random import randint, random, seed
+import random
 from maps.maps_functions import read_map, read_paths, set_strategies, set_traffic_lights
 from engine.movable.movable import Movable
 from engine.road import Road
 from engine.node import Node
 from typing import List
-import time
 
 class Simulation:
-    def __init__(self, map_file: str, paths_file: str,debug_mode: bool = False, grid_size: int = 50, nb_movables: int = 1):
-        self.debug_mode = debug_mode
-        self.grid_size = grid_size
-        self.nb_movables = nb_movables
-        print("\n\n ---------------------------------- \n")
+    strategy_manager: StrategyManager
+    current_tick: int = 0
 
+    def __init__(self, map_file: str, paths_file: str):
+        self.strategy_manager = StrategyManager()
+
+        self.roads: List[Road]
+        self.nodes: List[Node]
         self.roads, self.nodes = read_map(map_file)
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
-        set_strategies(self.nodes)
+        set_strategies(self.nodes, self.strategy_manager)
+        self.movables: List[Movable] = []
 
-        if self.debug_mode:
-            print("Debug mode enabled")
-            print("press space to advance 10 steps")
-        
-        self.movables = []
-        self.screen = pygame_init()
-        pygame.display.set_caption("Simulation de réseau routier")
-        self.clock = pygame.time.Clock()
-        self.running = True
+        random.seed(0)
 
     def add_movables(self, count: int = 1):
         for _ in range(count):
-            r = self.roads[randint(0, len(self.roads) - 1)]
-            m = Movable(5, 2, random(), random() * (r.road_len), 2)
+            r = self.roads[random.randint(0, len(self.roads) - 1)]
+            m = Movable(5, 2, random.random(), random.random() * (r.road_len), 2)
             if r.add_movable(m, 0):
-                m.get_path(self.nodes[randint(0, len(self.nodes) - 1)])
+                m.get_path(self.nodes[random.randint(0, len(self.nodes) - 1)])
                 self.movables.append(m)
 
-    def run(self):
-        step = 0
-        seed(0)
-        self.add_movables(self.nb_movables)
-        print("Start simulation \n ----------------------------------")
-        loop_timer = 0
-        while self.running:
-            loop_timer += 1
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self.running = False
-                elif event.type == pygame.KEYDOWN and self.debug_mode:
-                    if event.key == pygame.K_SPACE:
-                        step = 10
+    def run(self, sim_duration: int = GENERATION_SEGMENT_DUARTION):
+        start_tick = self.current_tick
 
-            if not self.debug_mode or step > 0:
-                for _ in range(step or 1):
-                    for r in self.roads:
-                        r.update()
-                    for n in self.nodes:
-                        n.update(0)
-                    for m in self.movables.copy():
+        while (self.current_tick - start_tick) * TIME < sim_duration:
+            self.run_tick()
 
-                        if not m.update():
-                            # self.movables.remove(m)
-                            # m.pos = m.road.road_len - 5
-                            # m.pos = 0
-                            if m.road.add_movable(m, 0):
-                                u = randint(0, len(self.nodes) - 1)
-                                # print(u)
-                                m.get_path(self.nodes[u])
-                step -= 1 if step > 0 else 0
+    def run_tick(self):
+        for r in self.roads:
+            r.update()
+        for n in self.nodes:
+            n.update(self.current_tick)
+        for m in self.movables:
+            m.update()
 
-            self.screen.fill((255, 255, 255))
-            # if self.debug_mode:
-            #     draw_grid(self.roads, self.nodes, self.grid_size)
-            for road in self.roads:
-                draw_road(self.screen, road)
-            for node in self.nodes:
-                draw_node(self.screen, node)
-            for movable in self.movables:
-                draw_movable(movable, self.screen)
-
-            pygame.display.flip()
-            self.clock.tick(30)  # 60 FPS
-
-        pygame.quit()
+        self.current_tick += 1
 
 if __name__ == "__main__":
-    simulation = Simulation(debug_mode=True)
+    simulation = Simulation()
     simulation.run()

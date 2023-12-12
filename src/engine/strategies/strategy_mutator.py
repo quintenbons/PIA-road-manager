@@ -16,38 +16,45 @@ class StrategyTypes:
     OPEN = 3
 
 class StrategyMutator:
-    max_mutations = 0
 
     def __init__(self):
         pass
 
-    def get_strategies(self, node: Node):
-        strategies = []
-        for i in range(StrategyTypes.length):
-            strategies.append(self.get_mutation_handler(i)(node))
-
-    def get_mutation_handler(self, strategy_type: int):
-        handlers = [
-            self.mutate_cross_duplex,
-            self.mutate_open_corridor,
-            self.mutate_piece_of_cake,
-            self.mutate_open
-        ]
-        return handlers[strategy_type]
+    def get_strategies_mutations(self, nb_controllers: int, default_cycle_duration: int):
+        # Cross duplex
+        cross_duplex_mutations = []
+        # -> Default cycle
+        cross_duplex_mutations.append([default_cycle_duration for _ in range(nb_controllers)])
+        # -> 1 mutation for each road that takes 1.5 times the default cycle
+        for i in range(nb_controllers):
+            cross_duplex_mutations.append([default_cycle_duration for _ in range(nb_controllers)])
+            cross_duplex_mutations[i + 1][i] = default_cycle_duration * 1.5
         
-    def mutate_open_corridor(self, node: Node):
-        return [OpenCorridorStrategy(node)]
+        # Open corridor
+        # -> 1 mutation for each open road
+        open_corridor_mutations = []
+        for i in range(nb_controllers):
+            open_corridor_mutations.append([default_cycle_duration for _ in range(nb_controllers)])
+            open_corridor_mutations[i][i] = None
 
-    def mutate_cross_duplex(self, node: Node):
-        return [CrossDuplexStrategy(node)]
+        # Piece of cake
+        piece_of_cake_mutations = []
+        piece_of_cake_mutations.append([default_cycle_duration for _ in range(nb_controllers)])
+        # -> 1 mutation for each road that takes 1.5 times the default cycle
+        for i in range(nb_controllers):
+            if nb_controllers == 1:
+                piece_of_cake_mutations.append([default_cycle_duration])
+                continue
+            piece_of_cake_mutations.append([default_cycle_duration for _ in range(nb_controllers)])
+            piece_of_cake_mutations[i][i] = default_cycle_duration * 1.5
+        
+        # Open
+        open_mutations = []
+        open_mutations.append([None for _ in range(nb_controllers)])
 
-    def mutate_piece_of_cake(self, node: Node):
-        strategies = []
-        for i in range(TIME, TIME * 3, TIME / 2):
-            pieceOfCake = PieceOfCakeStrategy(node, i)
-            pieceOfCake.time_per_state = i
-            strategies.append(pieceOfCake)
-        return strategies
-
-    def mutate_open(self, node: Node):
-        return [OpenStrategy(node)]
+        return {
+            StrategyTypes.CROSS_DUPLEX: cross_duplex_mutations,
+            StrategyTypes.OPEN_CORRIDOR: open_corridor_mutations,
+            StrategyTypes.PIECE_OF_CAKE: piece_of_cake_mutations,
+            StrategyTypes.OPEN: open_mutations
+        }

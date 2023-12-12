@@ -4,6 +4,13 @@ from math import inf
 
 from typing import List
 from engine.strategies.cross_duplex_strategy import CrossDuplexStrategy
+from engine.strategies.open_corridor_strategy import OpenCorridorStrategy
+from engine.strategies.open_strategy import OpenStrategy
+from engine.strategies.piece_of_cake_strategy import PieceOfCakeStrategy
+from engine.strategies.strategies_manager import StrategyManager
+from engine.strategies.strategy_mutator import StrategyTypes
+
+from graphics.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 from engine.traffic.traffic_light import TrafficLight
 sys.path.append('../engine')
@@ -41,7 +48,7 @@ def read_map(name: str) -> (List[Road], List[Node]):
             x, y, *_ = line.split()
             nodes.append(Node(float(x), float(y)))
 
-        normalize_coordinates(nodes, 1200, 800) # todo: remove hard coded values
+        normalize_coordinates(nodes, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         for line in f:
             n1, n2, *_ = line.split()
@@ -75,9 +82,10 @@ def set_traffic_lights(nodes: List[Node]):
             trafficLight = TrafficLight(road, node.road_out)
             node.controllers.append(trafficLight)
 
-def set_strategies(nodes: List[Node]):
+def set_strategies(nodes: List[Node], strategy_manager: StrategyManager):
     for node in nodes:
-        CrossDuplexStrategy(node)
+        node.set_strategy(strategy_manager.get_strategy(node, 3, 0))
+        
 
 def find_path(n1: Node, n2: Node) -> List[Node]:
     paths = n1.paths

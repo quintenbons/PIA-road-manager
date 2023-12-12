@@ -1,10 +1,7 @@
 import pygame
-from .constants import load_ressources
-import time
+from .constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 def pygame_init():
     pygame.init()
-    screen = pygame.display.set_mode((1200, 800))
-    load_ressources()
-    time.sleep(0.5)
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     return screen

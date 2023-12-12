@@ -1,3 +1,5 @@
 CROSSWALK_SPEED = 15
 ACCELERATION = 2 #m/s/s // todo à supprimer
-TIME = 0.3 #second
+DEFAULT_DURATION = 30
+TIME = 0.5 #second
+GENERATION_SEGMENT_DUARTION = 15 * 60

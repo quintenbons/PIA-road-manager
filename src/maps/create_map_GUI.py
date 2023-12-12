@@ -7,7 +7,7 @@ BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build/GUI/')
 # Initialisation de pygame
 pygame.init()
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1200, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Créateur de Carte")
 
