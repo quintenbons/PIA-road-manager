@@ -73,12 +73,12 @@ class PygameDisplay:
                             self.simulation.run_tick()
                     if event.key == pygame.K_p:
                         self.paused = not self.paused
-                    elif event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS:
+                    elif event.unicode == '+': # Unicode is better than key, since it will work with modifiers
                         if self.speed_factor == 128:
                             print("Speed factor already at max")
                             break
                         self.speed_factor *= 2
-                    elif event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
+                    elif event.unicode == '-':
                         self.speed_factor = max(1, self.speed_factor // 2)
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
