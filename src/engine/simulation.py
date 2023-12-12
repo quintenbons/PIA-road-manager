@@ -27,6 +27,8 @@ class Simulation:
         set_strategies(self.nodes, self.strategy_manager)
         self.movables: List[Movable] = []
 
+        random.seed(0)
+
     def add_movables(self, count: int = 1):
         for _ in range(count):
             r = self.roads[random.randint(0, len(self.roads) - 1)]
