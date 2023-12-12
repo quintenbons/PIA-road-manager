@@ -1,16 +1,14 @@
 """
 Main interface for the display.
 """
-from collections import defaultdict
 import pygame
-import random
 from engine.constants import TIME
 from engine.simulation import Simulation
 from graphics.assets import AssetManager
 from graphics.utils import get_clicked_movable, get_clicked_node
 
 from graphics.init_pygame import pygame_init
-from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road
+from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road, draw_hud, draw_paused_text
 from graphics.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class PygameDisplay:
@@ -31,15 +29,24 @@ class PygameDisplay:
         pygame.display.set_caption("Simulation de réseau routier")
         if self.debug_mode:
             print("Debug mode enabled")
-            print("press Space to advance 10 steps")
+            print("Press Space to advance 10 steps")
 
         self.clock = pygame.time.Clock()
     
-    def show_paused_text(self):
-        if self.paused and pygame.time.get_ticks() // 1000 % 2:
-            paused_text = pygame.font.SysFont('Arial', 50).render('Appuyez sur P pour reprendre', True, (255, 0, 0))
-            text_rect = paused_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
-            self.screen.blit(paused_text, text_rect)
+    def draw(self):
+        self.screen.fill((255, 255, 255))
+        if self.debug_mode:
+            self.screen.blit(self.grid_surface, (0, 0)) 
+        for road in self.simulation.roads:
+            draw_road(self.screen, road)
+        for node in self.simulation.nodes:
+            draw_node(self.screen, node)
+        for spawner in self.simulation.spawners:
+            for movable in spawner.movables:
+                asset = self.asset_manager.get_car_asset(movable)
+                draw_movable(movable, self.screen, asset)
+        
+        draw_hud(self)
 
     def run(self):
         print("Start simulation \n ----------------------------------")
@@ -47,10 +54,15 @@ class PygameDisplay:
         self.grid_surface = create_grid_surface(self.screen)
         running = True
 
-        fps = 1 / TIME # FPS = tickers per second 
         self.speed_factor = 1
+        base_fps = 15
+        base_tick_interval = TIME * 1000 
+        last_tick_time = pygame.time.get_ticks()
 
         while running:
+            current_time = pygame.time.get_ticks()
+            time_since_last_tick = current_time - last_tick_time
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
@@ -62,6 +74,9 @@ class PygameDisplay:
                     if event.key == pygame.K_p:
                         self.paused = not self.paused
                     elif event.key == pygame.K_PLUS or event.key == pygame.K_KP_PLUS:
+                        if self.speed_factor == 128:
+                            print("Speed factor already at max")
+                            break
                         self.speed_factor *= 2
                     elif event.key == pygame.K_MINUS or event.key == pygame.K_KP_MINUS:
                         self.speed_factor = max(1, self.speed_factor // 2)
@@ -77,35 +92,22 @@ class PygameDisplay:
                         if clicked_node:
                             print("Clicked on node: ", clicked_node)
 
-            self.screen.fill((255, 255, 255))
-            if self.debug_mode:
-                self.screen.blit(self.grid_surface, (0, 0)) 
-            for road in self.simulation.roads:
-                draw_road(self.screen, road)
-            for node in self.simulation.nodes:
-                draw_node(self.screen, node)
-            for spawner in self.simulation.spawners:
-                for movable in spawner.movables:
-                    asset = self.asset_manager.get_car_asset(movable)
-                    draw_movable(movable, self.screen, asset)
+            self.draw()
 
             if not self.debug_mode:
                 if not self.paused:
-                    for _ in range(self.speed_factor):
+                    if time_since_last_tick >= base_tick_interval / self.speed_factor:
                         self.simulation.run_tick()
+                        last_tick_time = current_time
                 else:
-                    self.show_paused_text()
-            
-            
-            elapsed_time_in_seconds = self.simulation.current_tick * TIME
-            time_surface = pygame.font.SysFont('Arial', 30).render(f'Temps écoulé: {elapsed_time_in_seconds:.2f} s', True, (0, 0, 0))
-            self.screen.blit(time_surface, (10, 10))
-
-            speed_surface = pygame.font.SysFont('Arial', 30).render(f'Vitesse: x{self.speed_factor}', True, (0, 0, 0))
-            self.screen.blit(speed_surface, (10, 50))
-
+                    draw_paused_text(self)
 
             pygame.display.flip()
-            self.clock.tick(fps)
+
+            if self.speed_factor > 8:
+                self.clock.tick(base_fps* self.speed_factor // 2)
+            else:
+                self.clock.tick(base_fps)
+
 
         pygame.quit()
