@@ -48,7 +48,7 @@ class PygameDisplay:
         
         draw_hud(self)
 
-    def run(self):
+    def run(self, max_time: int = None):
         print("Start simulation \n ----------------------------------")
         self.screen = pygame_init()
         self.grid_surface = create_grid_surface(self.screen)
@@ -62,6 +62,9 @@ class PygameDisplay:
         while running:
             current_time = pygame.time.get_ticks()
             time_since_last_tick = current_time - last_tick_time
+
+            if max_time is not None and max_time <= self.simulation.current_tick * TIME:
+                self.paused = True
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

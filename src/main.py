@@ -10,6 +10,7 @@ def main():
     parser.add_argument('--nb_movables', type=int, default=1, help='Nombre de movables dans la simulation')
     parser.add_argument('--map_file', type=str, help='Fichier de la map')
     parser.add_argument('--paths_file', type=str, help='Fichier des chemins, en général pas besoin de le spécifier')
+    parser.add_argument('--max_time', type=int, help='Temps maximum de la simulation')
     args = parser.parse_args()
 
     if not args.paths_file:
@@ -18,7 +19,7 @@ def main():
 
     simulation = Simulation(map_file=args.map_file, paths_file=args.paths_file, nb_movables=args.nb_movables)
     display = PygameDisplay(simulation, debug_mode=args.debug)
-    display.run()
+    display.run(max_time=args.max_time)
 
 if __name__ == "__main__":
     main()
