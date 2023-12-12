@@ -153,7 +153,7 @@ class Movable(Nodable):
         #TODO handle going further road_len
         if self.road == self.road_goal[0] and self.pos > self.road_goal[1]:
             self.pos = self.road.road_len
-            self.road.remove_movable(self)
+            self.road.despawn_movable(self)
             self.tree_node = None
             self.node = None
             return False

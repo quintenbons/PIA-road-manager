@@ -109,6 +109,9 @@ class Road:
         mov.getTreeNode().remove()
         self.ai_flow_count[1] += 1
 
+    def despawn_movable(self, mov: Movable):
+        mov.getTreeNode().remove()
+
     def get_length(self):
         return self.length
 
