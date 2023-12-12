@@ -47,15 +47,7 @@ class Simulation:
         for n in self.nodes:
             n.update(self.current_tick)
         for m in self.movables:
-            # TODO: wtf is this mess?
-            if not m.update():
-                # self.movables.remove(m)
-                # m.pos = m.road.road_len - 5
-                # m.pos = 0
-                if m.road.add_movable(m, 0):
-                    u = random.randint(0, len(self.nodes) - 1)
-                    # print(u)
-                    m.get_path(self.nodes[u])
+            m.update()
 
         self.current_tick += 1
 

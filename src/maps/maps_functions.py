@@ -84,7 +84,7 @@ def set_traffic_lights(nodes: List[Node]):
 
 def set_strategies(nodes: List[Node], strategy_manager: StrategyManager):
     for node in nodes:
-        node.set_strategy(strategy_manager.get_strategy(node, 2, 0))
+        node.set_strategy(strategy_manager.get_strategy(node, 3, 0))
         
 
 def find_path(n1: Node, n2: Node) -> List[Node]:
