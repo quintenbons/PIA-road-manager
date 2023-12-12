@@ -27,8 +27,12 @@ class Spawner:
     def update(self, time: int):
         rate = self.get_rate(time)
 
-        for _ in range(rate):
-            self.spawn()
+        # for _ in range(rate):
+        #     self.spawn()
+        n = len(self.movables)
+        if n < 100:
+            for _ in range(100 - n):
+                self.spawn()
 
         remove_list = []
         for m in self.movables:
