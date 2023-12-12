@@ -1,5 +1,5 @@
 from __future__ import annotations
-from engine.strategies.strategy import Strategy
+from engine.strategies.model.strategy import Strategy
 
 from engine.strategies.strategy_mutator import StrategyTypes
 from .road import Road

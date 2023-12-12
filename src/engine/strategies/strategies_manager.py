@@ -1,11 +1,11 @@
 from random import Random
 from engine.node import Node
 from engine.constants import TIME
-from engine.strategies.cross_duplex_strategy import CrossDuplexStrategy
-from engine.strategies.open_corridor_strategy import OpenCorridorStrategy
+from engine.strategies.model.cross_duplex_strategy import CrossDuplexStrategy
+from engine.strategies.model.open_corridor_strategy import OpenCorridorStrategy
 
-from engine.strategies.open_strategy import OpenStrategy
-from engine.strategies.piece_of_cake_strategy import PieceOfCakeStrategy
+from engine.strategies.model.open_strategy import OpenStrategy
+from engine.strategies.model.piece_of_cake_strategy import PieceOfCakeStrategy
 from engine.strategies.strategy_mutator import StrategyMutator, StrategyTypes
 
 
