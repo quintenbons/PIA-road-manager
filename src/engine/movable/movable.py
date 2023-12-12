@@ -78,7 +78,7 @@ class Movable(Nodable):
     def handle_first_movable(self):
 
         future_pos, _ = self.next_position()
-        if self.pos == future_pos:
+        if self.pos >= future_pos:
             self.current_acceleration = self.acceleration
         future_pos, _ = self.next_position()
         
@@ -260,5 +260,5 @@ class Movable(Nodable):
         return x, y
 
     def __str__(self):
-        return f'{{(x,y): {self.to_coord_xy()}, "pos on the road": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "road": {self.road}}}'
+        return f'{{(x,y): {self.to_coord_xy()}, "pos on the road": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "road": {self.road}, "id": {self._id}}}'
 
