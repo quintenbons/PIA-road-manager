@@ -1,6 +1,6 @@
 from random import Random
 from engine.node import Node
-from engine.constants import TIME
+from engine.constants import DEFAULT_DURATION
 from engine.strategies.model.cross_duplex_strategy import CrossDuplexStrategy
 from engine.strategies.model.open_corridor_strategy import OpenCorridorStrategy
 
@@ -17,7 +17,7 @@ class StrategyManager:
         self.random = Random(1)
         mutator = StrategyMutator()
         for i in range(10):
-            self.mutations[i] = mutator.get_strategies_mutations(i, 50 / TIME)
+            self.mutations[i] = mutator.get_strategies_mutations(i, DEFAULT_DURATION)
             # total = 0
             # for j in range(4):
             #     print("nb controllers: ", i, " type: ", j, " mutations: ", len(self.mutations[i][j]))

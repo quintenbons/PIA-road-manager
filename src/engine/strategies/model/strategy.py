@@ -1,4 +1,4 @@
-from engine.constants import TIME
+from engine.constants import DEFAULT_DURATION
 from engine.traffic.flow_controller import FlowController
 from ...traffic.traffic_light import TrafficLight
 from typing import List
@@ -7,6 +7,7 @@ class Strategy:
     trafficLights: List[TrafficLight]
     stateCount: int = 1
     currentState: int = 0
+    time_per_state: int = DEFAULT_DURATION
     last_time: int = 0
     is_initialized: bool = False
     state_cycles: List[int] = []

@@ -9,7 +9,7 @@ class Spawner:
     destinations: List[Road]
     get_rate: Callable[[int], int]
 
-    movables = []
+    movables: List[Movable] = []
 
     # source: List[Road] - The source of the traffic, car will spawn from this source
     # destinations: List[Road] - The destination of the traffic, car will go to this destination
