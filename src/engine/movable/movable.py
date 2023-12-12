@@ -41,6 +41,8 @@ class Movable(Nodable):
     tree_node = None
     _id : int
 
+    road_goal: tuple(Road, float)
+
     def __init__(self, speed, acceleration, latency, pos, size):
         self.speed = speed
         self.acceleration = acceleration
@@ -204,8 +206,6 @@ class Movable(Nodable):
             else:
                 self.node.movables.remove(self)
                 self.node = None
-
-            
 
 
     def update(self):
