@@ -9,7 +9,8 @@ def draw_car(movable: Movable, screen: pygame.Surface, asset: pygame.Surface):
     x, y = movable.to_coord_xy()
     centered_x = x
     centered_y = y
-    pygame.draw.circle(screen, CAR_COLOR, (centered_x, centered_y), 4)
+    c = movable.color
+    pygame.draw.circle(screen, ((c * 26)%255, (c * 12)%255, (c*3)%255), (centered_x, centered_y), 4)
     # draw also the rect
     pygame.draw.rect(screen, (255, 0, 0), get_rect(movable), 1)
 

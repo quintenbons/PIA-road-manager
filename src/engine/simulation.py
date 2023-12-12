@@ -34,7 +34,9 @@ class Simulation:
             r = self.roads[random.randint(0, len(self.roads) - 1)]
             m = Movable(5, 2, random.random(), random.random() * (r.road_len), 2)
             if r.add_movable(m, 0):
-                m.get_path(self.nodes[random.randint(0, len(self.nodes) - 1)])
+                random_road = self.roads[random.randint(0, len(self.roads) - 1)]
+                random_pos = random_road.road_len * (random.random()*0.8 + 0.1)
+                m.set_road_goal(random_road, random_pos)
                 self.movables.append(m)
 
     def run(self, sim_duration: int = GENERATION_SEGMENT_DUARTION):
@@ -48,8 +50,12 @@ class Simulation:
             r.update()
         for n in self.nodes:
             n.update(self.current_tick)
+        remove_list = []
         for m in self.movables:
-            m.update()
+            if not m.update():
+                remove_list.append(m)
+        for m in remove_list:
+            self.movables.remove(m)
 
         self.current_tick += 1
 
