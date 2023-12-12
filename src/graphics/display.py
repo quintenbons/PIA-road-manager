@@ -55,7 +55,7 @@ class PygameDisplay:
         running = True
 
         self.speed_factor = 1
-        base_fps = 15
+        base_fps = 45
         base_tick_interval = TIME * 1000 
         last_tick_time = pygame.time.get_ticks()
 
@@ -105,7 +105,7 @@ class PygameDisplay:
             pygame.display.flip()
 
             if self.speed_factor > 8:
-                self.clock.tick(base_fps* self.speed_factor // 2)
+                self.clock.tick(base_fps*2)
             else:
                 self.clock.tick(base_fps)
 
