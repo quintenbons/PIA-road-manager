@@ -3,7 +3,6 @@ from __future__ import annotations
 import sys
 from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
-from random import randint
 from ..utils import getLength, vecteur_norm, scalaire
 
 from ..constants import TIME
@@ -37,7 +36,6 @@ class Movable(Nodable):
     node_len: float 
     size: float = 1.0
 
-    color: int
     path: List[Node] = None
     tree_node = None
     _id : int
@@ -55,7 +53,6 @@ class Movable(Nodable):
         global mid
         self._id = mid
         mid += 1
-        self.color = randint(0, 255)
 
 
     def update_position(self):
@@ -153,7 +150,7 @@ class Movable(Nodable):
         #TODO handle going further road_len
         if self.road == self.road_goal[0] and self.pos > self.road_goal[1]:
             self.pos = self.road.road_len
-            self.road.remove_movable(self)
+            self.road.despawn_movable(self)
             self.tree_node = None
             self.node = None
             return False
@@ -263,5 +260,5 @@ class Movable(Nodable):
         return x, y
 
     def __str__(self):
-        return f'{{"pos": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "road": {self.road}}}'
+        return f'{{(x,y): {self.to_coord_xy()}, "pos on the road": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "road": {self.road}}}'
 

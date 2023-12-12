@@ -20,17 +20,6 @@ def load_resource(path: PathLike) -> pygame.Surface:
 
 @dataclass
 class AssetManager:
-    cars: Dict[int, pygame.Surface] = field(default_factory=dict)
-
-    car_assets: List[pygame.Surface] = field(default_factory=list)
-
-    def __post_init__(self):
-        self.car_assets = list(map(load_resource, [BLUE_CAR, RED_CAR, GREEN_CAR]))
-
-    def get_car_asset(self, car: Movable) -> pygame.Surface:
-        if not car._id in self.cars:
-            car_asset = self.car_assets[car._id % len(self.car_assets)]
-            self.cars[car._id] = car_asset
-            # self.width, self.height = car_asset.get_size()
-
-        return self.cars[car._id]
+    def get_car_asset(self, car: Movable) -> int:
+        quick_hash = ((car._id >> 16) ^ car._id) * 0x45d9f3b
+        return quick_hash % 255

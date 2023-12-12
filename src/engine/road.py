@@ -94,6 +94,7 @@ class Road:
             movable.set_road(self)
             return True
         # print("Can't add movable")
+        self.ai_flow_count[0] += 1
         return False
 
     def spawn_movable(self, movable: Movable, lane: int):
@@ -105,6 +106,10 @@ class Road:
         return False
 
     def remove_movable(self, mov: Movable):
+        mov.getTreeNode().remove()
+        self.ai_flow_count[1] += 1
+
+    def despawn_movable(self, mov: Movable):
         mov.getTreeNode().remove()
 
     def get_length(self):

@@ -1,5 +1,5 @@
 from yaml import Node
-from engine.constants import TIME
+from engine.constants import DEFAULT_DURATION, TIME
 from engine.strategies.model.cross_duplex_strategy import CrossDuplexStrategy
 from engine.strategies.model.open_corridor_strategy import OpenCorridorStrategy
 
@@ -20,7 +20,7 @@ class StrategyMutator:
     def __init__(self):
         pass
 
-    def get_strategies_mutations(self, nb_controllers: int, default_cycle_duration: int):
+    def get_strategies_mutations(self, nb_controllers: int, default_cycle_duration: int = DEFAULT_DURATION):
         # Cross duplex
         cross_duplex_mutations = []
         # -> Default cycle

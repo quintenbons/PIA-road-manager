@@ -1,16 +1,17 @@
 import pygame
+
 from .constants import *
 from engine.road import Road
 from engine.node import Node
 from engine.movable.movable import Movable
 from graphics.assets import NODE_RADIUS
+from engine.constants import TIME
 
-def draw_car(movable: Movable, screen: pygame.Surface, asset: pygame.Surface):
+def draw_car(movable: Movable, screen: pygame.Surface, color: int):
     x, y = movable.to_coord_xy()
     centered_x = x
     centered_y = y
-    c = movable.color
-    pygame.draw.circle(screen, ((c * 26)%255, (c * 12)%255, (c*3)%255), (centered_x, centered_y), 4)
+    pygame.draw.circle(screen, ((color * 26)%255, (color * 12)%255, (color*3)%255), (centered_x, centered_y), 4)
     # draw also the rect
     pygame.draw.rect(screen, (255, 0, 0), get_rect(movable), 1)
 
@@ -23,8 +24,8 @@ def draw_road(screen, road: Road):
 def draw_node(screen, node:Node):
     pygame.draw.circle(screen, NODE_COLOR, node.position, NODE_RADIUS)
 
-def draw_movable(movable: Movable, screen, asset: pygame.Surface):
-    draw_car(movable, screen, asset)
+def draw_movable(movable: Movable, screen, color: int):
+    draw_car(movable, screen, color)
 
 def get_rect(obj):
     if isinstance(obj, Node):
@@ -54,3 +55,21 @@ def create_grid_surface(screen):
             grid_surface.blit(text, (x + 5, y + 5))
 
     return grid_surface
+
+
+def draw_hud(display):
+    elapsed_time_in_seconds = display.simulation.current_tick * TIME
+    time_surface = pygame.font.SysFont('Arial', 20).render(f'Time: {elapsed_time_in_seconds:.2f} s', True, (0, 0, 0))
+    display.screen.blit(time_surface, (10, 10))
+
+    speed_surface = pygame.font.SysFont('Arial', 20).render(f'Speed: x{display.speed_factor}', True, (0, 0, 0))
+    display.screen.blit(speed_surface, (10, 35))
+
+    hug_help_surface = pygame.font.SysFont('Arial', 20).render(f'P to pause, + to speed up, - to slow down', True, (0, 0, 0))
+    display.screen.blit(hug_help_surface, (10, 60))
+
+def draw_paused_text(display):
+        if display.paused and pygame.time.get_ticks() // 1000 % 2:
+            paused_text = pygame.font.SysFont('Arial', 50).render('Appuyez sur P pour reprendre', True, (255, 0, 0))
+            text_rect = paused_text.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
+            display.screen.blit(paused_text, text_rect)
