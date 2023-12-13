@@ -190,10 +190,11 @@ class Movable(Nodable):
 
         nx, ny = self.node_pos
         dx, dy = self.node_dir
-        return pos, speed, (nx + pos*dx, ny + pos * dy)
+        return pos, speed, (nx + (pos - self.pos)*dx, ny + (pos - self.pos) * dy)
     
     def update_node(self):
-        tmp_pos = self.pos
+        tmp_pos, tmp_node_pos = self.pos, self.node_pos
+
         self.pos, self.speed, self.node_pos = self.next_node_position()
         if self.node_mov and self.pos <= tmp_pos:
             self.current_acceleration = self.acceleration
@@ -201,6 +202,7 @@ class Movable(Nodable):
             self.pos = 0
             if not self.road.add_movable(self, 0):
                 self.pos = self.node_len
+                self.node_pos = tmp_node_pos
             else:
                 self.node.movables.remove(self)
                 self.node = None
@@ -250,7 +252,9 @@ class Movable(Nodable):
     def bindTree(self, tree_node: TreeNode):
         self.tree_node = tree_node
 
-    def to_coord_xy(self):        
+    def to_coord_xy(self):
+        if self.node is not None:
+            return self.node_pos
         road = self.road
         pos_start = road.pos_start
         pos_end = road.pos_end

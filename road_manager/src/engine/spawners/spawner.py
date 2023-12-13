@@ -45,7 +45,7 @@ class Spawner:
 
     def spawn(self):
         source = self.sources[random.randint(0, len(self.sources) - 1)]
-        new_movable = Movable(5, 2, random.random(), random.random() * source.road_len, 2)
+        new_movable = Movable(random.random()*4 + 1, random.random()*2.5 + 0.5, random.random(), random.random() * source.road_len, 2)
         # Add the movable to the road and the road to the movable
         if source.spawn_movable(new_movable, random.randint(0, len(source.lanes) - 1)):
 
