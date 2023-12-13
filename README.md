@@ -82,3 +82,17 @@ La position `car` évolue se situe entre 0 et 1, 1 signifie qu'elle a atteint un
 Lorsqu'un `node` se met à jour, il met à jour tout ses `FlowController`. Les `FlowController` ont chacun leur propre logique pour se mettre à jour.
 - `TrafficLight`: Les états sont gérés par l'IA donc rien n'est mis à jour, cependant si le `TrafficLight` dispose d'un `Crosswalk`, celui ci sera mit à jour en fonction de l'état du `TrafficLight`.
 - `Crosswalk`: Dons le cas d'un `Crosswalk` classique, si des piétons attendent ils seront autorisés à traverser. Si ils traversent, le `Crosswalk` sera bloqué pendant `CROSSWALK_SPEED` unités de temps. Sinon le `Crosswalk` est ouvert.
+
+## Intelligence artificielle
+
+- Générer un dataset
+
+`src/gen_dataset.py -h`
+
+créera un fichier `dataset.pt`
+
+- Entraîner un modèle
+
+`src/train_ai.py -h`
+
+créera un fichier `model.pt` SI BESOIN (sinon ça le charge juste), et l'entraînera. Notez qu'il n'est pas save après l'entraînement pour l'instant

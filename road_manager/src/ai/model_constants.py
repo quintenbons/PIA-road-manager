@@ -1,4 +1,0 @@
-MAX_ROADS = 5
-INPUT_DIM = 2 * MAX_ROADS
-HIDDEN_DIM = 64
-OUTPUT_DIM = 5 # strategies
