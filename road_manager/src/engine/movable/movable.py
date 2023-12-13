@@ -105,10 +105,11 @@ class Movable(Nodable):
             # Leaving the road
             # Check if it can leave or not
             # Check for slowing down
-            next_road = self.find_next_road(self.path[-1])
+            # next_road = self.find_next_road(self.path[-1])
             #direction = vecteur_norm(self.road.pos_end, next_road.pos_start)
-            
-            if not self.road.end.position_available(self.road.pos_end, 2*self.size):
+            # print(self.road.end.position, self.road.pos_end)
+            if not self.road.end.position_available(self.road.pos_end, self.size):
+                # print("je me bloque ?")
                 da = 2.5*dx/TIME/TIME # < 0
                 self.current_acceleration = min(self.acceleration, self.current_acceleration + da)
 
@@ -154,7 +155,7 @@ class Movable(Nodable):
             self.node = next_node
             self.node.movables.append(self)
 
-            next_road = self.find_next_road(next_node)
+            next_road = self.find_next_road(self.path[-1])
             self.road.remove_movable(self)
             self.tree_node = None
             self.pos = 0
@@ -228,7 +229,7 @@ class Movable(Nodable):
         from maps.maps_functions import find_path
         self.path = [arrival.end]
         self.path += find_path(self.road.end, arrival.start)
-        assert(self.road.end == self.path.pop(-1))
+        # assert(self.road.end == self.path.pop(-1))
 
     def set_road_goal(self, arrival: Road, pos):
         self.road_goal = [arrival, pos]

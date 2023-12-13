@@ -4,7 +4,7 @@ def getLength(pos1:tuple[float, float], pos2:tuple[float, float]) -> float:
 
 def circle_collision(pos1, pos2, size1, size2):
     dist = getLength(pos1, pos2)
-    if dist < size1 + size2:
+    if dist < (size1 + size2):
         return True
     return False
 

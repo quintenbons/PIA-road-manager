@@ -91,7 +91,9 @@ class Node:
     def position_available(self, pos, size):
         for m in self.movables:
             #TODO use next node pos
+            # print(m.node_pos, pos, m.size, size)
             if circle_collision(m.node_pos, pos, m.size, size):
+                # print("collision ?")
                 return False
         return True
 
