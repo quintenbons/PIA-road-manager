@@ -15,6 +15,7 @@ class StrategyTypes:
     PIECE_OF_CAKE = 2
     OPEN = 3
 
+STRAT_NAMES = ["CROSS_DUPLEX", "OPEN_CORRIDOR", "PIECE_OF_CAKE", "OPEN"]
 class StrategyMutator:
 
     def __init__(self):

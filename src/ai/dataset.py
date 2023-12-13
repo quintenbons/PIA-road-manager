@@ -11,7 +11,8 @@ import random
 from engine.node import Node
 from engine.simulation import Simulation
 from ai.model_constants import *
-from engine.strategies.strategy_mutator import StrategyTypes
+from engine.strategies.strategies_manager import StrategyManager
+from engine.strategies.strategy_mutator import STRAT_NAMES, StrategyTypes
 
 @dataclass
 class NodeDataset(Dataset):
@@ -49,6 +50,24 @@ def entry_from_node(node: Node, tqdm_disable=True):
         if num < len(node.road_out):
             tensor[num * 2 + 1] = node.road_out[num].ai_flow_count[0]
     return tensor
+
+def score_tester():
+    sim_seed = int(time.time())
+    map_file = "src/maps/build/GUI/Star/map.csv"
+    paths_file = "src/maps/build/GUI/Star/paths.csv"
+    central_node = 1
+
+    strategy_manager = StrategyManager()
+    nb_controllers = 4
+
+    for typ, mutation in strategy_manager.enumerate_strategy_schemes(nb_controllers):
+        random.seed(sim_seed)
+        simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
+        simulation.set_node_strategy(central_node, typ, mutation)
+        simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
+
+        sim_score = simulation.get_total_score()
+        print(f"{typ:3} {STRAT_NAMES[typ]:20} {mutation:3} {sim_score:15.5f}")
 
 def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
     sim_seed = int(time.time())

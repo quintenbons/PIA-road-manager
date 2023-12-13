@@ -40,7 +40,16 @@ class StrategyManager:
             return PieceOfCakeStrategy(node.controllers, mutation_parameters)
         else:
             return None
-        
+
+    def enumerate_strategy_schemes(self, controller_count: int):
+        for type in range(StrategyTypes.length):
+            for mutation in range(len(self.mutations[controller_count][type])):
+                yield type, mutation
+
+    def enumerate_strategies(self, node: Node):
+        for type, mutation in self.enumerate_strategy_schemes(len(node.controllers)):
+            yield self.get_strategy(node, type, mutation)
+
     def get_random_strategy(self, node: Node):
         type = self.random.randint(0, StrategyTypes.length - 1)
         mutation = self.random.randint(0, len(self.mutations[len(node.controllers)][type]) - 1)
