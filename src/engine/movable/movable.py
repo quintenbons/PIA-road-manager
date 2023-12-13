@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
 from ..utils import getLength, vecteur_norm, scalaire
 
-from ..constants import TIME
+from ..constants import LEAVING_TIME, TIME
 
 sys.path.append('../maps')
 
@@ -42,6 +42,7 @@ class Movable(Nodable):
     _id : int
 
     road_goal: List(Road, float) = None
+    inner_timer: float = 0
 
     def __init__(self, speed, acceleration, latency, pos, size):
         self.speed = speed
@@ -74,7 +75,17 @@ class Movable(Nodable):
             pos = TIME*TIME*self.current_acceleration/2 + self.speed*TIME + self.pos
             speed = sp
         assert(speed <= self.road.speedLimit)
+        if self.inner_timer > 0:
+            speed = 0
+            pos = self.pos
         return pos, speed
+    
+    def handle_road_target(self):
+        dx = self.road_goal[1] - self.pos
+        # assert(dx > 0)
+        if self.road == self.road_goal[0] and 0 < dx < 50:
+            da = -dx/TIME/TIME
+            self.current_acceleration = max(0, self.current_acceleration + da)
 
     def handle_first_movable(self):
 
@@ -102,7 +113,6 @@ class Movable(Nodable):
                 self.current_acceleration = min(self.acceleration, self.current_acceleration + da)
 
             #TODO add a way to check for other roads
-
     def handle_possible_collision(self, other: Movable):
         dx = (other.next_position()[0] - 1*other.size) - (self.next_position()[0] + 1*self.size)
         if dx <= 0:
@@ -111,7 +121,6 @@ class Movable(Nodable):
         else:
             da = 2.5*dx/TIME/TIME
             self.current_acceleration -= da
-
     def no_possible_collision(self, other: Movable):
         if not other:
             self.current_acceleration = self.acceleration
@@ -129,7 +138,12 @@ class Movable(Nodable):
         self.pos, self.speed = self.next_position()
         #TODO handle going further road_len
         if self.road == self.road_goal[0] and self.pos > self.road_goal[1]:
-            self.pos = self.road.road_len
+            timer = self.inner_timer * TIME
+            if timer <= LEAVING_TIME:
+                self.speed = 0
+                self.current_acceleration = 0
+                self.inner_timer += 1
+                return True
             self.road.despawn_movable(self)
             self.tree_node = None
             self.node = None

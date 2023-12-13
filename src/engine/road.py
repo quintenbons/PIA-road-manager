@@ -75,6 +75,7 @@ class Road:
                     mov.handle_first_movable()
                 else:
                     self.collision_detection(previous, mov)
+                mov.handle_road_target()
                 previous = mov
 
     # No need for collision detection??
