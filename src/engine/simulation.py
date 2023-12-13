@@ -6,6 +6,7 @@ from engine.spawners.spawner import Spawner
 from engine.spawners.spawner_utils import every_ten_seconds
 
 from engine.strategies.strategies_manager import StrategyManager
+from engine.strategies.strategy_mutator import StrategyTypes
 sys.path.append(os.path.dirname(__file__))
 import random
 from maps.maps_functions import read_map, read_paths, set_strategies, set_traffic_lights
@@ -64,6 +65,10 @@ class Simulation:
         for s in self.spawners:
             s.reset_score()
 
+    def set_node_strategy(self, node_id: int, type: StrategyTypes, mutation: int):
+        target_node = self.nodes[node_id]
+        strat = self.strategy_manager.get_strategy(target_node, type, mutation)
+        target_node.set_strategy(strat)
 
 if __name__ == "__main__":
     simulation = Simulation()

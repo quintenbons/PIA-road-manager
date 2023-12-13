@@ -11,6 +11,7 @@ import random
 from engine.node import Node
 from engine.simulation import Simulation
 from ai.model_constants import *
+from engine.strategies.strategy_mutator import StrategyTypes
 
 @dataclass
 class NodeDataset(Dataset):
@@ -61,6 +62,7 @@ def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torc
     for _ in tqdm(range(size), disable=tqdm_disable):
         random.seed(sim_seed)
         simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
+        simulation.set_node_strategy(central_node, StrategyTypes.CROSS_DUPLEX, 0)
         simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
         sim_seeds.append(sim_seed)
         batch.append(entry_from_node(simulation.nodes[central_node]))
