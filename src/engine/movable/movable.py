@@ -36,6 +36,7 @@ class Movable(Nodable):
     node_mov: bool = True
     node_len: float 
     size: float = 1.0
+    spawn_tick: int = 0
 
     path: List[Node] = None
     tree_node = None
@@ -44,13 +45,14 @@ class Movable(Nodable):
     road_goal: List(Road, float) = None
     inner_timer: float = 0
 
-    def __init__(self, speed, acceleration, latency, pos, size):
+    def __init__(self, speed, acceleration, latency, pos, size, spawn_tick: int = 0):
         self.speed = speed
         self.acceleration = acceleration
         
         self.latency = latency
         self.pos = pos
         self.size = size
+        self.spawn_tick = spawn_tick
 
         global mid
         self._id = mid
@@ -264,6 +266,10 @@ class Movable(Nodable):
         y = pos_start[1] + pos*uy
 
         return x, y
+
+    def get_score(self, current_tick) -> int:
+        """Game score. Play with this, and the AI will try to minimize it."""
+        return (current_tick - self.spawn_tick) ** 2
 
     def __str__(self):
         return f'{{(x,y): {self.to_coord_xy()}, "pos on the road": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "node": {self.node} "road": {self.road}, "id": {self._id}}}'

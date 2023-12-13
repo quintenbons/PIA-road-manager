@@ -8,6 +8,7 @@ class Spawner:
     sources: List[Road]
     destinations: List[Road]
     get_rate: Callable[[int], int]
+    _total_despawned_score: int = 0
 
     movables: List[Movable] = []
 
@@ -22,13 +23,13 @@ class Spawner:
         self.movables = []
 
         for _ in range(initial_rate):
-            self.spawn()
+            self.spawn(current_tick=0)
 
-    def update(self, time: int):
-        rate = self.get_rate(time)
+    def update(self, current_tick: int):
+        rate = self.get_rate(current_tick)
 
         for _ in range(rate):
-            self.spawn()
+            self.spawn(current_tick=current_tick)
             #TODO
             pass
         # n = len(self.movables)
@@ -36,16 +37,28 @@ class Spawner:
         #     for _ in range(100 - n):
         #         self.spawn()
 
-        remove_list = []
+        remove_list: List[Movable] = []
         for m in self.movables:
             if not m.update():
                 remove_list.append(m)
         for m in remove_list:
+            self._total_despawned_score += m.get_score(current_tick)
             self.movables.remove(m)
 
-    def spawn(self):
+    def get_total_score(self, current_tick: int) -> int:
+        """Get total simulation score (not node specific)"""
+        total_active_score = 0
+        for m in self.movables:
+            total_active_score += m.get_score(current_tick)
+        return self._total_despawned_score + total_active_score
+
+    def reset_score(self):
+        """Reset score of previously despawned movables (still maintains ongoing movables)"""
+        self._total_despawned_score = 0
+
+    def spawn(self, current_tick: int):
         source = self.sources[random.randint(0, len(self.sources) - 1)]
-        new_movable = Movable(5, 2, random.random(), random.random() * source.road_len, 2)
+        new_movable = Movable(5, 2, random.random(), random.random() * source.road_len, 2, spawn_tick=current_tick)
         # Add the movable to the road and the road to the movable
         if source.spawn_movable(new_movable, random.randint(0, len(source.lanes) - 1)):
 

@@ -50,6 +50,20 @@ class Simulation:
         for s in self.spawners:
             s.update(self.current_tick * TIME)
 
+    def get_total_score(self) -> int:
+        """Get total simulation score (not node specific)
+
+        Kind of see through for spawner.get_total_score"""
+        total_active_score = 0
+        for s in self.spawners:
+            total_active_score += s.get_total_score(self.current_tick)
+        return total_active_score
+
+    def reset_score(self):
+        """Reset score of previously despawned movables (still maintains ongoing movables)"""
+        for s in self.spawners:
+            s.reset_score()
+
 
 if __name__ == "__main__":
     simulation = Simulation()
