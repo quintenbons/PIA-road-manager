@@ -1,4 +1,4 @@
-import { Box, Text, ChakraProvider, Button } from "@chakra-ui/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { NavBar } from "./components/NavBar";
 import { Content } from "./components/Content";
 
