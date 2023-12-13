@@ -42,42 +42,50 @@ class Node:
             for j in range(i + 1, n):
                 movable1 = self.movables[i]
                 movable2 = self.movables[j]
-                # if circle_collision(movable1.node_pos, movable2.node_pos, movable1.size, movable2.size):
-                    # print("Col in node")
-                    # exit(0)
                 pos1, speed1, node_pos1 = movable1.next_node_position()
                 pos2, speed2, node_pos2 = movable2.next_node_position()
 
-                if circle_collision(node_pos1, node_pos2, movable1.size, movable2.size):
-                    # print("collision")
-                    pass
-                    #TODO gérer cela, par exemple, si une voiture attend à un feu on peut ignorer
-                    # exit(0)
                 A = movable1.node_pos
                 B = movable2.node_pos
                 O = vecteur(A, B)
-                U = vecteur(node_pos1, A)
-                V = vecteur(node_pos2, B)
+                U = vecteur(A, node_pos1)
+                V = vecteur(B, node_pos2)
+                
+                N = (U[1], -U[0])
+                #BA et V
+                sca = scalaire(N, O)
+                priority_mov = None
+                stop_mov = None
+                if sca > 0:
+                    priority_mov = movable2
+                    stop_mov = movable1
+                else:
+                    priority_mov = movable1
+                    stop_mov = movable2
+                
+                if circle_collision(node_pos1, node_pos2, movable1.size, movable2.size):
+                    # notifier la voiture à droite qu'elle doit stoper
+                    stop_mov.notify_node_collision()
+                    priority_mov.notify_node_priority()
 
+                det = V[0]*U[1]-V[1]*U[0]
                 t = (V[0]*O[1]-O[0]*V[1])
 
-                det = V[1]*U[0]-V[0]*U[1]
                 if det != 0:
                     t /= det
                 
                     P = (A[0] + t*U[0], A[1] + t*U[1])
 
-                    AP = vecteur(P, A)
-                    BP = vecteur(P, B)
+                    AP = vecteur(A, P)
+                    BP = vecteur(B, P)
 
                     sca1 = scalaire(AP, U)
                     sca2 = scalaire(BP, V)
 
                     if sca1 >= 0 and sca2 >= 0:
                         if norm(AP) < norm(U) and norm(BP) < norm(V):
-                            # print("Collision ici")
-                            # exit(0)
-                            pass
+                            stop_mov.notify_node_collision()
+                            priority_mov.notify_node_priority()
 
 
     def position_available(self, pos, size):

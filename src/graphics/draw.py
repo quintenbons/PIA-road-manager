@@ -13,7 +13,7 @@ def draw_car(movable: Movable, screen: pygame.Surface, color: int):
     centered_y = y
     pygame.draw.circle(screen, ((color * 26)%255, (color * 12)%255, (color*3)%255), (centered_x, centered_y), 4)
     # draw also the rect
-    pygame.draw.rect(screen, (255, 0, 0), get_rect(movable), 1)
+    # pygame.draw.rect(screen, (255, 0, 0), get_rect(movable), 1)
 
 def draw_road(screen, road: Road):
     if road.block_traffic:

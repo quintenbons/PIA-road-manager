@@ -33,6 +33,7 @@ class Movable(Nodable):
     pos: float = 0.0
     node_pos: list(float, float)
     node_dir: tuple(float, float)
+    node_mov: bool = True
     node_len: float 
     size: float = 1.0
 
@@ -94,34 +95,13 @@ class Movable(Nodable):
             # Check if it can leave or not
             # Check for slowing down
             next_road = self.find_next_road(self.path[-1])
-            direction = vecteur_norm(self.road.pos_end, next_road.pos_start)
+            #direction = vecteur_norm(self.road.pos_end, next_road.pos_start)
             
-            if not self.road.end.position_available(self.road.pos_end, self.size):
+            if not self.road.end.position_available(self.road.pos_end, 2*self.size):
                 da = 2.5*dx/TIME/TIME # < 0
                 self.current_acceleration = min(self.acceleration, self.current_acceleration + da)
 
             #TODO add a way to check for other roads
-    
-        
-    def handle_node_collision(self, other: Movable):
-        ortho = (self.node_dir[1], -self.node_dir[0])
-        scal = scalaire(ortho, other.node_dir)
-        if scal > 0:
-            # Priotité à droite
-            if other.speed == 0 and other.current_acceleration <= 0:
-                #TODO test if it works
-                self.current_acceleration = self.acceleration
-            else:
-                self.speed = 0
-                self.current_acceleration = 0
-        else:
-            # On a la priorité
-            if self.speed == 0 and self.current_acceleration <= 0:
-                #TODO test if it works
-                other.current_acceleration = other.acceleration
-            else:
-                other.speed = 0
-                other.current_acceleration = 0
 
     def handle_possible_collision(self, other: Movable):
         dx = (other.next_position()[0] - 1*other.size) - (self.next_position()[0] + 1*self.size)
@@ -180,6 +160,16 @@ class Movable(Nodable):
 
         return True
     
+    def notify_node_collision(self):
+        # print(f"my id is : {self._id}")
+        # pass
+        self.speed = 0
+        self.current_acceleration = 0
+        self.node_mov = False
+    
+    def notify_node_priority(self):
+        self.current_acceleration = self.acceleration/2
+
     def next_node_position(self):
         pos, speed = self.next_position()
         pos = min(pos, self.node_len)
@@ -189,8 +179,10 @@ class Movable(Nodable):
         return pos, speed, (nx + pos*dx, ny + pos * dy)
     
     def update_node(self):
+        tmp_pos = self.pos
         self.pos, self.speed, self.node_pos = self.next_node_position()
-
+        if self.node_mov and self.pos <= tmp_pos:
+            self.current_acceleration = self.acceleration
         if self.pos >= self.node_len:
             self.pos = 0
             if not self.road.add_movable(self, 0):
@@ -198,7 +190,7 @@ class Movable(Nodable):
             else:
                 self.node.movables.remove(self)
                 self.node = None
-
+        self.node_mov = True
 
     def update(self):
         if self.tree_node is None and self.node is None:
@@ -260,5 +252,5 @@ class Movable(Nodable):
         return x, y
 
     def __str__(self):
-        return f'{{(x,y): {self.to_coord_xy()}, "pos on the road": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "road": {self.road}, "id": {self._id}}}'
+        return f'{{(x,y): {self.to_coord_xy()}, "pos on the road": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "node": {self.node} "road": {self.road}, "id": {self._id}}}'
 

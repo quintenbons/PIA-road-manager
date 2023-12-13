@@ -28,7 +28,9 @@ class Spawner:
         rate = self.get_rate(time)
 
         for _ in range(rate):
-            self.spawn()
+            # self.spawn()
+            #TODO
+            pass
         # n = len(self.movables)
         # if n < 100:
         #     for _ in range(100 - n):
