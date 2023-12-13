@@ -20,8 +20,6 @@ class Simulation:
     current_tick: int = 0
 
     def __init__(self, map_file: str, paths_file: str, nb_movables: int = 0):
-        random.seed(0)
-
         self.strategy_manager = StrategyManager()
 
         self.roads: List[Road]
