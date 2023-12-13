@@ -31,6 +31,7 @@ def training_loop(model: CrossRoadModel, dataloader: DataLoader, num_epochs: int
 def train(dataset_target: PathLike, model_target: PathLike, num_epochs):
     dataset = NodeDataset.load(dataset_target)
     model = CrossRoadModel.load(model_target)
-    dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=4)
+    model = torch.nn.DataParallel(model)
+    dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=4, pin_memory=True)
     training_loop(model, dataloader, num_epochs)
     model.save(model_target)
