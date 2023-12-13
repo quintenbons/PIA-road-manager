@@ -115,6 +115,7 @@ def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torc
         # Run second range simulationS
         scores, _ = simul_to_scores(central_node, second_seed)
         one_hot = F.one_hot(torch.tensor(scores).argmin(), len(scores))
+        one_hot = one_hot.float()
 
         sim_seeds.append(sim_seed)
         batch.append(entry_from_node(simulation.nodes[central_node]))
