@@ -25,6 +25,14 @@ module.exports = {
           },
         ],
       },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: "file-loader",
+          },
+        ],
+      },
     ],
   },
   resolve: {
@@ -37,7 +45,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: "index.html",
-      inlineSource: '.(js)$',
+      inlineSource: ".(js)$",
       template: "src/index.html",
     }),
   ],
