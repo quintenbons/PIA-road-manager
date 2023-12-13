@@ -30,6 +30,17 @@ class NodeDataset(Dataset):
     def save(self, target: PathLike):
         torch.save([self.inputs, self.outputs, self.seeds], target)
 
+    def merge(self, other):
+        self.inputs = torch.cat([self.inputs, other.inputs])
+        self.outputs = torch.cat([self.outputs, other.outputs])
+        self.seeds = torch.cat([self.seeds, other.seeds])
+        return self
+
+    def merge_all(self, others):
+        for other in others:
+            self.merge(other)
+        return self
+
     @classmethod
     def load(Cls, target: PathLike):
         data = torch.load(target)
