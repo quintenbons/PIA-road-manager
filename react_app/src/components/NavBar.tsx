@@ -1,11 +1,23 @@
-import { Box, Container, Icon, Text, theme } from "@chakra-ui/react";
+import {
+  Box,
+  Container,
+  Icon,
+  Text,
+  theme,
+  useColorMode,
+} from "@chakra-ui/react";
+import { ColorSwitch } from "./ColorSwitch";
 
 export const NavBar = () => {
+  const { colorMode } = useColorMode();
   return (
     <Box
       sx={{
         width: "100%",
-        backgroundColor: theme.colors.green[100],
+        backgroundColor:
+          colorMode === "light"
+            ? theme.colors.green[100]
+            : theme.colors.green[900],
       }}
     >
       <Container
@@ -31,6 +43,13 @@ export const NavBar = () => {
         >
           Text
         </Text>
+        <Box
+          sx={{
+            marginLeft: "auto",
+          }}
+        >
+          <ColorSwitch />
+        </Box>
       </Container>
     </Box>
   );
