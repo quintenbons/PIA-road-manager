@@ -245,6 +245,10 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
       <Title title="Pistes d'amélioration" size="md" />
       <Paragraph text="Nous n'avons pas réalisé de refactoring ou d'optimisation de la codebase. Nous pensons que cela pourrait largement améliorer les performances de l'engine et ainsi augmenter la vitesse de génération des datasets." />
       <Paragraph text="Nous aimerions aussi ajouter de nouveaux benchmarks. Nous sommes satisfait pour ce POC et nous pourrons toujours revenir aux commits." />
+
+      <Title title="Précision du modèle" />
+      <Paragraph text="Un simple script nous permet de remarquer que le modèle atteint actuellement (sur une simulation extrêmement simple) à peu près 30% de précision. Il est à noter que le modèle est quand même overfit sur des données très simples. Cela met en évidence que la structure actuelle des layers n'est pas viable, et qu'il faut trouver de nouvelles valeurs." />
+
     </Container>
   );
 };
