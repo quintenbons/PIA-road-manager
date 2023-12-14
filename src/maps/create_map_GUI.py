@@ -53,7 +53,8 @@ while running:
                 for node in nodes:
                     if node.collidepoint(pos):
                         if len(links) > 0 and links[-1][1] is None:
-                            links[-1][1] = node
+                            if links[-1][0] != node:
+                                links[-1][1] = node
                         else:
                             links.append([node, None])
                         break

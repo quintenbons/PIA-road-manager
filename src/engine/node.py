@@ -1,4 +1,5 @@
 from __future__ import annotations
+from engine.constants import MAX_MOVABLES_IN_NODE
 from engine.strategies.model.strategy import Strategy
 
 from engine.strategies.strategy_mutator import StrategyTypes
@@ -35,7 +36,6 @@ class Node:
 
     def update(self, time) -> None:
         self.strategy.update(time)
-        
         n = len(self.movables)
         # print(n)
         for i in range(n):
@@ -89,6 +89,9 @@ class Node:
 
 
     def position_available(self, pos, size):
+
+        if len(self.movables) > MAX_MOVABLES_IN_NODE:
+            return False
         for m in self.movables:
             #TODO use next node pos
             # print(m.node_pos, pos, m.size, size)
