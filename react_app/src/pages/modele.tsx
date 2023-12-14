@@ -1,4 +1,4 @@
-import { Container, theme, Image } from "@chakra-ui/react";
+import { Container, theme, Image, Code } from "@chakra-ui/react";
 import { BreadcrumbLnk } from "../components/BreadcrumbLnk";
 import { DocumentDescriptor } from "../components/DocumentDescriptor";
 import { Title } from "../components/Title";
@@ -84,6 +84,66 @@ export const Modele = () => {
           "Branchement à des cas concrets (transformation d'une situation réelle en entrée du dataset)",
         ]}
       />
+
+      <Code colorScheme="green">
+        class CrossRoadModel(nn.Module):
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, nb_strats=OUTPUT_DIM):
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(CrossRoadModel,
+        self).__init__()
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fc1 =
+        nn.Linear(INPUT_DIM, HIDDEN_DIM)
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fc2 =
+        nn.Linear(HIDDEN_DIM, HIDDEN_DIM)
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fc3 =
+        nn.Linear(HIDDEN_DIM, nb_strats)
+        <br />
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;def forward(self, x):
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(self.fc1(x))
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(self.fc2(x))
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(self.fc3(x))
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return x<br />
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;def save(self, target: PathLike):
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if isinstance(self,
+        nn.DataParallel):
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state_dict
+        = self.module.state_dict()
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state_dict
+        = self.state_dict()
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;torch.save(state_dict,
+        target)
+        <br />
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;@classmethod
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;def load(Cls, target: PathLike, device="cpu"):
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state_dict =
+        torch.load(target, map_location=device)
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model = Cls()
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.load_state_dict(state_dict)
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return model
+        <br />
+      </Code>
 
       <ContinueLectureButton text="Continuer vers Mesures" href="/mesures" />
     </Container>
