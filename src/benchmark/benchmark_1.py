@@ -1,10 +1,8 @@
 import time
-from engine.constants import GENERATION_SEGMENT_DUARTION
 import random
 
 from engine.simulation import Simulation
 from ai.model_constants import *
-from engine.strategies.strategies_manager import StrategyManager
 
 class Benchmark1():
     def run():
