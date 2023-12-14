@@ -4,6 +4,7 @@ from math import inf
 
 from typing import List
 from engine.strategies.strategies_manager import StrategyManager
+from engine.strategies.strategy_mutator import StrategyTypes
 
 from graphics.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
@@ -79,7 +80,7 @@ def set_traffic_lights(nodes: List[Node]):
 
 def set_strategies(nodes: List[Node], strategy_manager: StrategyManager):
     for node in nodes:
-        node.set_strategy(strategy_manager.get_strategy(node, 3, 0))
+        node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.PIECE_OF_CAKE, 0))
         
 
 def find_path(n1: Node, n2: Node) -> List[Node]:

@@ -42,8 +42,8 @@ class Node:
             for j in range(i + 1, n):
                 movable1 = self.movables[i]
                 movable2 = self.movables[j]
-                pos1, speed1, node_pos1 = movable1.next_node_position()
-                pos2, speed2, node_pos2 = movable2.next_node_position()
+                _, _, node_pos1 = movable1.next_node_position()
+                _, _, node_pos2 = movable2.next_node_position()
 
                 A = movable1.node_pos
                 B = movable2.node_pos
@@ -64,7 +64,7 @@ class Node:
                     stop_mov = movable2
                 
                 if circle_collision(node_pos1, node_pos2, movable1.size, movable2.size):
-                    # notifier la voiture à droite qu'elle doit stoper
+                    # notifier la voiture à gauche qu'elle doit stoper
                     stop_mov.notify_node_collision()
                     priority_mov.notify_node_priority()
 
@@ -84,6 +84,7 @@ class Node:
 
                     if sca1 >= 0 and sca2 >= 0:
                         if norm(AP) < norm(U) and norm(BP) < norm(V):
+                            #voiture à droite stop
                             stop_mov.notify_node_collision()
                             priority_mov.notify_node_priority()
 

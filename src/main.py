@@ -3,8 +3,10 @@ import argparse
 import os
 from engine.simulation import Simulation
 from graphics.display import PygameDisplay
+import random as random
 
 def main():
+    random.seed(0)
     parser = argparse.ArgumentParser(description='Lancez une simulation de réseau routier.')
     parser.add_argument('--debug', action='store_true', help='Mode debug')
     parser.add_argument('--nb_movables', type=int, default=1, help='Nombre de movables dans la simulation')

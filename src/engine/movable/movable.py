@@ -85,9 +85,17 @@ class Movable(Nodable):
     def handle_road_target(self):
         dx = self.road_goal[1] - self.pos
         # assert(dx > 0)
+        # #TODO correction
         if self.road == self.road_goal[0] and 0 < dx < 50:
-            da = -dx/TIME/TIME
-            self.current_acceleration = max(0, self.current_acceleration + da)
+            da = 0
+            if self.speed < 0.5:
+                return
+            else:
+                da = (0.5 - self.speed - TIME*self.current_acceleration)/TIME
+                if da > 0:
+                    da = 0
+            self.current_acceleration += da
+        pass
 
     def handle_first_movable(self):
 
@@ -117,13 +125,15 @@ class Movable(Nodable):
 
             #TODO add a way to check for other roads
     def handle_possible_collision(self, other: Movable):
-        dx = (other.next_position()[0] - 1*other.size) - (self.next_position()[0] + 1*self.size)
+        dx = (other.next_position()[0] - other.size) - (self.next_position()[0] + self.size)
         if dx <= 0:
             da = 2.5*dx/TIME/TIME
             self.current_acceleration += da
         else:
             da = 2.5*dx/TIME/TIME
             self.current_acceleration -= da
+        pass
+        #TODO correction d'un bug ici
     def no_possible_collision(self, other: Movable):
         if not other:
             self.current_acceleration = self.acceleration
@@ -134,6 +144,9 @@ class Movable(Nodable):
             dx = min(future_other - future_self, future_other - future_self - self.size)
 
             da = 1.75*dx/TIME/TIME
+            # acceleration to speedLimit
+            damax = (self.road.speedLimit - self.speed - TIME*self.current_acceleration)/TIME
+            da = min(da, damax)
             self.current_acceleration = min(self.acceleration, self.current_acceleration + da)
 
 

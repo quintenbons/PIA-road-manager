@@ -26,16 +26,6 @@ class Spawner:
             self.spawn(current_tick=0)
 
     def update(self, current_tick: int):
-        rate = self.get_rate(current_tick)
-
-        for _ in range(rate):
-            self.spawn(current_tick=current_tick)
-            #TODO
-            pass
-        # n = len(self.movables)
-        # if n < 100:
-        #     for _ in range(100 - n):
-        #         self.spawn()
 
         remove_list: List[Movable] = []
         for m in self.movables:
@@ -44,6 +34,14 @@ class Spawner:
         for m in remove_list:
             self._total_despawned_score += m.get_score(current_tick)
             self.movables.remove(m)
+        
+        rate = self.get_rate(current_tick)
+
+        # if len(self.movables) < 200:
+        for _ in range(rate):
+            self.spawn(current_tick=current_tick)
+            #TODO
+            pass
 
     def get_total_score(self, current_tick: int) -> int:
         """Get total simulation score (not node specific)"""

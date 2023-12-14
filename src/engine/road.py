@@ -68,6 +68,7 @@ class Road:
     def update(self) -> None:
         for lane in self.lanes:
             previous: Movable = None
+            #previous is ahead
             for mov in lane.iter(True):
                 mov: Movable
                 assert(previous != mov)

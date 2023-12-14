@@ -49,6 +49,7 @@ class Simulation:
         for s in self.spawners:
             s.update(self.current_tick * TIME)
 
+
     def get_total_score(self) -> int:
         """Get total simulation score (not node specific)
 
