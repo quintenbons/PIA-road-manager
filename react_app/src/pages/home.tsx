@@ -194,32 +194,6 @@ export const Home = () => {
       <Title title="Conclusion" size="lg" />
       <Paragraph text="Le développement du modèle et de la simulation ont avancé en parallèle. Les deux blocs de ce projet sont donc dans un état avancé. Cependant, la chaîne de dépendance des tâches nous oblige à encore patienter avant de pouvoir brancher les deux parties." />
       <Paragraph text="Il est important à présent de se concentrer sur la génération de datasets afin d'avoir d'afiner nos estimations, et éventuellement prendre des mesures pour rendre la génération plus rapide." />
-      <Title title="Réferences" size="md" />
-
-      <AllLinks
-        links={[
-          {
-            text: "Github Ens'IA",
-            url: "https://github.com/YannSia",
-          },
-          {
-            text: "Medium - Simple CNN with numpy",
-            url: "https://medium.com/analytics-vidhya/simple-cnn-using-numpy-part-i-introduction-data-processing-b6652615604d",
-          },
-          {
-            text: "TP ens'IA",
-            url: "https://gitlab.ensimag.fr/francoj/vorf",
-          },
-          {
-            text: "PyTorch introduction (3h)",
-            url: "https://youtu.be/c36lUUr864M?si=RYYo9ozEjq-OqBtU",
-          },
-          {
-            text: "Overpass API Turbo",
-            url: "http://overpass-api.de/",
-          },
-        ]}
-      />
     </Container>
   );
 };

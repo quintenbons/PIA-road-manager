@@ -2,7 +2,6 @@ import { ExternalLinkIcon } from "@chakra-ui/icons";
 import { Link } from "@chakra-ui/layout";
 import {
   Table,
-  TableCaption,
   TableContainer,
   Tbody,
   Td,
@@ -19,7 +18,6 @@ export const AllLinks = (props: AllLinksProps) => {
   return (
     <TableContainer>
       <Table variant="simple">
-        <TableCaption>Imperial to metric conversion factors</TableCaption>
         <Thead>
           <Tr>
             <Th>Source</Th>

@@ -14,6 +14,7 @@ export type ResultTabProps = {
     date: string;
     time: string;
     commitHash: string;
+    granularity: string;
   }[];
   caption: string;
 };
@@ -28,6 +29,7 @@ export const ResultTab = (props: ResultTabProps) => {
             <Th>Date</Th>
             <Th>Commit hash</Th>
             <Th isNumeric>Temps (s)</Th>
+            <Th isNumeric>Granularité (s)</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -37,6 +39,7 @@ export const ResultTab = (props: ResultTabProps) => {
                 <Td>{value.date}</Td>
                 <Td>{value.commitHash}</Td>
                 <Td isNumeric>{value.time}</Td>
+                <Td isNumeric>{value.granularity}</Td>
               </Tr>
             );
           })}

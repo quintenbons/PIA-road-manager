@@ -6,6 +6,7 @@ import { Mesure } from "./pages/mesure";
 import { Simulation } from "./pages/simulation";
 import { Modele } from "./pages/modele";
 import { Footer } from "./components/Footer";
+import { References } from "./pages/references";
 
 function App() {
   return (
@@ -29,6 +30,10 @@ function App() {
               name: "Mesure",
               href: "/mesure",
             },
+            {
+              name: "Références",
+              href: "/references",
+            },
           ]}
         />
         <Routes>
@@ -36,6 +41,7 @@ function App() {
           <Route path="simulation" element={<Simulation />} />
           <Route path="mesure" element={<Mesure />} />
           <Route path="modele" element={<Modele />} />
+          <Route path="references" element={<References />} />
         </Routes>
         <Footer />
       </ChakraProvider>

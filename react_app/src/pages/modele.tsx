@@ -1,10 +1,9 @@
-import { Container, theme, Image } from "@chakra-ui/react";
+import { Container, theme } from "@chakra-ui/react";
 import { BreadcrumbLnk } from "../components/BreadcrumbLnk";
 import { DocumentDescriptor } from "../components/DocumentDescriptor";
 import { Title } from "../components/Title";
 import { Paragraph } from "../components/Paragraph";
 import { ParagraphList } from "../components/ParagraphList";
-import { GRENOBLE } from "../assets";
 
 export const Modele = () => {
   return (

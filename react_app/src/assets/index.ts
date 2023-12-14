@@ -7,6 +7,9 @@ import SUMMARY_DRAWING from "./summary-drawing.png";
 import DATASET_HESITATION from "./dataset-hesitation.png";
 import DATASET_GENERATION from "./dataset-generation.png";
 import GRENOBLE from "./grenoble.png";
+import DATASET_1 from "./dataset_1.png";
+import GUI_NETWORK from "./gui_network.png";
+import NETWORK from "./network.png";
 
 export {
   BANNER,
@@ -18,4 +21,7 @@ export {
   DATASET_HESITATION,
   DATASET_GENERATION,
   GRENOBLE,
+  DATASET_1,
+  GUI_NETWORK,
+  NETWORK,
 };
