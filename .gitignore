@@ -2,7 +2,6 @@
 media/
 manim.log
 *.mp4
-*.gif
 examples/**/*.png
 src/**/*.png
 
