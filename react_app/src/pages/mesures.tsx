@@ -41,6 +41,16 @@ export const Mesures = () => {
         ]}
       />
       <Title title="Génération de datasets" size="md" />
+      <Code colorScheme="green">
+        100%|█████████████████████████████████████████| 96/96 [33:58/00:00, 21.23s/it]
+        100%|█████████████████████████████████████████| 96/96 [34:07/00:00, 21.33s/it]
+        100%|█████████████████████████████████████████| 96/96 [34:14/00:00, 21.40s/it]
+        100%|█████████████████████████████████████████| 96/96 [34:30/00:00, 21.57s/it]
+        <br />
+      </Code>
+      <Paragraph text="Voici l'output de notre script de génération en parallèle de dataset. Nous avons créé ici 96 entrées par coeur en 34 minutes." />
+      <Paragraph text="Comme nous le voyons grâce à tqdm, nous pouvons générer 1 entrée de dataset en 21 secondes, sur 4 coeurs en simultané." />
+
       <Title title="Score" size="md" />
       <Title title="Performances Engine" size="md" />
       <Title title="Benchmark #1" size="sm" />
