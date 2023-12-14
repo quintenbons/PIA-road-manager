@@ -11,7 +11,7 @@ import LineChart from "../components/LineChart";
 import training_data from "../data/first_training_data.json";
 import scores_data from "../data/scores_per_strategy.json";
 
-export const Mesures = () => {
+export const Mesures = (props: { setPath: (path: string) => void }) => {
   return (
     <Container
       maxW="container.lg"
@@ -23,6 +23,7 @@ export const Mesures = () => {
       }}
     >
       <BreadcrumbLnk
+      setPath={props.setPath}
         sections={[
           {
             name: "Home",

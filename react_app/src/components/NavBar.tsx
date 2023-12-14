@@ -6,6 +6,7 @@ export type NavBarProps = {
     name: string;
     href: string;
   }[];
+  setPath: (path: string) => void;
 };
 
 export const NavBar = (props: NavBarProps) => {
@@ -27,7 +28,6 @@ export const NavBar = (props: NavBarProps) => {
           gap: theme.space[7],
           padding: theme.space[4],
           position: "fixed",
-          zIndex: 1000,
         }}
       >
         <Icon w={8} h={8}>
@@ -39,7 +39,10 @@ export const NavBar = (props: NavBarProps) => {
               verticalAlign: "middle",
               textAlign: "center",
             }}
-            href={section.href}
+            onClick={() => {
+              window.scrollTo(0, 0);
+              props.setPath(section.href);
+            }}
           >
             {section.name}
           </Link>

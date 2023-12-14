@@ -5,9 +5,13 @@ import { Title } from "../components/Title";
 import { Paragraph } from "../components/Paragraph";
 import { ParagraphList } from "../components/ParagraphList";
 import { ContinueLectureButton } from "../components/ContinueLectureButton";
-import { CURRENT_MODEL, DATASET_GENERATION, DATASET_HESITATION } from "../assets";
+import {
+  CURRENT_MODEL,
+  DATASET_GENERATION,
+  DATASET_HESITATION,
+} from "../assets";
 
-export const Modele = () => {
+export const Modele = (props: { setPath: (path: string) => void }) => {
   return (
     <Container
       maxW="container.lg"
@@ -19,6 +23,7 @@ export const Modele = () => {
       }}
     >
       <BreadcrumbLnk
+        setPath={props.setPath}
         sections={[
           {
             name: "Home",
@@ -146,7 +151,11 @@ export const Modele = () => {
 
       <Image src={CURRENT_MODEL} height={"30rem"} alignSelf={"center"} />
 
-      <ContinueLectureButton text="Continuer vers Mesures" href="/mesures" />
+      <ContinueLectureButton
+        text="Continuer vers Mesures"
+        href="/mesures"
+        setPath={props.setPath}
+      />
     </Container>
   );
 };

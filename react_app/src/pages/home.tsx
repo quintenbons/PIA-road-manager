@@ -14,7 +14,7 @@ import {
 } from "../assets";
 import { ContinueLectureButton } from "../components/ContinueLectureButton";
 
-export const Home = () => {
+export const Home = (props: { setPath: (path: string) => void }) => {
   return (
     <Container
       maxW="container.lg"
@@ -157,6 +157,7 @@ export const Home = () => {
       <ContinueLectureButton
         text="Continuer vers Simulation"
         href="/simulation"
+        setPath={props.setPath}
       />
     </Container>
   );

@@ -4,7 +4,7 @@ import { DocumentDescriptor } from "../components/DocumentDescriptor";
 import { Title } from "../components/Title";
 import { AllLinks } from "../components/AllLinks";
 
-export const References = () => {
+export const References = (props: { setPath: (path: string) => void }) => {
   return (
     <Container
       maxW="container.lg"
@@ -16,6 +16,7 @@ export const References = () => {
       }}
     >
       <BreadcrumbLnk
+        setPath={props.setPath}
         sections={[
           {
             name: "Home",

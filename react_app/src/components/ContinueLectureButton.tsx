@@ -1,14 +1,13 @@
 import { ArrowForwardIcon } from "@chakra-ui/icons";
 import { Box, Button } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 
 export type ContinueLectureButtonProps = {
   href: string;
   text: string;
+  setPath: (path: string) => void;
 };
 
 export const ContinueLectureButton = (props: ContinueLectureButtonProps) => {
-  const navigate = useNavigate();
   return (
     <Box
       sx={{
@@ -24,7 +23,7 @@ export const ContinueLectureButton = (props: ContinueLectureButtonProps) => {
         rightIcon={<ArrowForwardIcon />}
         onClick={() => {
           window.scrollTo(0, 0);
-          navigate(props.href);
+          props.setPath(props.href);
         }}
       >
         {props.text}

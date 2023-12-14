@@ -7,12 +7,15 @@ import { Simulation } from "./pages/simulation";
 import { Modele } from "./pages/modele";
 import { Footer } from "./components/Footer";
 import { References } from "./pages/references";
+import { useNavigation } from "./navigation";
 
 function App() {
+  const { path, setPath } = useNavigation();
   return (
     <BrowserRouter>
       <ChakraProvider>
         <NavBar
+          setPath={setPath}
           sections={[
             {
               name: "Home",
@@ -36,13 +39,21 @@ function App() {
             },
           ]}
         />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="simulation" element={<Simulation />} />
-          <Route path="mesures" element={<Mesures />} />
-          <Route path="modele" element={<Modele />} />
-          <Route path="references" element={<References />} />
-        </Routes>
+        <>
+          {path === "/" ? (
+            <Home setPath={setPath} />
+          ) : path === "/simulation" ? (
+            <Simulation setPath={setPath} />
+          ) : path === "/modele" ? (
+            <Modele setPath={setPath} />
+          ) : path === "/mesures" ? (
+            <Mesures setPath={setPath} />
+          ) : path === "/references" ? (
+            <References setPath={setPath} />
+          ) : (
+            <Home setPath={setPath} />
+          )}
+        </>
         <Footer />
       </ChakraProvider>
     </BrowserRouter>

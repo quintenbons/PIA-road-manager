@@ -1,9 +1,4 @@
-import {
-  Container,
-  theme,
-  Image,
-  Box,
-} from "@chakra-ui/react";
+import { Container, theme, Image, Box } from "@chakra-ui/react";
 import { BreadcrumbLnk } from "../components/BreadcrumbLnk";
 import { DocumentDescriptor } from "../components/DocumentDescriptor";
 import { Title } from "../components/Title";
@@ -12,7 +7,7 @@ import { ParagraphList } from "../components/ParagraphList";
 import { GRENOBLE, GUI_NETWORK, NETWORK } from "../assets";
 import { ContinueLectureButton } from "../components/ContinueLectureButton";
 
-export const Simulation = () => {
+export const Simulation = (props: { setPath: (path: string) => void }) => {
   return (
     <Container
       maxW="container.lg"
@@ -24,6 +19,7 @@ export const Simulation = () => {
       }}
     >
       <BreadcrumbLnk
+        setPath={props.setPath}
         sections={[
           {
             name: "Home",
@@ -116,7 +112,11 @@ export const Simulation = () => {
         />
       </Box>
 
-      <ContinueLectureButton text="Continuer vers Modèle" href="/modele" />
+      <ContinueLectureButton
+        text="Continuer vers Modèle"
+        href="/modele"
+        setPath={props.setPath}
+      />
     </Container>
   );
 };
