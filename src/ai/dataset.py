@@ -104,8 +104,16 @@ def simul_to_scores(central_node: int, second_seed: int):
 
     return scores, total_num_schemes
 
+def seed_generator(meta_seed: int = None):
+    if meta_seed is None:
+        meta_seed = random.randrange(0, 2**32-1)
+
+    local_random = random.Random(meta_seed)
+
+    while True:
+        yield local_random.randrange(0, 2**32)
+
 def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
-    sim_seed = int(time.time())
     map_file = "src/maps/build/GUI/Star/map.csv"
     paths_file = "src/maps/build/GUI/Star/paths.csv"
     central_node = 1
@@ -114,24 +122,33 @@ def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torc
     expected = []
     sim_seeds = []
 
-    for _ in tqdm(range(size), disable=tqdm_disable):
-        random.seed(sim_seed)
-        second_seed = random.randint(0, 2**32)
+    seed_gen = seed_generator()
 
-        # Run first simulation
-        simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
-        simulation.set_node_strategy(central_node, StrategyTypes.CROSS_DUPLEX, 0)
-        simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
+    try:
+        for _ in tqdm(range(size), disable=tqdm_disable):
+            sim_seed = next(seed_gen)
+            random.seed()
+            second_seed = random.randrange(0, 2**32)
 
-        # Run second range simulationS
-        scores, _ = simul_to_scores(central_node, second_seed)
-        one_hot = F.one_hot(torch.tensor(scores).argmin(), len(scores))
-        one_hot = one_hot.float()
+            # Run first simulation
+            simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
+            simulation.set_node_strategy(central_node, StrategyTypes.CROSS_DUPLEX, 0)
+            simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
 
-        sim_seeds.append(sim_seed)
-        batch.append(entry_from_node(simulation.nodes[central_node]))
-        expected.append(one_hot)
+            # Run second range simulationS
+            scores, _ = simul_to_scores(central_node, second_seed)
+            one_hot = F.one_hot(torch.tensor(scores).argmin(), len(scores))
+            one_hot = one_hot.float()
 
-        sim_seed += 1
+            sim_seeds.append(sim_seed)
+            batch.append(entry_from_node(simulation.nodes[central_node]))
+            expected.append(one_hot)
+
+            sim_seed += 1
+    except KeyboardInterrupt:
+        print("Keyboard interrupt, generated incomplete dataset...")
+    except Exception as e:
+        print("Unknown exception occured, generated incomplete dataset...")
+        print(e)
 
     return torch.stack(batch), torch.stack(expected), torch.tensor(sim_seeds)
