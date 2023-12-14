@@ -7,8 +7,6 @@ import { ResultTab } from "../components/ResultTab";
 import { AccordionParagraph } from "../components/AccordionParagraph";
 import { DATASET_1 } from "../assets";
 import BarChart from "../components/BarChart";
-import LineChart from "../components/LineChart";
-import training_data from "../data/first_training_data.json";
 import scores_data from "../data/scores_per_strategy.json";
 
 export const Mesures = (props: { setPath: (path: string) => void }) => {
@@ -109,7 +107,6 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
       <Title title="Scores" size="md" />
 
       <BarChart data={scores_data} />
-      <LineChart data={training_data} />
 
       <Title title="Performances du moteur" size="md" />
       <Title title="Benchmark #1" size="sm" />
