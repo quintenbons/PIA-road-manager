@@ -1,4 +1,9 @@
-import { Container, theme, Image, Flex } from "@chakra-ui/react";
+import {
+  Container,
+  theme,
+  Image,
+  Box,
+} from "@chakra-ui/react";
 import { BreadcrumbLnk } from "../components/BreadcrumbLnk";
 import { DocumentDescriptor } from "../components/DocumentDescriptor";
 import { Title } from "../components/Title";
@@ -56,17 +61,24 @@ export const Simulation = () => {
 
       <Title title="GUI" size="sm" />
 
-      <Paragraph text="Nous avons développé une interface graphique pour modéliser nous même des cartes. Cela nous permet de tester notre moteur de simulation et de générer des cartes de test." />
+      <Paragraph text="Nous avons développé une interface graphique pour modéliser nous même des cartes. Cela nous permet de tester notre moteur de simulation et de définir nos scénarios d'entrainement." />
 
-      <Flex>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Image
           src={GUI_NETWORK}
           flex={"1"}
-          width={"100%"}
+          width={"50%"}
           alignSelf={"center"}
         />
-        <Image src={NETWORK} flex={"1"} width={"100%"} alignSelf={"center"} />
-      </Flex>
+        <Image src={NETWORK} flex={"1"} width={"50%"} alignSelf={"center"} />
+      </Box>
 
       <Title title="Engine" size="md" />
       <Paragraph text="Le modèle physique se découpe en plusieurs parties:" />
@@ -87,6 +99,22 @@ export const Simulation = () => {
       <Paragraph text="La simulation graphique se fait avec la bibliothèque Pygame. Elle permet de visualiser la simulation en temps réel." />
 
       <Paragraph text="Voici une vidéo explicative de la simulation graphique:" />
+
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <iframe
+          height={500}
+          width={800}
+          title="Graphical simulation"
+          src="https://www.youtube.com/embed/Hei4Z9-AF-I"
+          allowFullScreen
+        />
+      </Box>
 
       <ContinueLectureButton text="Continuer vers Modèle" href="/modele" />
     </Container>
