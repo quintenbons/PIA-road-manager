@@ -30,7 +30,7 @@ def main():
     max_cores = int(max_cores)
     duration_in_minutes = args.duration
     dest_directory = args.dest
-    seconds_per_entry = 12  # Time to generate one entry
+    seconds_per_entry = 25  # Time to generate one entry
     size = duration_in_minutes * 60 // seconds_per_entry
 
     if not os.path.exists(dest_directory):
