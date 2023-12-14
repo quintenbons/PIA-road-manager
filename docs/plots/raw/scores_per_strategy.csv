@@ -1,4 +1,4 @@
-strategy_id,strategy_name,mutator,loss_score
+strategy_id,strategy_name,mutator_id,loss_score
 0,CROSS_DUPLEX,0,75616690.75000
 0,CROSS_DUPLEX,1,73742356.50000
 0,CROSS_DUPLEX,2,190962994.75000
