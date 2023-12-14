@@ -5,6 +5,7 @@ import { Title } from "../components/Title";
 import { Paragraph } from "../components/Paragraph";
 import { ParagraphList } from "../components/ParagraphList";
 import { GRENOBLE, GUI_NETWORK, NETWORK } from "../assets";
+import { ContinueLectureButton } from "../components/ContinueLectureButton";
 
 export const Simulation = () => {
   return (
@@ -86,6 +87,8 @@ export const Simulation = () => {
       <Paragraph text="La simulation graphique se fait avec la bibliothèque Pygame. Elle permet de visualiser la simulation en temps réel." />
 
       <Paragraph text="Voici une vidéo explicative de la simulation graphique:" />
+
+      <ContinueLectureButton text="Continuer vers Modèle" href="/modele" />
     </Container>
   );
 };

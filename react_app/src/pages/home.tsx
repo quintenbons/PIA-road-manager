@@ -17,6 +17,7 @@ import {
   PIECE_OF_CAKE,
   SUMMARY_DRAWING,
 } from "../assets";
+import { ContinueLectureButton } from "../components/ContinueLectureButton";
 
 export const Home = () => {
   return (
@@ -62,7 +63,7 @@ export const Home = () => {
         ]}
       />
       <Title title="Les stratégies" size="md" />
-      <Paragraph text="Jusqu'à présent nous avons dégagé un total de cinq stratégies primaires. Ces stratégies représentent les logiques s'appliquant aux feux. Les règles de circulation classiques telles que les priorités à droite ou les distances de sécurité s'appliquent en priorité sur les stratégies." />
+      <Paragraph text="Jusqu'à présent nous avons dégagé un total de quatre stratégies primaires. Ces stratégies représentent les logiques s'appliquant aux feux. Les règles de circulation classiques telles que les priorités à droite ou les distances de sécurité s'appliquent en priorité sur les stratégies." />
       <Paragraph text="Chaque stratégie peut être représentée par un graphe d'état cyclique. Nous pensons faire des variantes de ces graphes dans lesquelles l'IA pourra choisir le temps nécessaire pour passer à l'état suivant. Cela a pour but de donner à l'IA de la flexibilité et de s'adapter lorsque les routes d'entrée des carrefours ont des débits de véhicules différents." />
       <MultipleTabs
         childrens={{
@@ -121,32 +122,8 @@ export const Home = () => {
           ),
         }}
       />
-      <Title title="Entraînement du Modèle" size="lg" />
-      <Title title="Format des Données d'entraînement" size="md" />
-      <Paragraph
-        text="Pour entraîner efficacement notre modèle d'intelligence artificielle basé sur PyTorch, il est essentiel d'avoir des datasets structurés pour une utilisation avec des dataloaders. Ces datasets permettront de nourrir et d'affiner le modèle d'IA, en fournissant une source de données cohérente et structurée, adaptée aux spécificités de l'apprentissage automatique.
-    Nous estimons qu'un volume conséquent, de plusieurs millions d'exemples au moins, sera nécessaire pour atteindre une efficacité optimale."
-      />
-      <Paragraph text="Le dataset sera constitué de tuples (I, E)." />
-      <ParagraphList
-        paragraphs={[
-          "I (input) correspond à une entrée du réseau neuronal pour une intersection donnée. I contient aussi des informations sur les évènements des 15 minutes précédentes.",
-          "E (expected) correspond au résultat attendu 'expected', qui devra être généré algorithmiquement.",
-        ]}
-      />
-      <Paragraph text="Cette approche structurée permettra à notre modèle de s'adapter et d'apprendre efficacement à partir d'un large éventail de scénarios de trafic." />
-      <Title title="Génération des données d'entrée" size="md" />
-      <Image src={DATASET_GENERATION} width={"60%"} alignSelf={"center"} />
-
-      <Paragraph text="La génération de jeux de données pour entraîner notre IA est un processus clé, impliquant la création de configurations spécifiques pour simuler divers scénarios de trafic urbain. Il est important de rappeler que notre modèle n'est conscient que d'une seule intersection, ce qui nous permet de simplifier drastiquement la génération des datasets, en limiant la simulation à un seul noeud." />
-      <Paragraph text="Pour générer une entrée de dataset (I, E), la simulation est d'abord exécutée pendant 15 minutes avec une stratégie sélectionnée uniformément, sur une configuration aléatoire. À l'issue de cette période, le paramètre I de l'entrée de dataset peut être calculé à partir des informations mesurées pendant l'exécution." />
-      <Paragraph text="Il faut ensuite générer le paramètre E, qui correspond au meilleur choix possible de stratégie pour les 15 minutes suivantes. Pour cela, nous pouvons simplement exécuter les stratégies une par une, et récupérer celle qui obtient le meilleur score (le moins de congestion). Attention ici à bien utiliser la même configuration de trafic que pour les 15 minutes initiales pour ne pas enfreindre notre hypothèse de consistence du trafic." />
-
-      <Image src={DATASET_HESITATION} width={"60%"} alignSelf={"center"} />
-      <Paragraph text="Un cas particulier est à prévoir (voir @close-second) : si plusieurs stratégies sont correctes, pénaliser le modèle lors du backwards peut être néfaste. C'est pourquoi nous détecterons ces situations afin de les exclure du dataset." />
-      <Paragraph text="Il est possible à l'avenir que nous reviendrons sur cette décision afin de permettre à l'intelligence artificielle d'apprendre à résoudre des dilemmes plus efficacement." />
       <Title title="Développement et Implémentation" size="lg" />
-  
+
       <Title title="Estimation Préliminaire des Performances" size="md" />
       <Paragraph text="Il existe trois points critiques pour la performance de notre projet:" />
       <AccordionParagraph
@@ -191,9 +168,10 @@ export const Home = () => {
         }}
       />
 
-      <Title title="Conclusion" size="lg" />
-      <Paragraph text="Le développement du modèle et de la simulation ont avancé en parallèle. Les deux blocs de ce projet sont donc dans un état avancé. Cependant, la chaîne de dépendance des tâches nous oblige à encore patienter avant de pouvoir brancher les deux parties." />
-      <Paragraph text="Il est important à présent de se concentrer sur la génération de datasets afin d'avoir d'afiner nos estimations, et éventuellement prendre des mesures pour rendre la génération plus rapide." />
+      <ContinueLectureButton
+        text="Continuer vers Simulation"
+        href="/simulation"
+      />
     </Container>
   );
 };

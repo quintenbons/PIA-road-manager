@@ -7,7 +7,7 @@ import { ResultTab } from "../components/ResultTab";
 import { AccordionParagraph } from "../components/AccordionParagraph";
 import { DATASET_1 } from "../assets";
 
-export const Mesure = () => {
+export const Mesures = () => {
   return (
     <Container
       maxW="container.lg"
@@ -25,8 +25,8 @@ export const Mesure = () => {
             href: "/",
           },
           {
-            name: "Mesure",
-            href: "/mesure",
+            name: "Mesures",
+            href: "/mesures",
           },
         ]}
       />

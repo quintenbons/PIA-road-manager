@@ -61,6 +61,10 @@ export const References = () => {
             text: "Overpass API Turbo",
             url: "http://overpass-api.de/",
           },
+          {
+            text: "Pygame",
+            url: "https://www.pygame.org/news",
+          },
         ]}
       />
     </Container>

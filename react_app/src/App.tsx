@@ -2,7 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { NavBar } from "./components/NavBar";
 import { Home } from "./pages/home";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { Mesure } from "./pages/mesure";
+import { Mesures } from "./pages/mesures";
 import { Simulation } from "./pages/simulation";
 import { Modele } from "./pages/modele";
 import { Footer } from "./components/Footer";
@@ -27,8 +27,8 @@ function App() {
               href: "/modele",
             },
             {
-              name: "Mesure",
-              href: "/mesure",
+              name: "Mesures",
+              href: "/mesures",
             },
             {
               name: "Références",
@@ -39,7 +39,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="simulation" element={<Simulation />} />
-          <Route path="mesure" element={<Mesure />} />
+          <Route path="mesures" element={<Mesures />} />
           <Route path="modele" element={<Modele />} />
           <Route path="references" element={<References />} />
         </Routes>
