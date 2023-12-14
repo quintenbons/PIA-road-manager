@@ -5,7 +5,7 @@ import { Title } from "../components/Title";
 import { Paragraph } from "../components/Paragraph";
 import { ParagraphList } from "../components/ParagraphList";
 import { ContinueLectureButton } from "../components/ContinueLectureButton";
-import { DATASET_GENERATION, DATASET_HESITATION } from "../assets";
+import { CURRENT_MODEL, DATASET_GENERATION, DATASET_HESITATION } from "../assets";
 
 export const Modele = () => {
   return (
@@ -143,6 +143,8 @@ export const Modele = () => {
       </Code>
 
       <Paragraph text="Schéma représentatif:" />
+
+      <Image src={CURRENT_MODEL} height={"30rem"} alignSelf={"center"} />
 
       <ContinueLectureButton text="Continuer vers Mesures" href="/mesures" />
     </Container>

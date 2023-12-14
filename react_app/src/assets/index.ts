@@ -10,6 +10,7 @@ import GRENOBLE from "./grenoble.png";
 import DATASET_1 from "./dataset_1.png";
 import GUI_NETWORK from "./gui_network.png";
 import NETWORK from "./network.png";
+import CURRENT_MODEL from "./current_model.png";
 
 export {
   BANNER,
@@ -24,4 +25,5 @@ export {
   DATASET_1,
   GUI_NETWORK,
   NETWORK,
+  CURRENT_MODEL,
 };

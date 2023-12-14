@@ -14,6 +14,7 @@ export const NavBar = (props: NavBarProps) => {
     <>
       <Box
         sx={{
+          zIndex: 1,
           width: "100vw",
           backgroundColor:
             colorMode === "light"
