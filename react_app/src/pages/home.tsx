@@ -1,25 +1,24 @@
-import { Box, Container } from "@chakra-ui/layout";
-import { theme } from "@chakra-ui/theme";
-import { Banner } from "./Banner";
-import { DocumentDescriptor } from "./DocumentDescriptor";
-import { MultipleTabs } from "./MultipleTab";
+import { Box, Container, theme, Image } from "@chakra-ui/react";
+import { Title } from "../components/Title";
+import { Paragraph } from "../components/Paragraph";
+import { AllLinks } from "../components/AllLinks";
+import { AccordionParagraph } from "../components/AccordionParagraph";
+import { ParagraphList } from "../components/ParagraphList";
+import { MultipleTabs } from "../components/MultipleTab";
+import { DocumentDescriptor } from "../components/DocumentDescriptor";
+import { Banner } from "../components/Banner";
+import { BreadcrumbLnk } from "../components/BreadcrumbLnk";
 import {
   CROSS_DUPLEX,
+  DATASET_GENERATION,
+  DATASET_HESITATION,
+  OPEN,
   OPEN_CORRIDOR,
   PIECE_OF_CAKE,
-  OPEN,
   SUMMARY_DRAWING,
-  DATASET_HESITATION,
-  DATASET_GENERATION,
 } from "../assets";
-import { Paragraph } from "./Paragraph";
-import { Title } from "./Title";
-import { Image } from "@chakra-ui/image";
-import { ParagraphList } from "./ParagraphList";
-import { AccordionParagraph } from "./AccordionParagraph";
-import { AllLinks } from "./AllLinks";
 
-export const Content = () => {
+export const Home = () => {
   return (
     <Container
       maxW="container.lg"
@@ -126,7 +125,7 @@ export const Content = () => {
       <Title title="Format des Données d'entraînement" size="md" />
       <Paragraph
         text="Pour entraîner efficacement notre modèle d'intelligence artificielle basé sur PyTorch, il est essentiel d'avoir des datasets structurés pour une utilisation avec des dataloaders. Ces datasets permettront de nourrir et d'affiner le modèle d'IA, en fournissant une source de données cohérente et structurée, adaptée aux spécificités de l'apprentissage automatique.
-Nous estimons qu'un volume conséquent, de plusieurs millions d'exemples au moins, sera nécessaire pour atteindre une efficacité optimale."
+    Nous estimons qu'un volume conséquent, de plusieurs millions d'exemples au moins, sera nécessaire pour atteindre une efficacité optimale."
       />
       <Paragraph text="Le dataset sera constitué de tuples (I, E)." />
       <ParagraphList
@@ -147,48 +146,7 @@ Nous estimons qu'un volume conséquent, de plusieurs millions d'exemples au moin
       <Paragraph text="Un cas particulier est à prévoir (voir @close-second) : si plusieurs stratégies sont correctes, pénaliser le modèle lors du backwards peut être néfaste. C'est pourquoi nous détecterons ces situations afin de les exclure du dataset." />
       <Paragraph text="Il est possible à l'avenir que nous reviendrons sur cette décision afin de permettre à l'intelligence artificielle d'apprendre à résoudre des dilemmes plus efficacement." />
       <Title title="Développement et Implémentation" size="lg" />
-      <Title title="Génération de la map" size="md" />
-      <Paragraph text="Étapes de la Génération de Cartes:" />
-      <ParagraphList
-        paragraphs={[
-          "Récupération des Données : Nous utilisons l'API de Overpass pour obtenir un ensemble de points représentant le réseau routier de la ville.",
-          "Reconstruction des Routes : À partir de ces points, nous reconstruisons les routes et identifions les intersections.",
-          "Simplification des Routes : Chaque route, définie par l'ensemble de points entre deux intersections, est simplifiée en un segment droit en conservant seulement les points extrêmes.",
-          "Sélection du Plus Grand Graphe Connexe : Nous conservons uniquement le plus grand graphe connexe du réseau routier. Ceci élimine les petits graphes isolés qui résultent de l'exclusion des routes mineures (comme les parkings et les sorties résidentielles) lors de la récupération des données.",
-        ]}
-      />
-      <Paragraph text="La carte générée de Grenoble, bien que présentant quelques approximations, reste largement cohérente avec la carte réelle de la ville. Par exemple, bien que la route traversant le CEA au Nord-Ouest soit légèrement décalée, notre modèle reproduit avec une précision raisonnable l'architecture routière. Ces modifications d'échelle sont dues aux approximations inhérentes à notre méthode de simplification, mais elles n'affectent pas l'intégrité globale du complexe routier. Cette fidélité à la structure réelle des routes est cruciale pour notre objectif, qui est de simuler de manière réaliste la gestion du trafic urbain." />
-      <Title title="Modèle Physique : Simulation" size="md" />
-      <Paragraph text="Le modèle physique se découpe en plusieurs parties:" />
-      <ParagraphList
-        paragraphs={[
-          "Des routes",
-          "Des intersections",
-          "Des objets qui se déplacent, pour la suite, on désignera cela par les voitures",
-          "Générateur de trafic",
-        ]}
-      />
-      <Paragraph text="Le générateur de trafic génère une voiture, avec un itinéraire. L'itinéraire est choisi avec un calcul de Dijkstra. Pour accélérer la simulation, l'ensemble des calculs de chemin sont précalculés en utilisant une techno plus rapide que le Python ici le C++." />
-      <Paragraph text="Les routes doivent permettre de faire circuler des voitures et les intersections permettent de bloquer ou de faire passer les voitures." />
-      <Paragraph text="Les principales difficultés sont liées au comportement des voitures. Il faut pouvoir ralentir en fonction de la vitesse des autres voitures, il faut pouvoir dépasser une voiture trop lente." />
-      <Paragraph text="Nous avons aussi imaginé un système de collision qui permet aux voitures de réguler leurs allures en fonction du trafic et de traverser les intersections de manière réaliste. Cette partie reste néanmoins une problématique sur le plan technique car nous avons des inquiétudes quant au fait que la gestion d'un tel degré de détail puisse ralentir énormément les temps de simulation." />
-      <Title title="Modèle d'IA : Dense Neural Network" size="md" />
-      <Paragraph text="Afin de prendre en main pytorch, un court exercice a été fait : entraîner un modèle de Pathfinding. Cela nous a aussi permis de faire des premières estimations de performance (@perf)." />
-      <Paragraph text="Une infrastructure d'entraînement pour le projet routier est déjà prête. Elle contient" />
-      <ParagraphList
-        paragraphs={[
-          "Un module de manipulation des datasets",
-          "Un module d'entraînement, prennant en entrée un dataloader, et le modèle",
-          "Possibilité de sauvegarder les datasets et modèles",
-        ]}
-      />
-      <Paragraph text="Il lui manque:" />
-      <ParagraphList
-        paragraphs={[
-          "Des fonctionalités de génération automatique de dataset à partir de configs externes",
-          "Branchement à des cas concrêts (transformation d'une situation réelle en entrée du dataset)",
-        ]}
-      />
+  
       <Title title="Estimation Préliminaire des Performances" size="md" />
       <Paragraph text="Il existe trois points critiques pour la performance de notre projet:" />
       <AccordionParagraph
