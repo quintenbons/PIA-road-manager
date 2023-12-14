@@ -66,7 +66,7 @@ export const Mesures = () => {
       <AccordionParagraph
         children={{
           "lsb_release -a": (
-            <Code>
+            <Code colorScheme="green">
               Distributor ID: Ubuntu <br />
               Description: Ubuntu 22.04.3 <br />
               LTS Release: 22.04 <br />
@@ -75,7 +75,7 @@ export const Mesures = () => {
             </Code>
           ),
           lscpu: (
-            <Code>
+            <Code colorScheme="green">
               Architecture: x86_64
               <br />
               CPU op-mode(s): 32-bit, 64-bit
