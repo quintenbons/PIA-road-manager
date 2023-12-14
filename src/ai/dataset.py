@@ -104,8 +104,16 @@ def simul_to_scores(central_node: int, second_seed: int):
 
     return scores, total_num_schemes
 
+def seed_generator(meta_seed: int = None):
+    if meta_seed is None:
+        meta_seed = random.randrange(0, 2**32-1)
+
+    local_random = random.Random(meta_seed)
+
+    while True:
+        yield local_random.randrange(0, 2**32)
+
 def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
-    sim_seed = int(time.time())
     map_file = "src/maps/build/GUI/Star/map.csv"
     paths_file = "src/maps/build/GUI/Star/paths.csv"
     central_node = 1
@@ -114,10 +122,13 @@ def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torc
     expected = []
     sim_seeds = []
 
+    seed_gen = seed_generator()
+
     try:
         for _ in tqdm(range(size), disable=tqdm_disable):
-            random.seed(sim_seed)
-            second_seed = random.randint(0, 2**32)
+            sim_seed = next(seed_gen)
+            random.seed()
+            second_seed = random.randrange(0, 2**32)
 
             # Run first simulation
             simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)

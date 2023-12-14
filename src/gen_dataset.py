@@ -3,8 +3,8 @@ from ai.dataset import NodeDataset, score_tester
 import argparse
 import os
 
-def generate_dataset(size: int, dest: os.PathLike, tqdm_disable=False):
-    if os.path.exists(dest):
+def generate_dataset(size: int, dest: os.PathLike, tqdm_disable=False, quiet=False):
+    if os.path.exists(dest) and not quiet:
         answer = input("Dataset already exists, are you sure you want to overwrite it? (y/n)")
         if answer.lower() != "y":
             print("Aborting")
