@@ -69,21 +69,18 @@ export const Modele = () => {
 
       <Title title="Modèle d'IA : Dense Neural Network" size="md" />
       <Paragraph text="Afin de prendre en main Pytorch, un court exercice a été fait : entraîner un modèle de Pathfinding. Cela nous a aussi permis de faire des premières estimations de performance (sur la page Home)." />
-      <Paragraph text="Une infrastructure d'entraînement pour le projet routier est déjà prête. Elle contient" />
+      <Paragraph text="Une infrastructure d'entraînement pour le projet routier est déjà prête. Elle contient:" />
       <ParagraphList
         paragraphs={[
           "Un module de manipulation des datasets",
           "Un module d'entraînement, prennant en entrée un dataloader, et le modèle",
           "Possibilité de sauvegarder les datasets et modèles",
-        ]}
-      />
-      <Paragraph text="Il lui manque:" />
-      <ParagraphList
-        paragraphs={[
           "Des fonctionalités de génération automatique de dataset à partir de configs externes",
           "Branchement à des cas concrets (transformation d'une situation réelle en entrée du dataset)",
         ]}
       />
+
+      <Paragraph text="Code de notre modèle:" />
 
       <Code colorScheme="green">
         class CrossRoadModel(nn.Module):
@@ -144,6 +141,8 @@ export const Modele = () => {
         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return model
         <br />
       </Code>
+
+      <Paragraph text="Schéma représentatif:" />
 
       <ContinueLectureButton text="Continuer vers Mesures" href="/mesures" />
     </Container>
