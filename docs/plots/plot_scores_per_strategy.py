@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# csv output: key_size,gen_time
 import polars as pl
 import plotly.express as px
 import sys
@@ -20,5 +19,8 @@ fig.update_layout(
         color="#7f7f7f"
     )
 )
-fig.show()
+fig.update_yaxes(range=[0, None])
+
+# fig.show()
 fig.write_html("loss.html")
+fig.write_image("loss.png")
