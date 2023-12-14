@@ -6,6 +6,10 @@ import { Paragraph } from "../components/Paragraph";
 import { ResultTab } from "../components/ResultTab";
 import { AccordionParagraph } from "../components/AccordionParagraph";
 import { DATASET_1 } from "../assets";
+import BarChart from "../components/BarChart";
+import LineChart from "../components/LineChart";
+import training_data from '../data/first_training_data.json';
+import scores_data from '../data/scores_per_strategy.json';
 
 export const Mesures = () => {
   return (
@@ -186,6 +190,8 @@ export const Mesures = () => {
         }}
       />
 
+      <BarChart data={scores_data} />
+      <LineChart data={training_data} />
       <Title title="Pistes d'amélioration" size="md" />
       <Paragraph text="Nous n'avons pas réalisés de refactoring ou d'optimisation de la codebase. Nous pensons que cela pourrait largement améliorer les performances de l'engine." />
       <Paragraph text="Nous devons ajouter de nouveaux benchmarks pour les tests. Ce n'est pas très grave pour cette POC car nous pourrons toujours revenir au commit en question." />
