@@ -156,13 +156,13 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
       <Title title="Entraînement du modèle sur 400 entrées" size="md" />
       <LineChart data={training_data} />
 
+      <Paragraph text="Comme vous pouvez le constater, le modèle est déjà capable de s'entraîner sur les datasets. Cependant, il ne converge pas pour l'instant vers une valeur de pertes acceptable (comme nous le constaterons dans la page Mesures). Cela s'explique par la forme actuelle du modèle: un seul hidden layer n'est pas suffisant pour bien approximer la fonction de score, même sur un très petit dataset. De plus, il faudra à l'avenir essayer de modifier la taille des hidden layers." />
+
       <ContinueLectureButton
         text="Continuer vers Mesures"
         href="/mesures"
         setPath={props.setPath}
       />
-
-      <Paragraph text="Comme vous pouvez le constater, le modèle est déjà capable de s'entraîner sur les datasets. Cependant, il ne converge pas pour l'instant vers une valeur de pertes acceptable (comme nous le constaterons dans la page Mesures). Cela s'explique par la forme actuelle du modèle: un seul hidden layer n'est pas suffisant pour bien approximer la fonction de score, même sur un très petit dataset. De plus, il faudra à l'avenir essayer de modifier la taille des hidden layers." />
     </Container>
   );
 };
