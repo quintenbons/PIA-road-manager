@@ -13,51 +13,21 @@ class TrafficGroup:
 
     def add_traffic_light(self, traffic_light: TrafficLight):
         self.traffic_lights.add(traffic_light)
-        if self.pos is None:
-            self.pos = traffic_light.pos
-        else:
-            # This is wrong code, it should set the position to the center of all traffic lights, we need to discuss together to find the correct way to do it
-            self.pos = (0, 0)
-            x = 0
-            y = 0
-            for traffic_light in self.traffic_lights:
-                x += traffic_light.pos[0]
-                y += traffic_light.pos[1]
-            x /= len(self.traffic_lights)
-            y /= len(self.traffic_lights)
-            self.pos = (x, y)
-
+        self.pos = traffic_light.pos
 
 class CrossDuplexStrategy(Strategy):
     traffic_lights_group: List[TrafficGroup]
     node_pos: tuple[float, float]
     opposit_degree_treshold :int= 15
 
-    # 
     def __init__(self, controllers:List[TrafficLight], position: tuple[float, float], cycles:List[int]):
         super().__init__(controllers, cycles)
 
         self.traffic_lights_group = []
         self.node_pos = position
 
-        # print("--------- node pos -----------", self.node_pos)
-        # print("traffic lights")
-        # i = 0
-        # for traffic_light in self.trafficLights:
-        #     print(i, traffic_light.pos)
-        #     i += 1
-
         for traffic_light in self.trafficLights:
             self.associate_to_group(traffic_light)
-
-        # print("traffic lights group")
-        # i = 0
-        # for group in self.traffic_lights_group:
-        #     print(i, group.pos)
-        #     for traffic_light in group.traffic_lights:
-        #         print("    ", traffic_light.pos)
-        #     i += 1
-        # print("-------------------------------")
 
         self.stateCount = len(self.traffic_lights_group)
 

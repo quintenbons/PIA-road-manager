@@ -83,7 +83,7 @@ def set_strategies(nodes: List[Node], strategy_manager: StrategyManager, benchma
         if benchmark:
             node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.PIECE_OF_CAKE, 0))
         else:
-            node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.PIECE_OF_CAKE, 0))
+            node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.OPEN_CORRIDOR, 0))
             # node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.OPEN, 0))
         
 

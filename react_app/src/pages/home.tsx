@@ -68,57 +68,93 @@ export const Home = () => {
       <MultipleTabs
         childrens={{
           Open: (
-            <Container
+            <Box
               sx={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
                 gap: theme.space[4],
               }}
             >
-              <Paragraph text="La stratégie 'Open' consiste à laisser tous les feux au vert. De cette façon le trafic se régule de manière autonome." />
-              <Paragraph text="Dans l'exemple suivant, les flux possibles sont représentés en orange." />
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignSelf: "center",
+                  gap: theme.space[4],
+                }}
+              >
+                <Paragraph text="La stratégie 'Open' consiste à laisser tous les feux au vert. De cette façon le trafic se régule de manière autonome." />
+                <Paragraph text="Dans l'exemple suivant, les flux possibles sont représentés en orange." />
+                <Paragraph text="Les stratégies peuvent changer au cours du temps, en pratique un feu de signalisation reste en place, choisir cette stratégie revient à faire en sorte que tous les feux de signalisation de l'intersection soient oranges et clignotent." />
+              </Box>
               <Image src={OPEN} />
-              <Paragraph text="Les stratégies peuvent changer au cours du temps, en pratique un feu de signalisation reste en place, choisir cette stratégie revient à faire en sorte que tous les feux de signalisation de l'intersection soient oranges et clignotent." />
-            </Container>
+            </Box>
           ),
           "Open Corridor": (
-            <Container
+            <Box
               sx={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
                 gap: theme.space[4],
               }}
             >
-              <Paragraph text="La stratégie 'Open corridor' correspond à un feu qui restera toujours vert tandis que les autres feux de signalisation alterneront chacun leur tour à temps égal." />
-              <Paragraph text="Dans l'exemple suivant, le feu de signalisation qui restera en vert est aussi représenté par cette couleur tandis que les feux rouges et bleus alternent." />
+              <Box
+                sx={{
+                  alignSelf: "center",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: theme.space[4],
+                }}
+              >
+                <Paragraph text="La stratégie 'Open corridor' correspond à un feu qui restera toujours vert tandis que les autres feux de signalisation alterneront chacun leur tour à temps égal." />
+                <Paragraph text="Dans l'exemple suivant, le feu de signalisation qui restera en vert est aussi représenté par cette couleur tandis que les feux rouges et bleus alternent." />
+              </Box>
               <Image src={OPEN_CORRIDOR} />
-            </Container>
-          ),
-          "Cross Duplex": (
-            <Container
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: theme.space[4],
-              }}
-            >
-              <Paragraph text="La stratégie 'Piece of cake': si on représente le temps total disponible avec un gâteau, cette stratégie partage équitablement le gâteau entre tous les feux de signalisation. Ainsi, lorsqu'un feu est au vert, les autres sont au rouge." />
-              <Paragraph text="Dans l'exemple suivant les feux de signalisations sont représentés par les traits de couleur rouge, vert et bleu." />
-              <Image src={PIECE_OF_CAKE} />
-            </Container>
+            </Box>
           ),
           "Piece of Cake": (
-            <Container
+            <Box
               sx={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: "row",
                 gap: theme.space[4],
               }}
             >
-              <Paragraph text="La stratégie 'Cross duplex' est la plus intuitive. Elle correspond au carrefour typique et permet de faire alterner les feux de signalisation des routes parallèles avec ceux des routes perpendiculaires." />
-              <Paragraph text="Dans l'exemple suivant sont représentés en bleu et rouge les groupes de feux de signalisation. Le groupe bleu et le groupe rouge s'allument chacun leur tour. " />
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignSelf: "center",
+                  gap: theme.space[4],
+                }}
+              >
+                <Paragraph text="La stratégie 'Piece of cake': si on représente le temps total disponible avec un gâteau, cette stratégie partage équitablement le gâteau entre tous les feux de signalisation. Ainsi, lorsqu'un feu est au vert, les autres sont au rouge." />
+                <Paragraph text="Dans l'exemple suivant les feux de signalisations sont représentés par les traits de couleur rouge, vert et bleu." />
+              </Box>
+              <Image src={PIECE_OF_CAKE} />
+            </Box>
+          ),
+          "Cross Duplex": (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "row",
+                gap: theme.space[4],
+              }}
+            >
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignSelf: "center",
+                  gap: theme.space[4],
+                }}
+              >
+                <Paragraph text="La stratégie 'Cross duplex' est la plus intuitive. Elle correspond au carrefour typique et permet de faire alterner les feux de signalisation des routes parallèles avec ceux des routes perpendiculaires." />
+                <Paragraph text="Dans l'exemple suivant sont représentés en bleu et rouge les groupes de feux de signalisation. Le groupe bleu et le groupe rouge s'allument chacun leur tour. " />
+              </Box>
               <Image src={CROSS_DUPLEX} />
-            </Container>
+            </Box>
           ),
         }}
       />

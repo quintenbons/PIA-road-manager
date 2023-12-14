@@ -1,5 +1,6 @@
 from __future__ import annotations
 from engine.constants import MAX_MOVABLES_IN_NODE
+from engine.strategies.model.cross_duplex_strategy import CrossDuplexStrategy
 from engine.strategies.model.strategy import Strategy
 
 from engine.strategies.strategy_mutator import StrategyTypes

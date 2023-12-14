@@ -84,7 +84,7 @@ export const Modele = () => {
         ]}
       />
 
-      <ContinueLectureButton text="Continuer vers Mesure" href="/mesure" />
+      <ContinueLectureButton text="Continuer vers Mesures" href="/mesures" />
     </Container>
   );
 };
