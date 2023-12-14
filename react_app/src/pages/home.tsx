@@ -161,6 +161,7 @@ export const Home = () => {
       <Title title="Développement et Implémentation" size="lg" />
 
       <Title title="Estimation Préliminaire des Performances" size="md" />
+      <Paragraph text="Nous vous conseillons d'explorer d'abord les autres pages de ce rapport avant d'aborder cette partie pour mieux comprendre les enjeux de performances de l'IA."/>
       <Paragraph text="Il existe trois points critiques pour la performance de notre projet:" />
       <AccordionParagraph
         children={{
