@@ -5,5 +5,13 @@ export type ParagraphProps = {
 };
 
 export const Paragraph = (props: ParagraphProps) => {
-  return <Text>{props.text}</Text>;
+  return (
+    <Text
+      sx={{
+        textAlign: "justify",
+      }}
+    >
+      {props.text}
+    </Text>
+  );
 };

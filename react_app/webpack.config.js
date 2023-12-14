@@ -3,6 +3,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.tsx",
+  devServer: {
+    historyApiFallback: true,
+  },
   module: {
     rules: [
       {
@@ -26,10 +29,15 @@ module.exports = {
         ],
       },
       {
-        test: /\.(png|jpe?g|gif)$/i,
+        test: /\.(png|jpe?g|gif|svg)$/i,
         use: [
           {
-            loader: "file-loader",
+            loader: "url-loader",
+            options: {
+              encoding: "base64", // Encode smaller images as base64
+              fallback: "file-loader", // Fallback to file-loader for larger images
+              name: "images/[name].[hash:8].[ext]", // Output path and filename template
+            },
           },
         ],
       },

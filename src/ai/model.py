@@ -19,7 +19,12 @@ class CrossRoadModel(nn.Module):
         return x
 
     def save(self, target: PathLike):
-        torch.save(self.state_dict(), target)
+        if isinstance(self, nn.DataParallel):
+            state_dict = self.module.state_dict()
+        else:
+            state_dict = self.state_dict()
+        torch.save(state_dict, target)
+
 
     @classmethod
     def load(Cls, target: PathLike, device="cpu"):
