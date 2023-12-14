@@ -7,21 +7,30 @@ interface BarChartProps {
 }
 
 const BarChart: React.FC<BarChartProps> = ({ data }) => {
-    const trace: Data = {
-        x: data.map(item => item.strategy_name),
-        y: data.map(item => item.loss_score),
-        type: 'bar',
-        mode: 'markers',
-    };
+    const strategy_names = Array.from(new Set(data.map(item => item.strategy_name)));
+    const mutator_ids = Array.from(new Set(data.map(item => item.mutator_id)));
+
+    let traces: Data[] = []
+
+    for (const mutator_id of mutator_ids) {
+        const trace: Data = {
+            x: strategy_names,
+            y: data.filter(item => item.mutator_id === mutator_id).map(item => item.loss_score),
+            type: 'bar',
+            mode: 'markers',
+        };
+        traces.push(trace);
+    }
 
     return (
         <Plot
-            data={[trace]}
+            data={traces}
             layout={{
                 title: 'Loss score per strategy (light traffic)',
                 xaxis: { title: 'Strategy' },
                 yaxis: { title: 'Score' },
-                font: { family: 'Courier New, monospace', size: 18, color: '#7f7f7f' }
+                font: { family: 'Courier New, monospace', size: 18, color: '#7f7f7f' },
+                barmode: "group",
             }}
         />
     );
