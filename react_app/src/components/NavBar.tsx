@@ -27,6 +27,7 @@ export const NavBar = (props: NavBarProps) => {
           gap: theme.space[7],
           padding: theme.space[4],
           position: "fixed",
+          zIndex: 1000,
         }}
       >
         <Icon w={8} h={8}>
