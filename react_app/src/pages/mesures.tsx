@@ -1,4 +1,4 @@
-import { Code, Container, theme, Image } from "@chakra-ui/react";
+import { Code, Container, theme, Image, Box } from "@chakra-ui/react";
 import { BreadcrumbLnk } from "../components/BreadcrumbLnk";
 import { DocumentDescriptor } from "../components/DocumentDescriptor";
 import { Title } from "../components/Title";
@@ -43,6 +43,54 @@ export const Mesures = () => {
           "Quinten Bons",
           "Clément Juventin",
         ]}
+      />
+      <Title title="Estimation Préliminaire des Performances" size="md" />
+      <Paragraph text="Il existe trois points critiques pour la performance de notre projet:" />
+      <AccordionParagraph
+        children={{
+          "🧪 Estimation du temps de génération des datasets": (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: theme.space[4],
+              }}
+            >
+              <Paragraph text="Pour générer 100,000 entrées (I, E) (on rappelle que le but est de 1,000,000 d'entrées):" />
+              <Paragraph text="Il faut pouvoir exécuter 15 minutes de simulation dans un intervalle de temps réel de l'ordre de la seconde. Si on utilise une solution naive, il nous faudra ([nb_strategies] + 1) x [temps de simul 15 minutes] pour générer 1 entrée (I, E)." />
+              <Paragraph text="Avec 10 stratégies, on a donc 11 secondes par entrée, soit 305 heures. Sur 8 coeurs cela revient à 38 heures de génération, ce qui est loin d'être négligeable." />
+              <Paragraph text="En pratique:" />
+              <Paragraph text="À notre grande surprise, nous arrivons à générer en python 15 minutes de simulation en 1.4 secondes, sans avoir fait d'optimisation. Nous pensons pouvoir descendre en dessous de la seconde." />
+              <Paragraph text="Générer un dataset est encore très coûteux. Comme nous avons en réalité 15 stratégies, nous mettons environ 60 heures à générer 100000 entrées (I, E)" />
+            </Box>
+          ),
+          "🎰 Temps d'entraînement": (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: theme.space[4],
+              }}
+            >
+              <Paragraph text="L'entraînement consiste à faire un forward + backward sur des batch générés par un dataloader. La complexité de cette tâche est de l'ordre de la taille du dataset utilisé. En pratique, l'entraînement d'un DNN à 64 neuronnes par couche sur un dataset de 100,000 entrées peut se fait en 5 minutes sans même utiliser de GPU (mesuré avec un exercice de pathfinding)." />
+              <Paragraph text="En pratique:" />
+              <Paragraph text="Pas de mauvaise surprise, nous arrivons à entraîner l'IA dans des ordres de grandeurs négligeables face au temps de génération des datasets." />
+            </Box>
+          ),
+          "🏧 Coût de fonctionnement": (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: theme.space[4],
+              }}
+            >
+              <Paragraph text="L'IA en pratique serait utilisée une fois par croisement, toutes les 15 minutes. La performance n'est pas requise temporellement. Cependant, une meilleure performance permet de réduire la consommation énergétique, ce qui est un des buts principaux du projet. En effet, si l'énergie consommée n'était pas importante, il suffirait de lancer notre algorithme naif toutes les 15 minutes sur la simulation." />
+              <Paragraph text="En pratique:" />
+              <Paragraph text="Le coût temporel forward de l'IA est vastement négligeable face au coût temporel de la simulation (de l'ordre de 0.01%). Cela prouve que le coût énergétique d'un forward est lui aussi très faible." />
+            </Box>
+          ),
+        }}
       />
       <Title title="Génération de datasets" size="md" />
       <Code colorScheme="green">

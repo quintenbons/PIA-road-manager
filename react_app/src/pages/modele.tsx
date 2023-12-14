@@ -63,11 +63,12 @@ export const Modele = () => {
       <Paragraph text="Il faut ensuite générer le paramètre E, qui correspond au meilleur choix possible de stratégie pour les 15 minutes suivantes. Pour cela, nous pouvons simplement exécuter les stratégies une par une, et récupérer celle qui obtient le meilleur score (le moins de congestion). Attention ici à bien utiliser la même configuration de trafic que pour les 15 minutes initiales pour ne pas enfreindre notre hypothèse de consistence du trafic." />
 
       <Image src={DATASET_HESITATION} width={"60%"} alignSelf={"center"} />
-      <Paragraph text="Un cas particulier est à prévoir (voir @close-second) : si plusieurs stratégies sont correctes, pénaliser le modèle lors du backwards peut être néfaste. C'est pourquoi nous détecterons ces situations afin de les exclure du dataset." />
-      <Paragraph text="Il est possible à l'avenir que nous reviendrons sur cette décision afin de permettre à l'intelligence artificielle d'apprendre à résoudre des dilemmes plus efficacement." />
+      <Paragraph text="Un cas particulier est à prévoir (voir schéma ci-dessus) : si plusieurs stratégies sont correctes, pénaliser le modèle lors du backwards peut être néfaste. C'est pourquoi nous détecterons ces situations afin de les exclure du dataset." />
+      <Paragraph text="Nous hésitons aussi à passer d'un modèle one-hot à un modèle softmax probabiliste. C'est quelque chose que nous avions déjà fait remarquer lors du dernier livrable, et qui n'est toujours pas sûr." />
+      <Paragraph text="Note: les scores sont en réalité de l'ordre de plusieurs millions. Plus d'information dans la page 'Mesures'." />
 
       <Title title="Modèle d'IA : Dense Neural Network" size="md" />
-      <Paragraph text="Afin de prendre en main Pytorch, un court exercice a été fait : entraîner un modèle de Pathfinding. Cela nous a aussi permis de faire des premières estimations de performance (@perf)." />
+      <Paragraph text="Afin de prendre en main Pytorch, un court exercice a été fait : entraîner un modèle de Pathfinding. Cela nous a aussi permis de faire des premières estimations de performance (sur la page Home)." />
       <Paragraph text="Une infrastructure d'entraînement pour le projet routier est déjà prête. Elle contient" />
       <ParagraphList
         paragraphs={[
@@ -80,7 +81,7 @@ export const Modele = () => {
       <ParagraphList
         paragraphs={[
           "Des fonctionalités de génération automatique de dataset à partir de configs externes",
-          "Branchement à des cas concrêts (transformation d'une situation réelle en entrée du dataset)",
+          "Branchement à des cas concrets (transformation d'une situation réelle en entrée du dataset)",
         ]}
       />
 

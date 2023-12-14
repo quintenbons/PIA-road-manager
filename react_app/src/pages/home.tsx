@@ -1,17 +1,12 @@
-import { Box, Container, theme, Image } from "@chakra-ui/react";
+import { Container, theme, Image } from "@chakra-ui/react";
 import { Title } from "../components/Title";
 import { Paragraph } from "../components/Paragraph";
-import { AllLinks } from "../components/AllLinks";
-import { AccordionParagraph } from "../components/AccordionParagraph";
 import { ParagraphList } from "../components/ParagraphList";
 import { MultipleTabs } from "../components/MultipleTab";
 import { DocumentDescriptor } from "../components/DocumentDescriptor";
 import { Banner } from "../components/Banner";
-import { BreadcrumbLnk } from "../components/BreadcrumbLnk";
 import {
   CROSS_DUPLEX,
-  DATASET_GENERATION,
-  DATASET_HESITATION,
   OPEN,
   OPEN_CORRIDOR,
   PIECE_OF_CAKE,
@@ -68,144 +63,57 @@ export const Home = () => {
       <MultipleTabs
         childrens={{
           Open: (
-            <Box
+            <Container
               sx={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: "column",
                 gap: theme.space[4],
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignSelf: "center",
-                  gap: theme.space[4],
-                }}
-              >
-                <Paragraph text="La stratégie 'Open' consiste à laisser tous les feux au vert. De cette façon le trafic se régule de manière autonome." />
-                <Paragraph text="Dans l'exemple suivant, les flux possibles sont représentés en orange." />
-                <Paragraph text="Les stratégies peuvent changer au cours du temps, en pratique un feu de signalisation reste en place, choisir cette stratégie revient à faire en sorte que tous les feux de signalisation de l'intersection soient oranges et clignotent." />
-              </Box>
+              <Paragraph text="La stratégie 'Open' consiste à laisser tous les feux au vert. De cette façon le trafic se régule de manière autonome." />
+              <Paragraph text="Dans l'exemple suivant, les flux possibles sont représentés en orange." />
               <Image src={OPEN} />
-            </Box>
+              <Paragraph text="Les stratégies peuvent changer au cours du temps, en pratique un feu de signalisation reste en place, choisir cette stratégie revient à faire en sorte que tous les feux de signalisation de l'intersection soient oranges et clignotent." />
+            </Container>
           ),
           "Open Corridor": (
-            <Box
+            <Container
               sx={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: "column",
                 gap: theme.space[4],
               }}
             >
-              <Box
-                sx={{
-                  alignSelf: "center",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: theme.space[4],
-                }}
-              >
-                <Paragraph text="La stratégie 'Open corridor' correspond à un feu qui restera toujours vert tandis que les autres feux de signalisation alterneront chacun leur tour à temps égal." />
-                <Paragraph text="Dans l'exemple suivant, le feu de signalisation qui restera en vert est aussi représenté par cette couleur tandis que les feux rouges et bleus alternent." />
-              </Box>
+              <Paragraph text="La stratégie 'Open corridor' correspond à un feu qui restera toujours vert tandis que les autres feux de signalisation alterneront chacun leur tour à temps égal." />
+              <Paragraph text="Dans l'exemple suivant, le feu de signalisation qui restera en vert est aussi représenté par cette couleur tandis que les feux rouges et bleus alternent." />
               <Image src={OPEN_CORRIDOR} />
-            </Box>
-          ),
-          "Piece of Cake": (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                gap: theme.space[4],
-              }}
-            >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignSelf: "center",
-                  gap: theme.space[4],
-                }}
-              >
-                <Paragraph text="La stratégie 'Piece of cake': si on représente le temps total disponible avec un gâteau, cette stratégie partage équitablement le gâteau entre tous les feux de signalisation. Ainsi, lorsqu'un feu est au vert, les autres sont au rouge." />
-                <Paragraph text="Dans l'exemple suivant les feux de signalisations sont représentés par les traits de couleur rouge, vert et bleu." />
-              </Box>
-              <Image src={PIECE_OF_CAKE} />
-            </Box>
+            </Container>
           ),
           "Cross Duplex": (
-            <Box
+            <Container
               sx={{
                 display: "flex",
-                flexDirection: "row",
+                flexDirection: "column",
                 gap: theme.space[4],
               }}
             >
-              <Box
-                sx={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignSelf: "center",
-                  gap: theme.space[4],
-                }}
-              >
-                <Paragraph text="La stratégie 'Cross duplex' est la plus intuitive. Elle correspond au carrefour typique et permet de faire alterner les feux de signalisation des routes parallèles avec ceux des routes perpendiculaires." />
-                <Paragraph text="Dans l'exemple suivant sont représentés en bleu et rouge les groupes de feux de signalisation. Le groupe bleu et le groupe rouge s'allument chacun leur tour. " />
-              </Box>
+              <Paragraph text="La stratégie 'Piece of cake': si on représente le temps total disponible avec un gâteau, cette stratégie partage équitablement le gâteau entre tous les feux de signalisation. Ainsi, lorsqu'un feu est au vert, les autres sont au rouge." />
+              <Paragraph text="Dans l'exemple suivant les feux de signalisations sont représentés par les traits de couleur rouge, vert et bleu." />
+              <Image src={PIECE_OF_CAKE} />
+            </Container>
+          ),
+          "Piece of Cake": (
+            <Container
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: theme.space[4],
+              }}
+            >
+              <Paragraph text="La stratégie 'Cross duplex' est la plus intuitive. Elle correspond au carrefour typique et permet de faire alterner les feux de signalisation des routes parallèles avec ceux des routes perpendiculaires." />
+              <Paragraph text="Dans l'exemple suivant sont représentés en bleu et rouge les groupes de feux de signalisation. Le groupe bleu et le groupe rouge s'allument chacun leur tour. " />
               <Image src={CROSS_DUPLEX} />
-            </Box>
-          ),
-        }}
-      />
-      <Title title="Développement et Implémentation" size="lg" />
-
-      <Title title="Estimation Préliminaire des Performances" size="md" />
-      <Paragraph text="Nous vous conseillons d'explorer d'abord les autres pages de ce rapport avant d'aborder cette partie pour mieux comprendre les enjeux de performances de l'IA."/>
-      <Paragraph text="Il existe trois points critiques pour la performance de notre projet:" />
-      <AccordionParagraph
-        children={{
-          "🧪 Estimation du temps de génération des datasets": (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: theme.space[4],
-              }}
-            >
-              <Paragraph text="Pour générer 100,000 entrées (I, E) (on rappelle que le but est de 1,000,000 d'entrées):" />
-              <Paragraph text="Il faut pouvoir exécuter 15 minutes de simulation dans un intervalle de temps réel de l'ordre de la seconde. Si on utilise une solution naive, il nous faudra ([nb_strategies] + 1) x [temps de simul 15 minutes] pour générer 1 entrée (I, E)." />
-              <Paragraph text="Avec 10 stratégies, on a donc 11 secondes par entrée, soit 305 heures. Sur 8 coeurs cela revient à 38 heures de génération, ce qui est loin d'être négligeable." />
-              <Paragraph text="En pratique:" />
-              <Paragraph text="À notre grande surprise, nous arrivons à générer en python 15 minutes de simulation en 1.4 secondes, sans avoir fait d'optimisation. Nous pensons pouvoir descendre en dessous de la seconde." />
-              <Paragraph text="Générer un dataset est encore très coûteux. Comme nous avons en réalité 15 stratégies, nous mettons environ 60 heures à générer 100000 entrées (I, E)" />
-            </Box>
-          ),
-          "🎰 Temps d'entraînement": (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: theme.space[4],
-              }}
-            >
-              <Paragraph text="L'entraînement consiste à faire un forward + backward sur des batch générés par un dataloader. La complexité de cette tâche est de l'ordre de la taille du dataset utilisé. En pratique, l'entraînement d'un DNN à 64 neuronnes par couche sur un dataset de 100,000 entrées peut se fait en 5 minutes sans même utiliser de GPU (mesuré avec un exercice de pathfinding)." />
-              <Paragraph text="En pratique:" />
-              <Paragraph text="Pas de mauvaise surprise, nous arrivons à entraîner l'IA dans des ordres de grandeurs négligeables face au temps de génération des datasets." />
-            </Box>
-          ),
-          "🏧 Coût de fonctionnement": (
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: theme.space[4],
-              }}
-            >
-              <Paragraph text="L'IA en pratique serait utilisée une fois par croisement, toutes les 15 minutes. La performance n'est pas requise temporellement. Cependant, une meilleure performance permet de réduire la consommation énergétique, ce qui est un des buts principaux du projet. En effet, si l'énergie consommée n'était pas importante, il suffirait de lancer notre algorithme naif toutes les 15 minutes sur la simulation." />
-              <Paragraph text="En pratique:" />
-              <Paragraph text="Le coût temporel forward de l'IA est vastement négligeable face au coût temporel de la simulation (de l'ordre de 0.01%). Cela prouve que le coût énergétique d'un forward est lui aussi très faible." />
-            </Box>
+            </Container>
           ),
         }}
       />
