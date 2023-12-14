@@ -3,14 +3,30 @@ from ai.dataset import NodeDataset, score_tester
 import argparse
 import os
 
-def generate_dataset(size: int, dest: os.PathLike):
-    ds = NodeDataset.from_generation(size, tqdm_disable=False)
-    print(f"Generated {len(ds)} entries")
+def generate_dataset(size: int, dest: os.PathLike, tqdm_disable=False):
+    if os.path.exists(dest):
+        answer = input("Dataset already exists, are you sure you want to overwrite it? (y/n)")
+        if answer.lower() != "y":
+            print("Aborting")
+            exit(1)
 
-    for entry in ds:
-        print(entry)
+    ds = None
+    try:
+        ds = NodeDataset.from_generation(size, tqdm_disable=tqdm_disable)
+    except KeyboardInterrupt:
+        print("Keyboard interrupt, saving dataset...")
+    except Exception as e:
+        print("Exception occured, saving dataset...")
+        raise e
+    finally:
+        if ds is None or len(ds) == 0:
+            print("Could not generate dataset, aborting")
+            exit(1)
+        ds.save(dest)
+        print(f"Generated {len(ds)} entries")
 
-    ds.save(dest)
+        for entry in ds:
+            print(entry)
 
 def main():
     parser = argparse.ArgumentParser()
