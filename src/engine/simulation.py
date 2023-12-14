@@ -3,7 +3,7 @@ import sys
 import os
 from engine.constants import GENERATION_SEGMENT_DUARTION, TIME
 from engine.spawners.spawner import Spawner
-from engine.spawners.spawner_utils import every_ten_seconds
+from engine.spawners.spawner_utils import every_ten_seconds, benchmark_spawner
 
 from engine.strategies.strategies_manager import StrategyManager
 from engine.strategies.strategy_mutator import StrategyTypes
@@ -19,7 +19,7 @@ class Simulation:
     strategy_manager: StrategyManager
     current_tick: int = 0
 
-    def __init__(self, map_file: str, paths_file: str, nb_movables: int = 0):
+    def __init__(self, map_file: str, paths_file: str, nb_movables: int = 0, benchmark: bool = False):
         self.strategy_manager = StrategyManager()
 
         self.roads: List[Road]
@@ -27,10 +27,13 @@ class Simulation:
         self.roads, self.nodes = read_map(map_file)
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
-        set_strategies(self.nodes, self.strategy_manager)
+        set_strategies(self.nodes, self.strategy_manager, benchmark)
 
         self.spawners: List[Spawner] = []
-        spawner = Spawner(self.roads, self.roads, every_ten_seconds, nb_movables)
+        if benchmark:
+            spawner = Spawner(self.roads, self.roads, benchmark_spawner, nb_movables)
+        else:
+            spawner = Spawner(self.roads, self.roads, every_ten_seconds, nb_movables)
         self.spawners.append(spawner)
 
 

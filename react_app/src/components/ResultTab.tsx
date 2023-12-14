@@ -13,7 +13,7 @@ export type ResultTabProps = {
   data: {
     date: string;
     time: string;
-    description: string;
+    commitHash: string;
   }[];
   caption: string;
 };
@@ -26,8 +26,8 @@ export const ResultTab = (props: ResultTabProps) => {
         <Thead>
           <Tr>
             <Th>Date</Th>
-            <Th>Commentaire</Th>
-            <Th isNumeric>Time (s)</Th>
+            <Th>Commit hash</Th>
+            <Th isNumeric>Temps (s)</Th>
           </Tr>
         </Thead>
         <Tbody>
@@ -35,7 +35,7 @@ export const ResultTab = (props: ResultTabProps) => {
             return (
               <Tr>
                 <Td>{value.date}</Td>
-                <Td>{value.description}</Td>
+                <Td>{value.commitHash}</Td>
                 <Td isNumeric>{value.time}</Td>
               </Tr>
             );

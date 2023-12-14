@@ -22,7 +22,7 @@ export const NavBar = (props: NavBarProps) => {
         alignItems: "center",
         justifyContent: "flex-start",
         height: theme.sizes[16],
-        gap: theme.space[4],
+        gap: theme.space[7],
         padding: theme.space[4],
       }}
     >

@@ -1,6 +1,5 @@
 import random
 from engine.movable.movable import Movable
-from engine.node import Node
 from engine.road import Road
 from typing import Callable, List
 

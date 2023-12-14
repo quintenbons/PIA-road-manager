@@ -78,10 +78,13 @@ def set_traffic_lights(nodes: List[Node]):
             trafficLight = TrafficLight(road, node.road_out)
             node.controllers.append(trafficLight)
 
-def set_strategies(nodes: List[Node], strategy_manager: StrategyManager):
+def set_strategies(nodes: List[Node], strategy_manager: StrategyManager, benchmark: bool):
     for node in nodes:
-        node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.PIECE_OF_CAKE, 0))
-        # node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.OPEN, 0))
+        if benchmark:
+            node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.PIECE_OF_CAKE, 0))
+        else:
+            node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.PIECE_OF_CAKE, 0))
+            # node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.OPEN, 0))
         
 
 def find_path(n1: Node, n2: Node) -> List[Node]:

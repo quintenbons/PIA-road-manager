@@ -13,13 +13,14 @@ def main():
     parser.add_argument('--map_file', type=str, help='Fichier de la map')
     parser.add_argument('--paths_file', type=str, help='Fichier des chemins, en général pas besoin de le spécifier')
     parser.add_argument('--max_time', type=int, help='Temps maximum de la simulation')
+    parser.add_argument('--benchmark', type=bool, default=False, help='Benchmark mode')
     args = parser.parse_args()
 
     if not args.paths_file:
         parent_dir = os.path.dirname(args.map_file)
         args.paths_file = os.path.join(parent_dir, "paths.csv")
 
-    simulation = Simulation(map_file=args.map_file, paths_file=args.paths_file, nb_movables=args.nb_movables)
+    simulation = Simulation(map_file=args.map_file, paths_file=args.paths_file, nb_movables=args.nb_movables, benchmark=args.benchmark)
     display = PygameDisplay(simulation, debug_mode=args.debug)
     display.run(max_time=args.max_time)
 
