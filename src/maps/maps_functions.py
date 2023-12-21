@@ -3,6 +3,8 @@ import sys
 from math import inf
 
 from typing import List
+from engine.spawners.spawner import Spawner
+from engine.spawners.spawner_utils import spawner_handlers
 from engine.strategies.strategies_manager import StrategyManager
 from engine.strategies.strategy_mutator import StrategyTypes
 
@@ -31,14 +33,14 @@ def normalize_coordinates(nodes, width, height):
         y = (node.position[1] - min_y) / (max_y - min_y) * scaled_height + padding_y
         node.position = (x, y)
 
-def read_map(name: str) -> (List[Road], List[Node]):
-
+def read_map(name: str) -> (List[Road], List[Node], List[Spawner]):
     with open(name, mode='r', encoding='utf-8') as f:
         nodes = []
         roads = []
+        roads_dictionnary = {}
+        spawners = []
 
         for line in f:
-
             if line.strip() == "===":
                 break
             x, y, *_ = line.split()
@@ -47,15 +49,50 @@ def read_map(name: str) -> (List[Road], List[Node]):
         normalize_coordinates(nodes, SCREEN_WIDTH, SCREEN_HEIGHT)
 
         for line in f:
+            if line.strip() == "===":
+                break
+
             n1, n2, *_ = line.split()
             n1 = int(n1)
             n2 = int(n2)
             
             #TODO change speedlimit and remove second line
-            roads.append(Road(nodes[n1], nodes[n2], 8))
-            roads.append(Road(nodes[n2], nodes[n1], 8))
-    
-    return roads, nodes
+            road1 = Road(nodes[n1], nodes[n2], 8)
+            road2 = Road(nodes[n2], nodes[n1], 8)
+            roads.append(road1)
+            roads.append(road2)
+
+            roads_dictionnary[(n1, n2)] = road1
+            roads_dictionnary[(n2, n1)] = road2
+
+        # Spawners
+        handler = ""
+        initial_rate = 0
+        sources = []
+        destinations = []
+        sourceMode = True
+        for line in f:
+            if line.strip() == "=":
+                sourceMode = False
+                continue
+            elif len(line.strip().split()) == 1:
+                if handler != "":
+                    spawners.append(Spawner(sources, destinations, spawner_handlers(handler), initial_rate))
+                handler = line.strip()
+                sources = []
+                destinations = []
+                sourceMode = True
+            else:
+                n1, n2, *_ = line.split()
+                n1 = int(n1)
+                n2 = int(n2)
+                if sourceMode:
+                    sources.append(roads_dictionnary[(n1, n2)])
+                else:
+                    destinations.append(roads_dictionnary[(n1, n2)])
+        if handler != "":
+            spawners.append(Spawner(sources, destinations, spawner_handlers(handler), initial_rate))
+    return roads, nodes, spawners
 
 def read_paths(nodes: List[Node], name: str):
     """ Read paths from a paths' file """
@@ -91,6 +128,7 @@ def find_path(n1: Node, n2: Node) -> List[Node]:
     paths = n1.paths
     current = n2
     path = []
+    
     while current != n1:
         path.append(current)
         current = paths[current]
@@ -102,7 +140,6 @@ def find_path(n1: Node, n2: Node) -> List[Node]:
 Deprecated function. It's our only one so no need to use a decorator, just print a warning
 """
 def calculatePath(nodes: List[Node]):
-    print("Warning: calculatePath is deprecated and used for testing purpose only, use read_paths instead")
     for node in nodes:
         P = []
         d = {n:inf for n in nodes}

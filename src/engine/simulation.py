@@ -24,18 +24,19 @@ class Simulation:
 
         self.roads: List[Road]
         self.nodes: List[Node]
-        self.roads, self.nodes = read_map(map_file)
+        self.spawners: List[Spawner]
+        self.roads, self.nodes, self.spawners = read_map(map_file)
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
         set_strategies(self.nodes, self.strategy_manager, benchmark)
 
-        self.spawners: List[Spawner] = []
-        if benchmark:
-            spawner = Spawner(self.roads, self.roads, benchmark_spawner, nb_movables)
-        else:
-            spawner = Spawner(self.roads, self.roads, every_ten_seconds, nb_movables)
-        self.spawners.append(spawner)
-
+        # if benchmark:
+        #     spawner = Spawner(self.roads, self.roads, benchmark_spawner, nb_movables)
+        # else:
+        #     spawner = Spawner(self.roads, self.roads, every_ten_seconds, nb_movables)
+        # self.spawners.append(spawner)
+        if self.spawners == []:
+            self.spawners.append(Spawner(self.roads, self.roads, every_ten_seconds, nb_movables))
 
     def run(self, sim_duration: int = GENERATION_SEGMENT_DUARTION):
         start_tick = self.current_tick
