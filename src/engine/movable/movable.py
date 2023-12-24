@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
 from ..utils import getLength, vecteur_norm, scalaire
 
-from ..constants import LEAVING_TIME, TIME
+from ..constants import LEAVING_DIST, LEAVING_TIME, TIME
 
 sys.path.append('../maps')
 
@@ -25,12 +25,15 @@ class Movable(Nodable):
     node: Node = None
     lane: int = 0
     speed: float = 0.0
+    pos: float = 0.0
+
+    nxt_pos: float = 0.0
+    nxt_speed: float = 0.0
     acceleration: float = 0.0
 
     current_acceleration: float = 0.0
     latency: float = 0.0
     # Pos = 0 <=> start of the road, Pos = 1 <=> end of the road
-    pos: float = 0.0
     node_pos: list(float, float)
     node_dir: tuple(float, float)
     node_mov: bool = True
@@ -62,11 +65,30 @@ class Movable(Nodable):
     def update_position(self):
         self.pos, self.speed = self.next_position()
 
-    def next_position(self) -> list(float, float):
-        sp = self.speed + TIME*self.current_acceleration
+    def next_pos(self) -> float:
+        tca = TIME*self.current_acceleration
+        sp = self.speed + tca
+        if self.inner_timer > 0:
+            return self.pos
         if sp > self.road.speedLimit and self.current_acceleration > 0:
             t = (self.road.speedLimit - self.speed)/self.current_acceleration
-            assert(t >= 0)
+            pos = t*tca/2 + self.speed*t + self.road.speedLimit*(TIME-t) + self.pos
+        elif sp < 0:
+            t = -self.speed/self.current_acceleration
+            pos = t*tca/2 + self.speed*t + self.pos
+        else:
+            pos = TIME*tca/2 + self.speed*TIME + self.pos
+        return pos
+    
+    def next_position(self) -> list(float, float):
+        sp = self.speed + TIME*self.current_acceleration
+        if self.inner_timer > 0:
+            speed = 0
+            pos = self.pos
+            return pos, speed
+        if sp > self.road.speedLimit and self.current_acceleration > 0:
+            t = (self.road.speedLimit - self.speed)/self.current_acceleration
+            # assert(t >= 0)
             pos = TIME*t*self.current_acceleration/2 + self.speed*t + self.road.speedLimit*(TIME-t) + self.pos
             speed = self.road.speedLimit
         elif sp < 0:
@@ -76,17 +98,14 @@ class Movable(Nodable):
         else:
             pos = TIME*TIME*self.current_acceleration/2 + self.speed*TIME + self.pos
             speed = sp
-        assert(speed <= self.road.speedLimit)
-        if self.inner_timer > 0:
-            speed = 0
-            pos = self.pos
+        # assert(speed <= self.road.speedLimit)
         return pos, speed
     
     def handle_road_target(self):
         dx = self.road_goal[1] - self.pos
         # assert(dx > 0)
         # #TODO correction
-        if self.road == self.road_goal[0] and 0 < dx < 50:
+        if self.road == self.road_goal[0] and 0 < dx < LEAVING_DIST:
             da = 0
             if self.speed < 0.5:
                 return
@@ -95,7 +114,6 @@ class Movable(Nodable):
                 if da > 0:
                     da = 0
             self.current_acceleration += da
-        pass
 
     def handle_first_movable(self):
 
@@ -125,7 +143,7 @@ class Movable(Nodable):
 
             #TODO add a way to check for other roads
     def handle_possible_collision(self, other: Movable):
-        dx = (other.next_position()[0] - other.size) - (self.next_position()[0] + self.size)
+        dx = (other.next_pos() - other.size) - (self.next_pos() + self.size)
         if dx <= 0:
             da = 2.5*dx/TIME/TIME
             self.current_acceleration += da
@@ -139,8 +157,8 @@ class Movable(Nodable):
             self.current_acceleration = self.acceleration
         else:
             self.current_acceleration = max(0, self.current_acceleration)
-            future_other = other.next_position()[0] - other.size
-            future_self = self.next_position()[0] + self.size
+            future_other = other.next_pos() - other.size
+            future_self = self.next_pos() + self.size
             dx = min(future_other - future_self, future_other - future_self - self.size)
 
             da = 1.75*dx/TIME/TIME
@@ -157,6 +175,7 @@ class Movable(Nodable):
             timer = self.inner_timer * TIME
             if timer <= LEAVING_TIME:
                 self.speed = 0
+                self.acceleration = 0
                 self.current_acceleration = 0
                 self.inner_timer += 1
                 return True
@@ -225,8 +244,9 @@ class Movable(Nodable):
         self.node_mov = True
 
     def update(self):
-        if self.tree_node is None and self.node is None:
-            return False
+        # if self.tree_node is None and self.node is None:
+        #     print("inutile ?")
+        #     return False
         if self.node is None and self.road:
             return self.update_road()
         elif self.node:

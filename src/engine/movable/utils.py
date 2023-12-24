@@ -1,4 +1,4 @@
-from ..constants import ACCELERATION, TIME
+from ..constants import TIME
 
 def car_speed(speedLimit, currentSpeed, acceleration):
     return max(min(speedLimit, currentSpeed + acceleration*TIME), 0)

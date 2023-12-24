@@ -71,7 +71,7 @@ class Road:
             #previous is ahead
             for mov in lane.iter(True):
                 mov: Movable
-                assert(previous != mov)
+                # assert(previous != mov)
                 if previous is None:
                     mov.handle_first_movable()
                 else:
@@ -82,9 +82,7 @@ class Road:
     # No need for collision detection??
     def collision_detection(self, previous: Movable, nxt: Movable) -> float:
         # previous is ahead and nxt is behind on the road
-        if previous is None:
-            return
-        if nxt.next_position()[0] + 2*nxt.size > previous.next_position()[0] - 2*previous.size:
+        if nxt.next_pos() + 2*nxt.size > previous.next_pos() - 2*previous.size:
             nxt.handle_possible_collision(previous)
         else:
             nxt.no_possible_collision(previous)
