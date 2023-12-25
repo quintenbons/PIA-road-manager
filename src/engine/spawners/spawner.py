@@ -28,6 +28,7 @@ class Spawner:
 
         remove_list: List[Movable] = []
         for m in self.movables:
+            # print(m.pos)
             if not m.update():
                 remove_list.append(m)
         for m in remove_list:
