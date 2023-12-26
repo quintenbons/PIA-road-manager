@@ -8,7 +8,7 @@ from graphics.assets import NODE_RADIUS
 from engine.constants import TIME
 
 def draw_car(movable: Movable, screen: pygame.Surface, color: int):
-    x, y = movable.to_coord_xy()
+    x, y = movable.cmovable.to_coord_xy()
     centered_x = x
     centered_y = y
     pygame.draw.circle(screen, ((color * 26)%255, (color * 12)%255, (color*3)%255), (centered_x, centered_y), 4)
@@ -16,22 +16,22 @@ def draw_car(movable: Movable, screen: pygame.Surface, color: int):
     # pygame.draw.rect(screen, (255, 0, 0), get_rect(movable), 1)
 
 def draw_road(screen, road: Road):
-    if road.block_traffic:
-        pygame.draw.line(screen, CLOSED_ROAD_COLOR, road.pos_start, road.pos_end, ROAD_WIDTH)
+    if road.croad.get_block_traffic():
+        pygame.draw.line(screen, CLOSED_ROAD_COLOR, road.croad.get_pos_start(), road.croad.get_pos_end(), ROAD_WIDTH)
     else:
-        pygame.draw.line(screen, ROAD_COLOR, road.pos_start, road.pos_end, ROAD_WIDTH)
+        pygame.draw.line(screen, ROAD_COLOR, road.croad.get_pos_start(), road.croad.get_pos_end(), ROAD_WIDTH)
 
 def draw_node(screen, node:Node):
-    pygame.draw.circle(screen, NODE_COLOR, node.position, NODE_RADIUS)
+    pygame.draw.circle(screen, NODE_COLOR, (node.cnode.get_x(), node.cnode.get_y()), NODE_RADIUS)
 
 def draw_movable(movable: Movable, screen, color: int):
     draw_car(movable, screen, color)
 
 def get_rect(obj):
     if isinstance(obj, Node):
-        return pygame.Rect(obj.position[0] - NODE_RADIUS, obj.position[1] - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2)
+        return pygame.Rect(obj.cnode.get_x() - NODE_RADIUS, obj.cnode.get_y() - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2)
     elif isinstance(obj, Movable):
-        x, y = obj.to_coord_xy()
+        x, y = obj.cmovable.to_coord_xy()
         centered_x = x  - NODE_RADIUS
         centered_y = y  - NODE_RADIUS
         return pygame.Rect(centered_x, centered_y, NODE_RADIUS * 2, NODE_RADIUS * 2)

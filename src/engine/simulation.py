@@ -46,9 +46,9 @@ class Simulation:
 
     def run_tick(self):
         for r in self.roads:
-            r.update()
+            r.croad.update()
         for n in self.nodes:
-            n.update(self.current_tick)
+            n.cnode.update(n.strategy, self.current_tick)
         self.current_tick += 1
         for s in self.spawners:
             s.update(self.current_tick * TIME)

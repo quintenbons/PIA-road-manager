@@ -7,6 +7,17 @@ Avant tout:
   cd src/maps/cpp && make all
   ```
 
+Cette étape est necessaire seulement si on doit toucher au code c++
+Installer pybind (seulement ce qui est necessaire):
+  ```bash
+  pip install pybind
+  apt install pybind11-dev
+  ```
+Compiler
+  ```bash
+  cd src/cpp && ./compile_cpp.sh
+  ```
+
 #### Créer une map
 On a besoin de deux fichiers, une map et la liste des chemins correspondants.
 S'assurer d'être au root du repo.

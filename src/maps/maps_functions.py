@@ -17,10 +17,10 @@ from engine.road import Road
 from engine.node import Node
 
 def normalize_coordinates(nodes, width, height):
-    min_x = min(node.position[0] for node in nodes)
-    min_y = min(node.position[1] for node in nodes)
-    max_x = max(node.position[0] for node in nodes)
-    max_y = max(node.position[1] for node in nodes)
+    min_x = min(node.cnode.get_x() for node in nodes)
+    min_y = min(node.cnode.get_y() for node in nodes)
+    max_x = max(node.cnode.get_x() for node in nodes)
+    max_y = max(node.cnode.get_y() for node in nodes)
 
     padding_x = width * 0.05
     padding_y = height * 0.05
@@ -29,9 +29,9 @@ def normalize_coordinates(nodes, width, height):
     scaled_height = height - 2 * padding_y
 
     for node in nodes:
-        x = (node.position[0] - min_x) / (max_x - min_x) * scaled_width + padding_x
-        y = (node.position[1] - min_y) / (max_y - min_y) * scaled_height + padding_y
-        node.position = (x, y)
+        x = (node.cnode.get_x() - min_x) / (max_x - min_x) * scaled_width + padding_x
+        y = (node.cnode.get_y() - min_y) / (max_y - min_y) * scaled_height + padding_y
+        node.cnode.set_position(x, y)
 
 def read_map(name: str) -> (List[Road], List[Node], List[Spawner]):
     with open(name, mode='r', encoding='utf-8') as f:
@@ -107,12 +107,12 @@ def read_paths(nodes: List[Node], name: str):
                 #TODO optim ?
                 l.pop(-1)
                 for n, previous in map(lambda x: x.split(':'), l):
-                    nodes[currentNode].paths[nodes[int(n)]] = nodes[int(previous)]
-
+                    # nodes[currentNode].paths[nodes[int(n)]] = nodes[int(previous)]
+                    nodes[currentNode].cnode.set_path(nodes[int(n)].cnode, nodes[int(previous)].cnode)
 def set_traffic_lights(nodes: List[Node]):
     for node in nodes:
-        for road in node.road_in:
-            trafficLight = TrafficLight(road, node.road_out)
+        for road in node.cnode.get_road_in():
+            trafficLight = TrafficLight(road, node.cnode.get_road_out())
             node.controllers.append(trafficLight)
 
 def set_strategies(nodes: List[Node], strategy_manager: StrategyManager, benchmark: bool):

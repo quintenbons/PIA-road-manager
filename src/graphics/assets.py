@@ -21,5 +21,5 @@ def load_resource(path: PathLike) -> pygame.Surface:
 @dataclass
 class AssetManager:
     def get_car_asset(self, car: Movable) -> int:
-        quick_hash = ((car._id >> 16) ^ car._id) * 0x45d9f3b
+        quick_hash = ((id(car) >> 16) ^ id(car)) * 0x45d9f3b
         return quick_hash % 255
