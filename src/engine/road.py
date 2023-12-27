@@ -12,12 +12,52 @@ if TYPE_CHECKING:
 rid = 0
 # @dataclass
 
+
+class CRoad:
+
+    def get_id(self) -> int:
+        pass
+
+    def update(self):
+        pass
+
+    def spawn_movable(self, movable: Movable) -> bool:
+        pass
+
+    def get_road_len(self) -> float:
+        pass
+
+    def get_block_traffic(self) -> bool:
+        pass
+
+    def get_pos_start(self) -> (float, float):
+        pass
+
+    def get_pos_end(self) -> (float, float):
+        pass
+
+
 class Road:
-    
-    croad = None
+
+    croad: CRoad = None
 
     def __init__(self, start: Node, end: Node, speedLimit: float):
         self.croad = engine_ia.Road(start.cnode, end.cnode, speedLimit)
+
+    def spawn_movable(self, movable: Movable) -> bool:
+        return self.croad.spawn_movable(movable.cmovable)
+
+    def get_road_len(self) -> float:
+        return self.croad.get_road_len()
+
+    def get_block_traffic(self) -> bool:
+        return self.croad.get_block_traffic()
+
+    def get_pos_start(self) -> (float, float):
+        return self.croad.get_pos_start()
+
+    def get_pos_end(self) -> (float, float):
+        return self.croad.get_pos_end()
 
     def __str__(self) -> str:
         # return f'{{"start": {self.start._id}, "end": {self.end._id}, "length": {self.length}, "bidirectional": "{self.bidirectional}", "speedLimit": {self.speedLimit}}}'
