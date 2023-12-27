@@ -63,6 +63,8 @@ PYBIND11_MODULE(engine_ia, m) {
         .def("spawn_movable", &Road::spawnMovable)
         .def("get_block_traffic", &Road::getBlockTraffic)
         .def("set_block_traffic", &Road::setBlockTraffic)
+        .def("get_ai_flow_count_0", &Road::getAiFlowCount0)
+        .def("get_ai_flow_count_1", &Road::getAiFlowCount1)
         ;
 
     py::class_<Node>(m, "Node")

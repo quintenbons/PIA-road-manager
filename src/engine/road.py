@@ -35,7 +35,12 @@ class CRoad:
 
     def get_pos_end(self) -> (float, float):
         pass
+    
+    def get_ai_flow_count_0(self) -> int:
+        pass
 
+    def get_ai_flow_count_1(self) -> int:
+        pass
 
 class Road:
 

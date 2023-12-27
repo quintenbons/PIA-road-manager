@@ -26,7 +26,7 @@ def main():
 
     # ENV:
     # MAX_CORES: Number of cores to use for dataset generation
-    max_cores = os.environ.get("MAX_CORES") or 4
+    max_cores = os.environ.get("MAX_CORES") or 8
     max_cores = int(max_cores)
     duration_in_minutes = args.duration
     dest_directory = args.dest

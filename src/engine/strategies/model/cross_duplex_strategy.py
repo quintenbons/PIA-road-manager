@@ -33,7 +33,7 @@ class CrossDuplexStrategy(Strategy):
 
     def associate_to_group(self, traffic_light: TrafficLight):
         for group in self.traffic_lights_group:
-            if self.is_opposit(self.node_pos, traffic_light.road_in.pos_end, group.pos):
+            if self.is_opposit(self.node_pos, traffic_light.road_in.get_pos_end(), group.pos):
                 group.add_traffic_light(traffic_light)
                 return
         group = TrafficGroup()

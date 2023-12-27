@@ -56,11 +56,14 @@ def entry_from_node(node: Node, tqdm_disable=True):
     for num in tqdm(range(MAX_ROADS), disable=tqdm_disable):
         if num >= 5:
             break
-
-        if num < len(node.road_in):
-            tensor[num * 2] = node.road_in[num].ai_flow_count[1]
-        if num < len(node.road_out):
-            tensor[num * 2 + 1] = node.road_out[num].ai_flow_count[0]
+        # print(node.cnode)
+        node_road_in = node.get_road_in()
+        node_road_out = node.get_road_out()
+        # print(node_road_in, node_road_out)
+        if num < len(node_road_in):
+            tensor[num * 2] = node_road_in[num].get_ai_flow_count_1()
+        if num < len(node_road_out):
+            tensor[num * 2 + 1] = node_road_out[num].get_ai_flow_count_0()
     return tensor
 
 def score_tester():

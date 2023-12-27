@@ -31,7 +31,7 @@ class StrategyManager:
         mutation_parameters = self.mutations[controller_count][type][mutation]
 
         if type == StrategyTypes.CROSS_DUPLEX:
-            return CrossDuplexStrategy(node.controllers, node.position, mutation_parameters)
+            return CrossDuplexStrategy(node.controllers, node.get_position(), mutation_parameters)
         elif type == StrategyTypes.OPEN_CORRIDOR:
             return OpenCorridorStrategy(node.controllers, mutation_parameters)
         elif type == StrategyTypes.OPEN:

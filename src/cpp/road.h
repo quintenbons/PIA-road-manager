@@ -23,6 +23,9 @@ public:
     bool getBlockTraffic();
     void setBlockTraffic(bool b);
     double getRoadLen();
+    int getAiFlowCount0();
+    int getAiFlowCount1();
+
     Node* start;
     Node* end;
     Point posStart;

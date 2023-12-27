@@ -4,7 +4,7 @@ from engine.strategies.model.cross_duplex_strategy import CrossDuplexStrategy
 from engine.strategies.model.strategy import Strategy
 
 from engine.strategies.strategy_mutator import StrategyTypes
-from .road import Road
+from .road import CRoad, Road
 from .traffic.flow_controller import FlowController
 from .movable.movable import Movable
 from .utils import circle_collision, vecteur, scalaire, norm
@@ -34,10 +34,10 @@ class CNode:
     def set_path(self, dest: CNode, prev: CNode):
         pass
 
-    def get_road_in(self) -> list[Road]:
+    def get_road_in(self) -> list[CRoad]:
         pass
 
-    def get_road_out(self) -> list[Road]:
+    def get_road_out(self) -> list[CRoad]:
         pass
 
 
@@ -58,17 +58,19 @@ class Node:
     def get_y(self) -> float:
         return self.cnode.get_y()
 
+    def get_position(self) -> (float, float):
+        return (self.get_x(), self.get_y())
     def set_position(self, x, y):
         self.cnode.set_position(x, y)
 
     def set_path(self, dest: Node, prev: Node):
         self.cnode.set_path(dest.cnode, prev.cnode)
 
-    def get_road_in(self) -> list[Road]:
-        self.cnode.get_road_in()
+    def get_road_in(self) -> list[CRoad]:
+        return self.cnode.get_road_in()
 
-    def get_road_out(self) -> list[Road]:
-        self.cnode.get_road_out()
+    def get_road_out(self) -> list[CRoad]:
+        return self.cnode.get_road_out()
 
     def __str__(self) -> str:
         # return f'{{"position":{{"x":{self.position[0]}, "y":{self.position[1]}}},"controllers":{"[]" if len(self.controllers) == 0 else "["+", ".join([controller.__str__() for controller in self.controllers])+"]"}}}'

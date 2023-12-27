@@ -157,3 +157,11 @@ void Road::setBlockTraffic(bool b) {
 double Road::getRoadLen() {
     return roadLen;
 }
+
+int Road::getAiFlowCount0() {
+    return aiFlowCount0;
+}
+
+int Road::getAiFlowCount1() {
+    return aiFlowCount1;
+}
