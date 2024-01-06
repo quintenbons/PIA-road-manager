@@ -68,8 +68,8 @@ def entry_from_node(node: Node, tqdm_disable=True):
 
 def score_tester():
     sim_seed = int(time.time())
-    map_file = "src/maps/build/GUI/Star/map.csv"
-    paths_file = "src/maps/build/GUI/Star/paths.csv"
+    map_file = "src/maps/build/GUI/Training-Star/map.csv"
+    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
     central_node = 1
 
     strategy_manager = StrategyManager()
@@ -85,8 +85,8 @@ def score_tester():
         print(f"{typ:3} {STRAT_NAMES[typ]:20} {mutation:3} {sim_score:15.5f}")
 
 def simul_to_scores(central_node: int, second_seed: int):
-    map_file = "src/maps/build/GUI/Star/map.csv"
-    paths_file = "src/maps/build/GUI/Star/paths.csv"
+    map_file = "src/maps/build/GUI/Training-Star/map.csv"
+    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
 
     strategy_manager = StrategyManager()
     nb_controllers = 4
@@ -117,8 +117,8 @@ def seed_generator(meta_seed: int = None):
         yield local_random.randrange(0, 2**32)
 
 def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
-    map_file = "src/maps/build/GUI/Star/map.csv"
-    paths_file = "src/maps/build/GUI/Star/paths.csv"
+    map_file = "src/maps/build/GUI/Training-Star/map.csv"
+    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
     central_node = 1
 
     batch = []
