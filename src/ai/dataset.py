@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 import time
 from tqdm import tqdm
-from engine.constants import GENERATION_SEGMENT_DUARTION
+from engine.constants import GENERATION_SEGMENT_DURATION
 import random
 
 from engine.node import Node
@@ -79,7 +79,7 @@ def score_tester():
         random.seed(sim_seed)
         simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
         simulation.set_node_strategy(central_node, typ, mutation)
-        simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
+        simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
         sim_score = simulation.get_total_score()
         print(f"{typ:3} {STRAT_NAMES[typ]:20} {mutation:3} {sim_score:15.5f}")
@@ -100,7 +100,7 @@ def simul_to_scores(central_node: int, second_seed: int):
         random.seed(second_seed)
         simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
         simulation.set_node_strategy(central_node, typ, mutation)
-        simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
+        simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
         sim_score = simulation.get_total_score()
         scores.append(sim_score)
@@ -136,7 +136,7 @@ def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torc
             # Run first simulation
             simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
             simulation.set_node_strategy(central_node, StrategyTypes.CROSS_DUPLEX, 0)
-            simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
+            simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
             # Run second range simulationS
             scores, _ = simul_to_scores(central_node, second_seed)

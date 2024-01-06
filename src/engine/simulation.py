@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import os
-from engine.constants import GENERATION_SEGMENT_DUARTION, TIME
+from engine.constants import GENERATION_SEGMENT_DURATION, TIME
 from engine.spawners.spawner import Spawner
 from engine.spawners.spawner_utils import every_ten_seconds, benchmark_spawner
 
@@ -38,7 +38,7 @@ class Simulation:
         if self.spawners == []:
             self.spawners.append(Spawner(self.roads, self.roads, every_ten_seconds, nb_movables))
 
-    def run(self, sim_duration: int = GENERATION_SEGMENT_DUARTION):
+    def run(self, sim_duration: int = GENERATION_SEGMENT_DURATION):
         start_tick = self.current_tick
 
         while (self.current_tick - start_tick) * TIME < sim_duration:
