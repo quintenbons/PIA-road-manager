@@ -30,11 +30,6 @@ class Simulation:
         set_traffic_lights(self.nodes)
         set_strategies(self.nodes, self.strategy_manager, benchmark)
 
-        # if benchmark:
-        #     spawner = Spawner(self.roads, self.roads, benchmark_spawner, nb_movables)
-        # else:
-        #     spawner = Spawner(self.roads, self.roads, every_ten_seconds, nb_movables)
-        # self.spawners.append(spawner)
         if self.spawners == []:
             self.spawners.append(Spawner(self.roads, self.roads, every_ten_seconds, nb_movables))
 
@@ -51,7 +46,7 @@ class Simulation:
             n.cnode.update(n.strategy, self.current_tick)
         self.current_tick += 1
         for s in self.spawners:
-            s.update(self.current_tick * TIME)
+            s.update(self.current_tick)
 
 
     def get_total_score(self) -> int:

@@ -1,4 +1,5 @@
 import random
+from engine.constants import TIME
 from engine.movable.movable import Movable
 from engine.road import Road
 from typing import Callable, List
@@ -38,7 +39,7 @@ class Spawner:
             self._total_despawned_score += m.cmovable.get_score(current_tick)
             self.movables.remove(m)
         
-        rate = self.get_rate(current_tick)
+        rate = self.get_rate(current_tick * TIME)
 
         # if len(self.movables) < 200:
         for _ in range(rate):
