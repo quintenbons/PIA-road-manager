@@ -36,7 +36,7 @@ def main():
     if not os.path.exists(dest_directory):
         os.makedirs(dest_directory)
 
-    print(f"Generating datasets of size {size} on {max_cores} (approx {approx_duration} minutes)...", file=sys.stderr)
+    print(f"Generating datasets of size {size} on {max_cores} cores (approx {approx_duration} minutes)...", file=sys.stderr)
 
     futures = set()
 
