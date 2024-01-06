@@ -1,10 +1,11 @@
 from __future__ import annotations
+from io import TextIOWrapper
 import sys
 from math import inf
 
 from typing import List
 from engine.spawners.spawner import Spawner
-from engine.spawners.spawner_utils import spawner_handlers
+from engine.spawners.spawner_utils import spawner_frequencies
 from engine.strategies.strategies_manager import StrategyManager
 from engine.strategies.strategy_mutator import StrategyTypes
 
@@ -32,6 +33,49 @@ def normalize_coordinates(nodes, width, height):
         x = (node.cnode.get_x() - min_x) / (max_x - min_x) * scaled_width + padding_x
         y = (node.cnode.get_y() - min_y) / (max_y - min_y) * scaled_height + padding_y
         node.cnode.set_position(x, y)
+
+def read_spawner(io: TextIOWrapper, all_roads: List[Road], road_dict: dict) -> Spawner | None:
+    """File format
+    frequency (slow, medium fast)
+    initial movables (int)
+    picking type (uniform or picked)
+
+    # if picked:
+    source1
+    source2
+    =
+    dest1
+    ...
+    """
+    first_line = io.readline().strip()
+
+    #EOF or parsing problem
+    if len(first_line) <= 1:
+        return None
+
+    freq = spawner_frequencies(first_line)
+    initial_rate = int(io.readline().strip())
+    picker = io.readline().strip()
+
+    if picker == "uniform":
+        return Spawner(all_roads, all_roads, freq, initial_rate) # TODO: initial freq
+
+    sources = []
+    destinations = []
+    sourceMode = True
+    for line in io:
+        match line.strip().split():
+            case ["==="]:
+                return Spawner(sources, destinations, freq, initial_rate)
+            case ["="]:
+                sourceMode = False
+            case [n1, n2] if len(line.strip().split()) == 2:
+                if sourceMode:
+                    sources.append(road_dict[(n1, n2)])
+                else:
+                    destinations.append(road_dict[(n1, n2)])
+            case _ as any:
+                raise Exception("Invalid line in spawner file", any)
 
 def read_map(name: str) -> (List[Road], List[Node], List[Spawner]):
     with open(name, mode='r', encoding='utf-8') as f:
@@ -66,32 +110,9 @@ def read_map(name: str) -> (List[Road], List[Node], List[Spawner]):
             roads_dictionnary[(n2, n1)] = road2
 
         # Spawners
-        handler = ""
-        initial_rate = 0
-        sources = []
-        destinations = []
-        sourceMode = True
-        for line in f:
-            if line.strip() == "=":
-                sourceMode = False
-                continue
-            elif len(line.strip().split()) == 1:
-                if handler != "":
-                    spawners.append(Spawner(sources, destinations, spawner_handlers(handler), initial_rate))
-                handler = line.strip()
-                sources = []
-                destinations = []
-                sourceMode = True
-            else:
-                n1, n2, *_ = line.split()
-                n1 = int(n1)
-                n2 = int(n2)
-                if sourceMode:
-                    sources.append(roads_dictionnary[(n1, n2)])
-                else:
-                    destinations.append(roads_dictionnary[(n1, n2)])
-        if handler != "":
-            spawners.append(Spawner(sources, destinations, spawner_handlers(handler), initial_rate))
+        while (spawner := read_spawner(f, roads, roads_dictionnary)) is not None:
+            spawners.append(spawner)
+
     return roads, nodes, spawners
 
 def read_paths(nodes: List[Node], name: str):

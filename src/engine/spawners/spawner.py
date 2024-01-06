@@ -17,7 +17,7 @@ class Spawner:
     # destinations: List[Road] - The destination of the traffic, car will go to this destination
     # get_rate: callable[int] - A function that returns the rate of spawn for a given time, we spawn |get_rate(time)| cars per second
     # initial_rate: int - The initial rate of spawn
-    def __init__(self, sources: List[Road], destinations: List[Road], get_rate: Callable[[int], int], initial_rate: int = 0):
+    def __init__(self, sources: List[Road], destinations: List[Road], get_rate: Callable[[float], int], initial_rate: int = 0):
         self.sources = sources
         self.destinations = destinations
         self.get_rate = get_rate
