@@ -1,7 +1,9 @@
 import random
+from engine.constants import TIME
 from engine.movable.movable import Movable
 from engine.road import Road
 from typing import Callable, List
+import build.engine_ia as engine_ia
 
 class Spawner:
     sources: List[Road]
@@ -26,16 +28,18 @@ class Spawner:
 
     def update(self, current_tick: int):
 
-        remove_list: List[Movable] = []
-        for m in self.movables:
-            # print(m.pos)
-            if not m.update():
-                remove_list.append(m)
+        cmov_list = [m.cmovable for m in self.movables]
+        # for m in self.movables:
+        #     # print(m.pos)
+        #     if not m.cmovable.update():
+        #         remove_list.append(m)
+        index_list = engine_ia.spawner_update(cmov_list)
+        remove_list: List[Movable] = [self.movables[i] for i in index_list]
         for m in remove_list:
-            self._total_despawned_score += m.get_score(current_tick)
+            self._total_despawned_score += m.cmovable.get_score(current_tick)
             self.movables.remove(m)
         
-        rate = self.get_rate(current_tick)
+        rate = self.get_rate(current_tick * TIME)
 
         # if len(self.movables) < 200:
         for _ in range(rate):
@@ -56,22 +60,23 @@ class Spawner:
 
     def spawn(self, current_tick: int):
         source = self.sources[random.randint(0, len(self.sources) - 1)]
-        new_movable = Movable(random.random()*4 + 1, random.random()*2.5 + 0.5, random.random(), random.random() * source.road_len, 2, spawn_tick=current_tick)
+        new_movable = Movable(random.random()*4 + 1, random.random()*2.5 + 0.5, random.random() * source.croad.get_road_len(), 2, spawn_tick=current_tick)
         # Add the movable to the road and the road to the movable
-        if source.spawn_movable(new_movable, random.randint(0, len(source.lanes) - 1)):
+        # print(new_movable.cmovable)
+        if source.croad.spawn_movable(new_movable.cmovable):
 
         # Get a random destination
             # new_movable.get_path(self.destinations[random.randint(0, len(self.destinations) - 1)])
             destination = self.destinations[random.randint(0, len(self.destinations) - 1)]
 
             if destination == source:
-                remaining = destination.road_len - new_movable.pos
-                pos = new_movable.pos + remaining * (random.random() * 0.8)
+                remaining = destination.croad.get_road_len() - new_movable.cmovable.get_pos()
+                pos = new_movable.cmovable.get_pos() + remaining * (random.random() * 0.8)
                 # print("unlucky ?")
             else:
-                pos = destination.road_len * (random.random() * 0.5 + 0.25)
+                pos = destination.croad.get_road_len() * (random.random() * 0.5 + 0.25)
 
-            new_movable.set_road_goal(destination, pos)
+            new_movable.cmovable.set_road_goal(destination.croad, pos)
             self.movables.append(new_movable)
 
         

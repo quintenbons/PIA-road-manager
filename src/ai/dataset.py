@@ -6,7 +6,7 @@ import torch.nn.functional as F
 from torch.utils.data import Dataset
 import time
 from tqdm import tqdm
-from engine.constants import GENERATION_SEGMENT_DUARTION
+from engine.constants import GENERATION_SEGMENT_DURATION
 import random
 
 from engine.node import Node
@@ -56,17 +56,20 @@ def entry_from_node(node: Node, tqdm_disable=True):
     for num in tqdm(range(MAX_ROADS), disable=tqdm_disable):
         if num >= 5:
             break
-
-        if num < len(node.road_in):
-            tensor[num * 2] = node.road_in[num].ai_flow_count[1]
-        if num < len(node.road_out):
-            tensor[num * 2 + 1] = node.road_out[num].ai_flow_count[0]
+        # print(node.cnode)
+        node_road_in = node.get_road_in()
+        node_road_out = node.get_road_out()
+        # print(node_road_in, node_road_out)
+        if num < len(node_road_in):
+            tensor[num * 2] = node_road_in[num].get_ai_flow_count_1()
+        if num < len(node_road_out):
+            tensor[num * 2 + 1] = node_road_out[num].get_ai_flow_count_0()
     return tensor
 
 def score_tester():
     sim_seed = int(time.time())
-    map_file = "src/maps/build/GUI/Star/map.csv"
-    paths_file = "src/maps/build/GUI/Star/paths.csv"
+    map_file = "src/maps/build/GUI/Training-Star/map.csv"
+    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
     central_node = 1
 
     strategy_manager = StrategyManager()
@@ -76,14 +79,14 @@ def score_tester():
         random.seed(sim_seed)
         simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
         simulation.set_node_strategy(central_node, typ, mutation)
-        simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
+        simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
         sim_score = simulation.get_total_score()
         print(f"{typ:3} {STRAT_NAMES[typ]:20} {mutation:3} {sim_score:15.5f}")
 
 def simul_to_scores(central_node: int, second_seed: int):
-    map_file = "src/maps/build/GUI/Star/map.csv"
-    paths_file = "src/maps/build/GUI/Star/paths.csv"
+    map_file = "src/maps/build/GUI/Training-Star/map.csv"
+    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
 
     strategy_manager = StrategyManager()
     nb_controllers = 4
@@ -97,7 +100,7 @@ def simul_to_scores(central_node: int, second_seed: int):
         random.seed(second_seed)
         simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
         simulation.set_node_strategy(central_node, typ, mutation)
-        simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
+        simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
         sim_score = simulation.get_total_score()
         scores.append(sim_score)
@@ -114,8 +117,8 @@ def seed_generator(meta_seed: int = None):
         yield local_random.randrange(0, 2**32)
 
 def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
-    map_file = "src/maps/build/GUI/Star/map.csv"
-    paths_file = "src/maps/build/GUI/Star/paths.csv"
+    map_file = "src/maps/build/GUI/Training-Star/map.csv"
+    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
     central_node = 1
 
     batch = []
@@ -133,7 +136,7 @@ def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torc
             # Run first simulation
             simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
             simulation.set_node_strategy(central_node, StrategyTypes.CROSS_DUPLEX, 0)
-            simulation.run(sim_duration=GENERATION_SEGMENT_DUARTION)
+            simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
             # Run second range simulationS
             scores, _ = simul_to_scores(central_node, second_seed)

@@ -2,13 +2,13 @@ from dataclasses import dataclass
 from typing import List
 from ..movable.hiker import Hiker
 from ..movable.car import Car
-from ..road import Road
+from ..road import CRoad
 class FlowController:
     vehicle_queue: List[Car] = []
     hiker_queue: List[Hiker] = []
     pos = tuple[float, float]
-    road_in: Road = None
-    road_out: List[Road] = []
+    road_in: CRoad = None
+    road_out: List[CRoad] = []
 
     def __init__(self):
         self.vehicle_queue = []

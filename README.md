@@ -7,6 +7,18 @@ Avant tout:
   cd src/maps/cpp && make all
   ```
 
+Cette étape est necessaire seulement si on doit toucher au code c++
+Installer pybind (seulement ce qui est necessaire):
+  ```bash
+  pip install pybind
+  apt install pybind11-dev
+  ```
+
+Compiler (une version compilée est déjà présente dans le repo)
+  ```bash
+  cd src/cpp && ./compile_cpp.sh
+  ```
+
 #### Créer une map
 On a besoin de deux fichiers, une map et la liste des chemins correspondants.
 S'assurer d'être au root du repo.
@@ -37,6 +49,12 @@ S'assurer d'être au root du repo.
 - `--nb_movables`: Nombre de véhicules à placer
 - `--map_file`: Chemin vers le fichier de la map
 - `--paths_file`: Chemin vers le fichier des chemins, si non spécifié, on prendra le fichier `paths.csv` dans le même dossier que `map.csv`
+
+#### Générer des datasets d'entraînement
+
+- Localement: `python3 src/gen_dataset.py --help`
+- En parallèle: `python3 src/gen_dataset_parallel.py`
+- Avec les vmgpu de l'ENSIMAG (attention à ne pas gêner les autres): `./training/gen_datasets.sh`
 
 ## Structure
 

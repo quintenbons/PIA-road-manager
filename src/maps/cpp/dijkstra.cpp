@@ -111,6 +111,9 @@ int main(int argc, char *argv[]) {
     int nodeCount = nodes.size();
 
     while (std::getline(file, line)) {
+        if(line.compare("===") == 0) {
+            break;
+        }
         std::vector<std::string> splited = split(line, ' ');
 
         int from = std::stoi(splited[0]);

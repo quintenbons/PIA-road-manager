@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 import sys
 import os
-from engine.constants import GENERATION_SEGMENT_DUARTION, TIME
+from engine.constants import GENERATION_SEGMENT_DURATION, TIME
 from engine.spawners.spawner import Spawner
 from engine.spawners.spawner_utils import every_ten_seconds, benchmark_spawner
 
@@ -24,20 +24,16 @@ class Simulation:
 
         self.roads: List[Road]
         self.nodes: List[Node]
-        self.roads, self.nodes = read_map(map_file)
+        self.spawners: List[Spawner]
+        self.roads, self.nodes, self.spawners = read_map(map_file)
         read_paths(self.nodes, paths_file)
         set_traffic_lights(self.nodes)
         set_strategies(self.nodes, self.strategy_manager, benchmark)
 
-        self.spawners: List[Spawner] = []
-        if benchmark:
-            spawner = Spawner(self.roads, self.roads, benchmark_spawner, nb_movables)
-        else:
-            spawner = Spawner(self.roads, self.roads, every_ten_seconds, nb_movables)
-        self.spawners.append(spawner)
+        if self.spawners == []:
+            self.spawners.append(Spawner(self.roads, self.roads, every_ten_seconds, nb_movables))
 
-
-    def run(self, sim_duration: int = GENERATION_SEGMENT_DUARTION):
+    def run(self, sim_duration: int = GENERATION_SEGMENT_DURATION):
         start_tick = self.current_tick
 
         while (self.current_tick - start_tick) * TIME < sim_duration:
@@ -45,12 +41,12 @@ class Simulation:
 
     def run_tick(self):
         for r in self.roads:
-            r.update()
+            r.croad.update()
         for n in self.nodes:
-            n.update(self.current_tick)
+            n.cnode.update(n.strategy, self.current_tick)
         self.current_tick += 1
         for s in self.spawners:
-            s.update(self.current_tick * TIME)
+            s.update(self.current_tick)
 
 
     def get_total_score(self) -> int:
