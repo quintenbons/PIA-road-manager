@@ -31,7 +31,7 @@ def save_to_file(nodes, links, filename):
                 end_node = nodes.index(link[1])
                 file.write(f"{start_node} {end_node}\n")
 
-        file.write(f"===\nmedium\nuniform\n")
+        file.write(f"===\nmedium\n10\nuniform\n")
 
 def remove_node(node_to_remove):
     global links

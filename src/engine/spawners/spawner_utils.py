@@ -20,7 +20,7 @@ def spawn_medium(time: float):
 def spawn_slow(time: float):
     return 1 if time % 8 < TIME else 0
 
-def spawner_handlers(handler):
+def spawner_frequencies(handler):
     return {
         "benchmark_spawner": benchmark_spawner,
         "benchmark_spawner2": benchmark_spawner2,
