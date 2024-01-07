@@ -1,5 +1,4 @@
 from __future__ import annotations
-from collections import defaultdict
 from io import TextIOWrapper
 import sys
 from math import inf
@@ -59,6 +58,7 @@ def read_spawner(io: TextIOWrapper, all_roads: List[Road], road_dict: dict) -> S
     picker = io.readline().strip()
 
     if picker == "uniform":
+        io.readline() # skip ==
         return Spawner(all_roads, all_roads, freq, initial_rate) # TODO: initial freq
 
     sources = []
@@ -71,6 +71,7 @@ def read_spawner(io: TextIOWrapper, all_roads: List[Road], road_dict: dict) -> S
             case ["="]:
                 sourceMode = False
             case [n1, n2] if len(line.strip().split()) == 2:
+                n1, n2 = int(n1), int(n2)
                 if sourceMode:
                     sources.append(road_dict[(n1, n2)])
                 else:
@@ -81,7 +82,7 @@ def read_spawner(io: TextIOWrapper, all_roads: List[Road], road_dict: dict) -> S
 def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
     nodes: List[Node] = []
     roads: List[Road] = []
-    roads_dictionnary: defaultdict = defaultdict(Road)
+    roads_dictionnary: dict = {}
     spawners: List[Spawner] = []
 
     with open(name, mode='r', encoding='utf-8') as f:
