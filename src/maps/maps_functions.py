@@ -115,7 +115,6 @@ def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
 
         # Spawners
         while (spawner := read_spawner(f, roads, roads_dictionnary)) is not None:
-            print(spawner)
             spawners.append(spawner)
 
     return roads, nodes, spawners
