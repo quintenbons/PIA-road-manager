@@ -18,6 +18,9 @@ from typing import List
 class Simulation:
     strategy_manager: StrategyManager
     current_tick: int = 0
+    roads: List[Road]
+    nodes: List[Node]
+    spawners: List[Spawner]
 
     def __init__(self, map_file: str, paths_file: str, nb_movables: int = 0, benchmark: bool = False):
         self.strategy_manager = StrategyManager()
@@ -32,6 +35,9 @@ class Simulation:
 
         if self.spawners == []:
             self.spawners.append(Spawner(self.roads, self.roads, every_ten_seconds, nb_movables))
+
+        for s in self.spawners:
+            s.spawn_initial()
 
     def run(self, sim_duration: int = GENERATION_SEGMENT_DURATION):
         start_tick = self.current_tick

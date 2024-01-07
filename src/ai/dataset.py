@@ -47,8 +47,8 @@ class NodeDataset(Dataset):
         return Cls(*data)
 
     @classmethod
-    def from_generation(Cls, size: int, tqdm_disable=True):
-        inputs, outputs, sim_seeds = generate_batch(size, tqdm_disable)
+    def from_generation(Cls, size: int, map_folder: str, tqdm_disable=True):
+        inputs, outputs, sim_seeds = generate_batch(size, map_folder, tqdm_disable)
         return Cls(inputs, outputs, sim_seeds)
 
 def entry_from_node(node: Node, tqdm_disable=True):
@@ -66,10 +66,10 @@ def entry_from_node(node: Node, tqdm_disable=True):
             tensor[num * 2 + 1] = node_road_out[num].get_ai_flow_count_0()
     return tensor
 
-def score_tester():
+def score_tester(map_folder: str):
     sim_seed = int(time.time())
-    map_file = "src/maps/build/GUI/Training-Star/map.csv"
-    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
+    map_file = f"{map_folder}/map.csv"
+    paths_file = f"{map_folder}/paths.csv"
     central_node = 1
 
     strategy_manager = StrategyManager()
@@ -84,9 +84,9 @@ def score_tester():
         sim_score = simulation.get_total_score()
         print(f"{typ:3} {STRAT_NAMES[typ]:20} {mutation:3} {sim_score:15.5f}")
 
-def simul_to_scores(central_node: int, second_seed: int):
-    map_file = "src/maps/build/GUI/Training-Star/map.csv"
-    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
+def simul_to_scores(central_node: int, second_seed: int, map_folder: str):
+    map_file = f"{map_folder}/map.csv"
+    paths_file = f"{map_folder}/paths.csv"
 
     strategy_manager = StrategyManager()
     nb_controllers = 4
@@ -116,9 +116,9 @@ def seed_generator(meta_seed: int = None):
     while True:
         yield local_random.randrange(0, 2**32)
 
-def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
-    map_file = "src/maps/build/GUI/Training-Star/map.csv"
-    paths_file = "src/maps/build/GUI/Training-Star/paths.csv"
+def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
+    map_file = f"{map_folder}/map.csv"
+    paths_file = f"{map_folder}/paths.csv"
     central_node = 1
 
     batch = []
@@ -139,7 +139,7 @@ def generate_batch(size: int, tqdm_disable=True) -> Tuple[torch.TensorType, torc
             simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
             # Run second range simulationS
-            scores, _ = simul_to_scores(central_node, second_seed)
+            scores, _ = simul_to_scores(central_node, second_seed, map_folder)
             one_hot = F.one_hot(torch.tensor(scores).argmin(), len(scores))
             one_hot = one_hot.float()
 
