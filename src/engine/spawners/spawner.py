@@ -76,7 +76,9 @@ class Spawner:
             else:
                 pos = destination.croad.get_road_len() * (random.random() * 0.5 + 0.25)
 
+            print("finding path from ", source.croad.get_id(), " to ", destination.croad.get_id(), " at ", pos, " / ", destination.croad.get_road_len())
             new_movable.cmovable.set_road_goal(destination.croad, pos)
+            print("OK!")
             self.movables.append(new_movable)
 
         
