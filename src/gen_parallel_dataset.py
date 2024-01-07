@@ -8,14 +8,15 @@ import time
 
 from gen_dataset import generate_dataset
 
-def generate_dataset_seeded(seed: int, size: int, dest: os.PathLike, tqdm_disable=False, quiet=True):
+def generate_dataset_seeded(seed: int, size: int, dest: os.PathLike, map_folder: str, tqdm_disable=False, quiet=True):
     random.seed(seed)
-    generate_dataset(size, dest, tqdm_disable=tqdm_disable, quiet=quiet)
+    generate_dataset(size, dest, map_folder, tqdm_disable=tqdm_disable, quiet=quiet)
 
 def main():
     parser = argparse.ArgumentParser(description='Generate datasets in parallel.')
     parser.add_argument('size', type=int, help='Size of dataset generation')
     parser.add_argument('--dest', type=str, default='datasets', help='Destination directory to save datasets.')
+    parser.add_argument("--map_folder", type=str, default="src/maps/build/GUI/Training-4/Uniform", help="Folder containing map.csv and paths.csv")
     args = parser.parse_args()
 
     if os.path.exists(args.dest):
@@ -45,7 +46,7 @@ def main():
     with ProcessPoolExecutor(max_workers=max_cores) as executor:
         for core_num in range(max_cores):
             dest = os.path.join(dest_directory, f"dataset-{core_num}.pt")
-            future = executor.submit(generate_dataset_seeded, base_seed + core_num, size, dest)
+            future = executor.submit(generate_dataset_seeded, base_seed + core_num, size, dest, args.map_folder)
             futures.add(future)
 
         for future in as_completed(futures):
