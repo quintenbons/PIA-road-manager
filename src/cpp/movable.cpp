@@ -200,7 +200,7 @@ bool Movable::updateRoad() {
         double norm = node_pos.getLength(next_road->posStart);
         node_dir = next_road->posStart.minus(road->posEnd);
         node_dir = node_dir.multiply(1 / norm);
-        speed = 0;
+        speed /= 2; // TODO modifié cela pour avoir un comportement réaliste
         current_acceleration = 1;
         node_len = norm;
 
