@@ -130,7 +130,7 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
     try:
         for _ in tqdm(range(size), disable=tqdm_disable):
             sim_seed = next(seed_gen)
-            random.seed()
+            random.seed(sim_seed)
             second_seed = random.randrange(0, 2**32)
 
             # Run first simulation
