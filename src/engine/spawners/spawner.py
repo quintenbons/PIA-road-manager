@@ -9,6 +9,7 @@ class Spawner:
     sources: List[Road]
     destinations: List[Road]
     get_rate: Callable[[int], int]
+    initial_rate: int
     _total_despawned_score: int = 0
 
     movables: List[Movable] = []
@@ -22,9 +23,11 @@ class Spawner:
         self.destinations = destinations
         self.get_rate = get_rate
         self.movables = []
+        self.initial_rate = initial_rate
 
-        for _ in range(initial_rate):
-            self.spawn(current_tick=0)
+    def spawn_initial(self, current_tick: int = 0):
+        for _ in range(self.initial_rate):
+            self.spawn(current_tick)
 
     def update(self, current_tick: int):
 

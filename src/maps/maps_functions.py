@@ -1,9 +1,10 @@
 from __future__ import annotations
+from collections import defaultdict
 from io import TextIOWrapper
 import sys
 from math import inf
 
-from typing import List
+from typing import List, Tuple
 from engine.spawners.spawner import Spawner
 from engine.spawners.spawner_utils import spawner_frequencies
 from engine.strategies.strategies_manager import StrategyManager
@@ -77,13 +78,13 @@ def read_spawner(io: TextIOWrapper, all_roads: List[Road], road_dict: dict) -> S
             case _ as any:
                 raise Exception("Invalid line in spawner file", any)
 
-def read_map(name: str) -> (List[Road], List[Node], List[Spawner]):
-    with open(name, mode='r', encoding='utf-8') as f:
-        nodes = []
-        roads = []
-        roads_dictionnary = {}
-        spawners = []
+def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
+    nodes: List[Node] = []
+    roads: List[Road] = []
+    roads_dictionnary: defaultdict = defaultdict(Road)
+    spawners: List[Spawner] = []
 
+    with open(name, mode='r', encoding='utf-8') as f:
         for line in f:
             if line.strip() == "===":
                 break
