@@ -78,6 +78,8 @@ def read_spawner(io: TextIOWrapper, all_roads: List[Road], road_dict: dict) -> S
                     destinations.append(road_dict[(n1, n2)])
             case _ as any:
                 raise Exception("Invalid line in spawner file", any)
+    
+    return Spawner(sources, destinations, freq, initial_rate)
 
 def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
     nodes: List[Node] = []
@@ -113,6 +115,7 @@ def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
 
         # Spawners
         while (spawner := read_spawner(f, roads, roads_dictionnary)) is not None:
+            print(spawner)
             spawners.append(spawner)
 
     return roads, nodes, spawners
