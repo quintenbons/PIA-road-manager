@@ -65,7 +65,7 @@ def read_spawner(io: TextIOWrapper, all_roads: List[Road], road_dict: dict) -> S
     sourceMode = True
     for line in io:
         match line.strip().split():
-            case ["==="]:
+            case ["=="]:
                 return Spawner(sources, destinations, freq, initial_rate)
             case ["="]:
                 sourceMode = False
