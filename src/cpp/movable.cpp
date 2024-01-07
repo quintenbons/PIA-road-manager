@@ -12,7 +12,7 @@
 extern double LEAVING_DIST;
 extern double LEAVING_TIME;
 extern double TIME;
-
+extern double STOP_SPEED;
 
 Movable::Movable(
     double speed,
@@ -97,14 +97,16 @@ auto Movable::nextPosition() {
     return result{futur_pos,
                   futur_speed};
 }
+
+// #define STOP_SPEED 2.5
 void Movable::handleRoadTarget() {
     double dx = this->pos_goal - this->pos;
-    if (this->road == this->road_goal && 0 < dx && dx < 20) {
+    if (this->road == this->road_goal && 0 < dx && dx < LEAVING_DIST) {
         double da = 0;
-        if (speed < 0.5) {
+        if (speed < STOP_SPEED) {
             return;
         }
-        da = (0.5 - speed - TIME * current_acceleration) / TIME;
+        da = (STOP_SPEED - speed - TIME * current_acceleration) / TIME;
         if (da > 0) {
             da = 0;
         }

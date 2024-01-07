@@ -10,6 +10,7 @@ double LEAVING_TIME = 5;
 double LEAVING_DIST = 20;
 double TIME = 0.5;
 int MAX_MOVABLES_IN_NODE = 5;
+double STOP_SPEED = 2.5;
 
 void setLeavingTime(double d) {
     LEAVING_TIME = d;
@@ -21,6 +22,10 @@ void setLeavingDist(double d) {
 
 void setTime(double d) {
     TIME = d;
+}
+
+void setStopSpeed(double d) {
+    STOP_SPEED = d;
 }
 
 void setMaxMovablesInNode(int i) {
@@ -60,6 +65,7 @@ PYBIND11_MODULE(engine_ia, m) {
     m.def("set_leaving_time", &setLeavingTime);
     m.def("set_leaving_dist", &setLeavingDist);
     m.def("set_time", &setTime);
+    m.def("set_stop_speed", &setStopSpeed);
     m.def("set_max_movables_in_node", &setMaxMovablesInNode);
 
     py::class_<Movable>(m, "Movable")
