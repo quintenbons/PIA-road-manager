@@ -47,7 +47,7 @@ class Movable(Nodable):
     def __init__(self, speed, acceleration, pos, size, spawn_tick: int = 0):
 
         self.cmovable = engine_ia.Movable(
-            speed, acceleration, pos, size, spawn_tick, TIME)
+            speed, acceleration, pos, size, spawn_tick)
 
     def get_score(self, current_tick: int) -> float:
         return self.cmovable.get_score(current_tick)

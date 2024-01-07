@@ -23,6 +23,7 @@ class Simulation:
     spawners: List[Spawner]
 
     def __init__(self, map_file: str, paths_file: str, nb_movables: int = 0, benchmark: bool = False):
+        self.init_constant()
         self.strategy_manager = StrategyManager()
 
         self.roads: List[Road]
@@ -38,6 +39,14 @@ class Simulation:
 
         for s in self.spawners:
             s.spawn_initial()
+
+    def init_constant(self):
+        from engine.constants import LEAVING_DIST, LEAVING_TIME, TIME, MAX_MOVABLES_IN_NODE
+        import build.engine_ia as engine_ia
+        engine_ia.set_leaving_time(LEAVING_TIME)
+        engine_ia.set_leaving_dist(LEAVING_DIST)
+        engine_ia.set_time(TIME)
+        engine_ia.set_max_movables_in_node(MAX_MOVABLES_IN_NODE)
 
     def run(self, sim_duration: int = GENERATION_SEGMENT_DURATION):
         start_tick = self.current_tick

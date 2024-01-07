@@ -43,7 +43,7 @@ class Spawner:
             self.movables.remove(m)
         
         rate = self.get_rate(current_tick * TIME)
-
+        
         # if len(self.movables) < 200:
         for _ in range(rate):
             self.spawn(current_tick=current_tick)

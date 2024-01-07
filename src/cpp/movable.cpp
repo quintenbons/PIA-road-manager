@@ -7,23 +7,24 @@
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MAX(x, y) ((x) < (y) ? (y) : (x))
-#define LEAVING_DIST 20
-#define LEAVING_TIME 10
+// #define LEAVING_DIST 20
+// #define LEAVING_TIME 10
+extern double LEAVING_DIST;
+extern double LEAVING_TIME;
+extern double TIME;
 
-#define PRINTER(msg) std::cout << msg << std::endl
+
 Movable::Movable(
     double speed,
     double acceleration,
     double pos,
     double size,
-    double spawn_tick,
-    double TIME)
+    double spawn_tick)
     : speed{speed},
       acceleration{acceleration},
       pos{pos},
       size{size},
       spawn_tick{spawn_tick},
-      TIME{TIME},
       road(nullptr),
       node(nullptr),
       inner_timer{0},

@@ -18,7 +18,7 @@ class Node;
 
 class Movable {
    public:
-    Movable(double speed, double acceleration, double pos, double size, double spawn_tick, double TIME);
+    Movable(double speed, double acceleration, double pos, double size, double spawn_tick);
 
     void updatePosition();
     double nextPos();
@@ -48,8 +48,6 @@ class Movable {
 
     std::vector<double> toCoordXY();
     int getId() const;
-
-    double const TIME;
 
     Road* road;
     Node* node;

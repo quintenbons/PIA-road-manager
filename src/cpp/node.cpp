@@ -1,5 +1,8 @@
 #include "node.h"
 #include <iostream>
+
+extern int MAX_MOVABLES_IN_NODE;
+
 Node::Node(double x, double y) : position(x, y) {
     static int s_id{0};
     id = s_id;
@@ -76,7 +79,7 @@ void Node::update(py::object obj, double timer) {
         }
     }
 }
-#define MAX_MOVABLES_IN_NODE 5
+// #define MAX_MOVABLES_IN_NODE 5
 bool Node::positionAvailable(Point& pos, double size) {
     if (movables.size() > MAX_MOVABLES_IN_NODE) {
         return false;
@@ -102,6 +105,7 @@ Road* Node::roadTo(Node* node) {
     double dist = std::numeric_limits<double>::infinity();
     Road* road = nullptr;
     for (Road* r : roadOut) {
+
         if (r->end == node && r->length < dist) {
             dist = r->length;
             road = r;

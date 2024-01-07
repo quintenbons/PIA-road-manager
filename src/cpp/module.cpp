@@ -6,9 +6,25 @@
 // #include "pet.h"
 
 namespace py = pybind11;
+double LEAVING_TIME = 5;
+double LEAVING_DIST = 20;
+double TIME = 0.5;
+int MAX_MOVABLES_IN_NODE = 5;
 
-int add(int a, int b) {
-    return a + b;
+void setLeavingTime(double d) {
+    LEAVING_TIME = d;
+}
+
+void setLeavingDist(double d) {
+    LEAVING_DIST = d;
+}
+
+void setTime(double d) {
+    TIME = d;
+}
+
+void setMaxMovablesInNode(int i) {
+    MAX_MOVABLES_IN_NODE = i;
 }
 
 std::vector<int> spawnerUpdate(std::vector<Movable*> movables) {
@@ -38,13 +54,16 @@ double next_pos(double speedLimit, double current_acceleration, double speed, do
 }
 
 PYBIND11_MODULE(engine_ia, m) {
-    m.def("add", &add, "Add two numbers");
-    m.def("next_pos", &next_pos, "next_position for movables");
 
+    m.def("next_pos", &next_pos, "next_position for movables");
     m.def("spawner_update", &spawnerUpdate);
+    m.def("set_leaving_time", &setLeavingTime);
+    m.def("set_leaving_dist", &setLeavingDist);
+    m.def("set_time", &setTime);
+    m.def("set_max_movables_in_node", &setMaxMovablesInNode);
 
     py::class_<Movable>(m, "Movable")
-        .def(py::init<double, double, double, double, double, double>())
+        .def(py::init<double, double, double, double, double>())
         .def("get_id", &Movable::getId)
         .def("update", &Movable::update)
         .def("get_score", &Movable::getScore)
