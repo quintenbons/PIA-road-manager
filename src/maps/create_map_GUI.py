@@ -1,15 +1,21 @@
 #!/usr/bin/env python3
+import shutil
 import pygame
-import sys
 import os
+import sys
+sys.path.append(os.path.dirname(__file__)+"/..")
+from graphics.constants import *
+from graphics.draw import draw_scale
 BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build/GUI/')
 
 # Initialisation de pygame
 pygame.init()
 
-WIDTH, HEIGHT = 1200, 800
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+
+screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Créateur de Carte")
+
+SCALE_RATIO = 100  # 100 pixels = 100m, si on veut 100px = 50m, mettre 50
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -20,9 +26,10 @@ links = []
 
 def save_to_file(nodes, links, filename):
     with open(filename, 'w') as file:
-        # Écrire les nœuds
         for i, node in enumerate(nodes):
-            file.write(f"{node.x} {node.y} : {i}\n")
+            scaled_x = node.x
+            scaled_y = node.y
+            file.write(f"{scaled_x} {scaled_y} : {i}\n")
         file.write("===\n")
         # Écrire les liens
         for link in links:
@@ -75,6 +82,7 @@ while running:
                 nodes.append(pygame.Rect(pos[0], pos[1], 10, 10))
         
     screen.fill(WHITE)
+    draw_scale(screen, SCALE_RATIO, 100) # 100 pixels = 100m
     
     for link in links:
         if link[1] is not None:
@@ -100,16 +108,23 @@ while True:
             os.makedirs(os.path.dirname(file_path))
         else:
             overwrite = input(f"The folder '{file_path}' already exists. Do you want to overwrite it? (y/n) ").lower()
-            if overwrite != 'y':
+            if overwrite == 'y':
+                shutil.rmtree(os.path.dirname(file_path))
+                os.makedirs(os.path.dirname(file_path))
+            elif overwrite == 'n':
                 continue
             else:
-                os.remove(file_path)
-        
+                print("Not a valid answer.")
+                exit()
+
         if os.path.exists(file_path):
             overwrite = input(f"The file '{filename}' already exists. Do you want to overwrite it? (y/n) ").lower()
-            if overwrite != 'y':
+            if overwrite == 'y':
+                os.remove(file_path)
+            elif overwrite == 'n':
                 continue
             else:
+                print("Not a valid answer.")
                 exit()
         
         save_to_file(nodes, links, file_path)

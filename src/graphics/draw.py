@@ -68,6 +68,13 @@ def draw_hud(display):
     hug_help_surface = pygame.font.SysFont('Arial', 20).render(f'P to pause, + to speed up, - to slow down', True, (0, 0, 0))
     display.screen.blit(hug_help_surface, (10, 60))
 
+def draw_scale(screen, pixel_length, real_length_m):
+    scale_pos = (50, SCREEN_HEIGHT - 50)  # Position de l'échelle sur l'écran
+    pygame.draw.line(screen, (0,0,0), scale_pos, (scale_pos[0] + pixel_length, scale_pos[1]), 5)
+    font = pygame.font.SysFont(None, 24)
+    text = font.render(f"{pixel_length}px = {real_length_m}m", True, (0,0,0))
+    screen.blit(text, (scale_pos[0], scale_pos[1] - 30))
+    
 def draw_paused_text(display):
         if display.paused and pygame.time.get_ticks() // 1000 % 2:
             paused_text = pygame.font.SysFont('Arial', 50).render('Appuyez sur P pour reprendre', True, (255, 0, 0))
