@@ -24,7 +24,7 @@ fetch_load() {
     printf "%s: %d\n" "$host" "$corenum" >> "$TMP_FILE"
 }
 
-for i in $(seq 200 230); do
+for i in $(seq 200 210); do
     formatted_number=$(printf "%03d" $i)
     host="ensipc${formatted_number}.ensimag.fr"
     fetch_load "$host" &
