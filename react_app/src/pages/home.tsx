@@ -10,6 +10,7 @@ import {
   OPEN,
   OPEN_CORRIDOR,
   PIECE_OF_CAKE,
+  STRATEGY_GRAPH_EXAMPLE,
   SUMMARY_DRAWING,
 } from "../assets";
 import { ContinueLectureButton } from "../components/ContinueLectureButton";
@@ -38,7 +39,7 @@ export const Home = (props: { setPath: (path: string) => void }) => {
       />
       <Title title="Architecture Préliminaire de l'IA" size="lg" />
       <Title title="Introduction" size="md" />
-      <Paragraph text="La simulation du réseau routier de Grenoble est un projet complexe visant à simuler fidèlement les conditions de circulation urbaine. Initialement, notre projet envisageait de créer une intelligence artificielle unique ayant la maîtrise sur l'ensemble des feux de signalisation de la ville, décidant du comportement de chaque feu. Cependant, cette méthode a soulevé deux problématiques majeures : premièrement, la génération des données d'entrée était excessivement longue, rendant cette approche peu pratique compte tenu du volume des données requises. Deuxièmement, l'ampleur des données d'entrée soulevait des inquiétudes quant à la capacité du système à converger vers une solution efficace." />
+      <Paragraph text="La simulation du réseau routier est un projet complexe visant à simuler fidèlement les conditions de circulation urbaine. Initialement, notre projet envisageait de créer une intelligence artificielle unique ayant la maîtrise sur l'ensemble des feux de signalisation de la ville, décidant du comportement de chaque feu. Cependant, cette méthode a soulevé deux problématiques majeures : premièrement, la génération des données d'entrée était excessivement longue, rendant cette approche peu pratique compte tenu du volume des données requises. Deuxièmement, l'ampleur des données d'entrée soulevait des inquiétudes quant à la capacité du système à converger vers une solution efficace." />
       <Paragraph text="Pour pallier à ces défis, nous avons modifié notre stratégie. Plutôt que d'avoir une seule IA pour tout le réseau, notre système se compose désormais d'une multitude d'IA, chacune gérant un noeud spécifique du réseau, c'est-à-dire une intersection avec ses feux de signalisation. Ainsi, chaque IA est responsable de tous les feux d'une intersection donnée et doit optimiser la circulation à ce point précis. Les noeuds reçoivent des flux de véhicules sur les routes entrantes et chaque IA s'efforce de minimiser la congestion en contrôlant efficacement les feux de son intersection." />
       <Paragraph text="Cette nouvelle méthode a pour objectif de trouver une optimisation locale pour chaque scénario, qui dépend de divers facteurs comme le flux de voitures, le nombre de routes connectées à l'intersection, et les caractéristiques propres à chaque route. Nous espérons ainsi que les IA trouvent les optimisations locales, ce qui (nous l'espérons) contribuera à une amélioration globale et coordonnée de la circulation sur l'ensemble du réseau routier." />
       <Title title="Flux d'utilisation" size="md" />
@@ -58,8 +59,11 @@ export const Home = (props: { setPath: (path: string) => void }) => {
         ]}
       />
       <Title title="Les stratégies" size="md" />
-      <Paragraph text="Jusqu'à présent nous avons dégagé un total de quatre stratégies primaires. Ces stratégies représentent les logiques s'appliquant aux feux. Les règles de circulation classiques telles que les priorités à droite ou les distances de sécurité s'appliquent en priorité sur les stratégies." />
-      <Paragraph text="Chaque stratégie peut être représentée par un graphe d'état cyclique. Nous pensons faire des variantes de ces graphes dans lesquelles l'IA pourra choisir le temps nécessaire pour passer à l'état suivant. Cela a pour but de donner à l'IA de la flexibilité et de s'adapter lorsque les routes d'entrée des carrefours ont des débits de véhicules différents." />
+      <Paragraph text="Les stratégies sont des algorithmes qui permettent de gérer les feux de signalisation d'une intersection. Nous utilisons le paradigme de stratégie afin de restreindre les choix de l'IA sur un sous-ensemble de solutions possibles dont on sait qu'une au moins sera proche de la meilleure solution. Cette approche euristique permet des résultats cohérents avec un coût en temps et en énergie raisonable."/>
+      <Paragraph text="Jusqu'à présent nous avons dégagé un total de quatre stratégies primaires. Les règles de circulation classiques telles que les priorités à droite ou les distances de sécurité s'appliquent en priorité sur les stratégies." />
+      <Paragraph text="Chaque stratégie peut être représentée par un graphe d'état cyclique. Les arrêtes reliants chaque état correspondent au temps nécessaires pour passer à l'état suivant. Nous pensons faire des variantes de ces graphes dans lesquelles l'IA pourra choisir le temps nécessaire pour passer à l'état suivant. Cela a pour but de donner à l'IA de la flexibilité et de s'adapter lorsque les routes d'entrée des carrefours ont des débits de véhicules différents." />
+      <Image src={STRATEGY_GRAPH_EXAMPLE} width={"60%"} alignSelf={"center"} />
+      
       <MultipleTabs
         childrens={{
           Open: (

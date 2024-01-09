@@ -11,6 +11,7 @@ import DATASET_1 from "./dataset_1.png";
 import GUI_NETWORK from "./gui_network.png";
 import NETWORK from "./network.png";
 import CURRENT_MODEL from "./current_model.png";
+import STRATEGY_GRAPH_EXAMPLE from "./strategy_graph_example.png";
 
 export {
   BANNER,
@@ -26,4 +27,5 @@ export {
   GUI_NETWORK,
   NETWORK,
   CURRENT_MODEL,
+  STRATEGY_GRAPH_EXAMPLE
 };
