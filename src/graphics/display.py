@@ -4,12 +4,12 @@ Main interface for the display.
 import pygame
 from engine.constants import TIME
 from engine.simulation import Simulation
-from graphics.assets import AssetManager
+from graphics.assets import AssetManager, load_resource
 from graphics.utils import get_clicked_movable, get_clicked_node
 
 from graphics.init_pygame import pygame_init
 from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road, draw_hud, draw_paused_text, draw_traffic_light
-from graphics.constants import MAX_SCALE_VALUE, SCREEN_WIDTH, SCREEN_HEIGHT
+from graphics.constants import BLUE_CAR, GREEN_CAR, MAX_SCALE_VALUE, RED_CAR, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 class PygameDisplay:
@@ -52,6 +52,7 @@ class PygameDisplay:
             print("\nScale factor too high, setting to max. This may cause graphical issues. Please use a bigger map.")
             self.scale_factor = MAX_SCALE_VALUE
 
+
     def draw(self):
         self.screen.fill((255, 255, 255))
         if self.debug_mode:
@@ -72,8 +73,16 @@ class PygameDisplay:
         for spawner in self.simulation.spawners:
             for movable in spawner.movables:
                 color = self.asset_manager.get_car_asset(movable)
-                draw_movable(movable, self.screen, color, self.engine_x_min, self.engine_x_max,
+                if color < 85:
+                    car_asset = load_resource(BLUE_CAR)
+                elif color < 170:
+                    car_asset = load_resource(RED_CAR)
+                else:
+                    car_asset = load_resource(GREEN_CAR)
+
+                draw_movable(movable, self.screen, car_asset, self.engine_x_min, self.engine_x_max,
                             self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+
 
         draw_hud(self)
 

@@ -7,16 +7,21 @@ from dataclasses import dataclass, field
 
 from engine.movable.movable import Movable
 
-def scale_to_road_width(car_asset):
-    width = int(2 * ROAD_WIDTH)
-    height = car_asset.get_height()
+
+def scale_car_asset(car_asset, node_radius):
     car_width, car_height = car_asset.get_size()
-    height = int((width / car_width) * car_height)
-    return pygame.transform.scale(car_asset, (width, height))
+
+    new_width = node_radius * 0.75
+    new_height = int((new_width / car_width) * car_height)
+
+    return pygame.transform.scale(car_asset, (new_width, new_height))
+
 
 def load_resource(path: PathLike) -> pygame.Surface:
     img = pygame.image.load(path)
-    return scale_to_road_width(img)
+    # return scale_to_road_width(img)
+    return img
+
 
 @dataclass
 class AssetManager:
