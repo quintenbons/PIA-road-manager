@@ -75,7 +75,7 @@ if [ $? -ne 0 ]; then
     echo "no local python3 version found, using system python3"
     py_interpreter="python3"
 else
-    echo "~/venv-python3 exists, using it"
+    echo "$pyenv_path exists, using it"
     py_interpreter="~/$pyenv_path/bin/python3"
 fi
 
