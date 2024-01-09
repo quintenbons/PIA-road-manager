@@ -41,7 +41,7 @@ class Simulation:
             s.spawn_initial()
 
     def init_constant(self):
-        from engine.constants import LEAVING_DIST, LEAVING_TIME, TIME, MAX_MOVABLES_IN_NODE, STOP_SPEED, NODE_RADIUS, ROAD_OFFSET
+        from engine.constants import LEAVING_DIST, LEAVING_TIME, TIME, MAX_MOVABLES_IN_NODE, STOP_SPEED, NODE_RADIUS, ROAD_OFFSET, SPEED_TRIGGER, TIME_COUNTER_VEC
         import build.engine_ia as engine_ia
         engine_ia.set_leaving_time(LEAVING_TIME)
         engine_ia.set_leaving_dist(LEAVING_DIST)
@@ -50,6 +50,8 @@ class Simulation:
         engine_ia.set_max_movables_in_node(MAX_MOVABLES_IN_NODE)
         engine_ia.set_node_radius(NODE_RADIUS)
         engine_ia.set_road_offset(ROAD_OFFSET)
+        engine_ia.set_speed_trigger(SPEED_TRIGGER)
+        engine_ia.set_time_counter_vec(TIME_COUNTER_VEC)
 
     def run(self, sim_duration: int = GENERATION_SEGMENT_DURATION):
         start_tick = self.current_tick
@@ -60,6 +62,8 @@ class Simulation:
     def run_tick(self):
         for r in self.roads:
             r.croad.update()
+            print(r.get_ai_wait_duration())
+            print(r.get_ai_wait_duration_cumulative())
         for n in self.nodes:
             n.cnode.update(n.strategy, self.current_tick)
         self.current_tick += 1

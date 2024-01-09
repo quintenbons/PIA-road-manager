@@ -2,14 +2,18 @@
 #include "road.h"
 
 #include <iostream>
+#include <vector>
 
 #include "movable.h"  // Incluez le fichier d'en-tête de la classe Movable
 // #define NODE_RADIUS 10
 extern double NODE_RADIUS;
 extern double ROAD_OFFSET;
+extern std::vector<double> TIME_COUNTER_VEC;
+extern double SPEED_TRIGGER;
+extern double TIME;
 
 Road::Road(Node* start, Node* end, double speedLimit)
-    : start{start}, end{end}, speedLimit{speedLimit}, aiFlowCount0{0}, aiFlowCount1{0} {
+    : start{start}, end{end}, speedLimit{speedLimit}, aiFlowCount0{0}, aiFlowCount1{0}, aiWaitDuration{0}, aiWaitDurationCumulative{0} {
     length = start->position.getLength(end->position);
 
     Point u = end->position.minus(start->position);
@@ -18,12 +22,12 @@ Road::Road(Node* start, Node* end, double speedLimit)
 
     posStart = start->position;
     posEnd = end->position;
-    roadLen = length - NODE_RADIUS;
+    roadLen = length - 2 * NODE_RADIUS;
 
     // posStart.x += 5*u.x + 2*v.x;
     // posStart.y += 5*u.y + 2*v.y;
     // posEnd.x += -5*u.x
-    Point u5 = u.multiply(NODE_RADIUS/2);
+    Point u5 = u.multiply(NODE_RADIUS);
     Point v2 = v.multiply(ROAD_OFFSET);
     posStart = posStart.add(u5).add(v2);
     posEnd = posEnd.minus(u5).add(v2);
@@ -111,22 +115,44 @@ double Road::getSpeedLimit() {
 void Road::update() {
     Movable* previous = nullptr;
     // std::cout << movables.size() << std::endl;
+    bool timeCounter = blockTraffic;
+    size_t index = 0;
     for (auto it = movables.rbegin(); it != movables.rend(); ++it) {
         Movable* mov = *it;
         // std::cout << "r : " << mov->nxt_pos << std::endl;
 
         if (mov->inner_timer > 0) {
             previous = mov;
+            timeCounter = false;
             continue;
         }
         mov->nxt_pos = mov->nextPos();
         // std::cout << "r : " << mov->nxt_pos << std::endl;
         if (previous == nullptr) {
             mov->handleFirstMovable();
+            if(mov->road_goal == this) {
+                timeCounter = false;
+            }
         } else {
             collisionDetection(previous, mov);
         }
+
         mov->handleRoadTarget();
+        if(mov->speed > SPEED_TRIGGER) {
+            timeCounter = false;
+        }
+        if (timeCounter) {
+            if(previous == nullptr) {
+                aiWaitDuration += TIME;
+            }
+            
+            if(index >= TIME_COUNTER_VEC.size()) {
+                aiWaitDurationCumulative += TIME_COUNTER_VEC.back();
+            } else {
+                aiWaitDurationCumulative += TIME_COUNTER_VEC[index++];
+            }
+
+        }
         previous = mov;
     }
 }
@@ -167,4 +193,11 @@ int Road::getAiFlowCount0() {
 
 int Road::getAiFlowCount1() {
     return aiFlowCount1;
+}
+
+double Road::getAiWaitDuration() {
+    return aiWaitDuration;
+}
+double Road::getAiWaitDurationCumulative() {
+    return aiWaitDurationCumulative;
 }

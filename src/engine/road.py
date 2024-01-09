@@ -35,12 +35,19 @@ class CRoad:
 
     def get_pos_end(self) -> (float, float):
         pass
-    
+
     def get_ai_flow_count_0(self) -> int:
         pass
 
     def get_ai_flow_count_1(self) -> int:
         pass
+
+    def get_ai_wait_duration(self) -> float:
+        pass
+
+    def get_ai_wait_duration_cumulative(self) -> float:
+        pass
+
 
 class Road:
 
@@ -63,6 +70,12 @@ class Road:
 
     def get_pos_end(self) -> (float, float):
         return self.croad.get_pos_end()
+
+    def get_ai_wait_duration(self) -> float:
+        return self.croad.get_ai_wait_duration()
+
+    def get_ai_wait_duration_cumulative(self) -> float:
+        return self.croad.get_ai_wait_duration_cumulative()
 
     def __str__(self) -> str:
         # return f'{{"start": {self.start._id}, "end": {self.end._id}, "length": {self.length}, "bidirectional": "{self.bidirectional}", "speedLimit": {self.speedLimit}}}'

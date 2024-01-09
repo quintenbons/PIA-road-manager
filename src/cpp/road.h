@@ -25,7 +25,8 @@ public:
     double getRoadLen();
     int getAiFlowCount0();
     int getAiFlowCount1();
-
+    double getAiWaitDuration();
+    double getAiWaitDurationCumulative();
     Node* start;
     Node* end;
     Point posStart;
@@ -38,7 +39,8 @@ public:
     bool blockTraffic;
     int aiFlowCount0;
     int aiFlowCount1;
-
+    double aiWaitDuration;
+    double aiWaitDurationCumulative;
     int id;
     // std::vector<BinarySearchTree*> lanes;
 private:

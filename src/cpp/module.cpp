@@ -12,6 +12,8 @@ int MAX_MOVABLES_IN_NODE = 5;
 double STOP_SPEED = 2.5;
 double NODE_RADIUS = 10;
 double ROAD_OFFSET = 2;
+std::vector<double> TIME_COUNTER_VEC {1};
+double SPEED_TRIGGER = 0.1;
 
 void setLeavingTime(double d) {
     LEAVING_TIME = d;
@@ -41,6 +43,14 @@ void setRoadOffset(double d) {
     ROAD_OFFSET = d;
 }
 
+void setSpeedTrigger(double d) {
+    SPEED_TRIGGER = d;
+}
+
+void setTimeCounterVec (std::vector<double> v) {
+    TIME_COUNTER_VEC = v;
+}
+
 std::vector<int> spawnerUpdate(std::vector<Movable*> movables) {
     std::vector<int> removeList {};
     for (int index = 0; index < movables.size(); ++index) {
@@ -64,7 +74,9 @@ PYBIND11_MODULE(engine_ia, m) {
     m.def("set_max_movables_in_node", &setMaxMovablesInNode);
     m.def("set_node_radius", &setNodeRadius);
     m.def("set_road_offset", &setRoadOffset);
-
+    m.def("set_speed_trigger", &setSpeedTrigger);
+    m.def("set_time_counter_vec", &setTimeCounterVec);
+    
     py::class_<Movable>(m, "Movable")
         .def(py::init<double, double, double, double, double>())
         .def("get_id", &Movable::getId)
@@ -87,6 +99,8 @@ PYBIND11_MODULE(engine_ia, m) {
         .def("set_block_traffic", &Road::setBlockTraffic)
         .def("get_ai_flow_count_0", &Road::getAiFlowCount0)
         .def("get_ai_flow_count_1", &Road::getAiFlowCount1)
+        .def("get_ai_wait_duration", &Road::getAiWaitDuration)
+        .def("get_ai_wait_duration_cumulative", &Road::getAiWaitDurationCumulative)
         ;
 
     py::class_<Node>(m, "Node")
