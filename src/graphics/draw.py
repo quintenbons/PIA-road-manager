@@ -55,12 +55,8 @@ def draw_road(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engi
 
     road_width = int(ROAD_WIDTH * scale_factor)
 
-    if road.croad.get_block_traffic():
-        pygame.draw.line(screen, CLOSED_ROAD_COLOR, (int(display_start_x), int(
-            display_start_y)), (int(display_end_x), int(display_end_y)), road_width)
-    else:
-        pygame.draw.line(screen, ROAD_COLOR, (int(display_start_x), int(
-            display_start_y)), (int(display_end_x), int(display_end_y)), road_width)
+    pygame.draw.line(screen, ROAD_COLOR, (int(display_start_x), int(
+        display_start_y)), (int(display_end_x), int(display_end_y)), road_width)
 
 
 def draw_node(screen, node: Node, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
