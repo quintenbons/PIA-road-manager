@@ -21,7 +21,7 @@ def main():
     # Create model
     if not os.path.exists(args.model_path):
         print("====== Generating model:")
-        model = CrossRoadModel(15) # 15 strategies for 4 roads
+        model = CrossRoadModel()
         model.save(args.model_path)
 
     train(args.dataset_path, args.model_path, args.epoch)

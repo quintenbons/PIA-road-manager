@@ -8,14 +8,15 @@ from ai.model_constants import *
 class CrossRoadModel(nn.Module):
     def __init__(self, nb_strats=OUTPUT_DIM):
         super(CrossRoadModel, self).__init__()
-        self.fc1 = nn.Linear(INPUT_DIM, HIDDEN_DIM)
-        self.fc2 = nn.Linear(HIDDEN_DIM, HIDDEN_DIM)
-        self.fc3 = nn.Linear(HIDDEN_DIM, nb_strats)
+        self.inp = nn.Linear(INPUT_DIM, HIDDEN_DIM)
+        self.hidden_layers = nn.ModuleList([nn.Linear(HIDDEN_DIM, HIDDEN_DIM) for _ in range(HIDDEN_AMOUNT)])
+        self.out = nn.Linear(HIDDEN_DIM, nb_strats)
 
     def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = F.relu(self.fc3(x))
+        x = F.relu(self.inp(x))
+        for layer in self.hidden_layers:
+            x = F.relu(layer(x))
+        x = F.relu(self.out(x))
         return x
 
     def save(self, target: PathLike):
@@ -24,7 +25,6 @@ class CrossRoadModel(nn.Module):
         else:
             state_dict = self.state_dict()
         torch.save(state_dict, target)
-
 
     @classmethod
     def load(Cls, target: PathLike, device="cpu"):

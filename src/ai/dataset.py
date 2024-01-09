@@ -44,8 +44,8 @@ class NodeDataset(Dataset):
         return self
 
     @classmethod
-    def load(Cls, target: PathLike):
-        data = torch.load(target)
+    def load(Cls, target: PathLike, device: str = "cpu"):
+        data = torch.load(target, map_location=device)
         return Cls(*data)
 
     @classmethod
