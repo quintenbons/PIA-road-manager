@@ -1,7 +1,7 @@
 from ...traffic.traffic_light import TrafficLight
 from typing import List
 from .strategy import Strategy
-import math
+from engine.utils import get_angle
 
 class TrafficGroup:
     traffic_lights: set[TrafficLight]
@@ -41,13 +41,7 @@ class CrossDuplexStrategy(Strategy):
         self.traffic_lights_group.append(group)
 
     def is_opposit(self, center:tuple[float, float], a:tuple[float, float], b:tuple[float, float]) -> bool:
-        return abs(self.get_angle(center, a) % 180 - self.get_angle(center, b) % 180) < self.opposit_degree_treshold
-    
-    def get_angle(self, center:tuple[float, float], point:tuple[float, float]) -> float:
-        x, y = point[0] - center[0], point[1] - center[1]
-        angle_rad = math.atan2(y, x)
-        angle_deg = math.degrees(angle_rad)
-        return angle_deg
+        return abs(get_angle(center, a) % 180 - get_angle(center, b) % 180) < self.opposit_degree_treshold
     
     def next(self):
         super().next()

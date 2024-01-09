@@ -8,6 +8,7 @@ from engine.spawners.spawner import Spawner
 from engine.spawners.spawner_utils import spawner_frequencies
 from engine.strategies.strategies_manager import StrategyManager
 from engine.strategies.strategy_mutator import StrategyTypes
+from engine.utils import get_angle
 
 from graphics.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
@@ -87,6 +88,9 @@ def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
     roads_dictionnary: dict = {}
     spawners: List[Spawner] = []
 
+    # Used to order roads by their angle
+    nodes_links: List[(int, int)] = []
+
     with open(name, mode='r', encoding='utf-8') as f:
         for line in f:
             if line.strip() == "===":
@@ -103,15 +107,21 @@ def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
             n1, n2, *_ = line.split()
             n1 = int(n1)
             n2 = int(n2)
-            
+
+            nodes_links.append((n1, n2))
+        
+        # Sort roads by their angle
+        nodes_links.sort(key=lambda link: get_angle(nodes[link[0]].get_position(), nodes[link[1]].get_position()))
+
+        # Create roads
+        for n1, n2 in nodes_links:
             #TODO change speedlimit and remove second line
             road1 = Road(nodes[n1], nodes[n2], 8)
-            road2 = Road(nodes[n2], nodes[n1], 8)
+            roads2 = Road(nodes[n2], nodes[n1], 8)
             roads.append(road1)
-            roads.append(road2)
-
+            roads.append(roads2)
             roads_dictionnary[(n1, n2)] = road1
-            roads_dictionnary[(n2, n1)] = road2
+            roads_dictionnary[(n2, n1)] = roads2     
 
         # Spawners
         while (spawner := read_spawner(f, roads, roads_dictionnary)) is not None:

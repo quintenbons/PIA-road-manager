@@ -1,3 +1,5 @@
+import math
+
 def getLength(pos1:tuple[float, float], pos2:tuple[float, float]) -> float:
     return ((pos1[0] - pos2[0])**2 + (pos1[1] - pos2[1])**2)**0.5
 
@@ -21,3 +23,9 @@ def vecteur_norm(pos1, pos2):
 
 def scalaire(u, v):
     return u[0]*v[0] + u[1]*v[1]
+
+def get_angle(center:tuple[float, float], point:tuple[float, float]) -> float:
+    x, y = point[0] - center[0], point[1] - center[1]
+    angle_rad = math.atan2(y, x)
+    angle_deg = math.degrees(angle_rad)
+    return angle_deg
