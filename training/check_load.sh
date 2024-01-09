@@ -3,6 +3,9 @@ TRAINING_DIR=$(dirname "$0")
 source "$TRAINING_DIR/hosts_list.sh"
 TMP_FILE="./tmp/loads.tmp"
 
+read -sp "Enter your ensimag password: " password
+echo ""
+
 if [ ! -d ./tmp ]; then
     mkdir -p ./tmp
 fi
@@ -11,7 +14,7 @@ fi
 
 fetch_load() {
     host=$1
-    load=$(ssh -n $host "grep 'model name' /proc/cpuinfo | wc -l; cat /proc/loadavg" 2>/dev/null)
+    load=$(sshpass -p $password ssh -n $host "grep 'model name' /proc/cpuinfo | wc -l; cat /proc/loadavg" 2>/dev/null)
 
     read cores loadavg <<<$(echo "$load" | sed 'N;s/\n/ /')
     read one_min five_min fifteen_min rest <<< "$loadavg"
