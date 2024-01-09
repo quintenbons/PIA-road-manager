@@ -20,6 +20,7 @@ TRAINING_DIR=$(dirname "$0")
 source "$TRAINING_DIR/hosts_list.sh"
 MASTER_NODE="${HOSTS[0]}"
 echo "Master node: $ENSIMAG_USER@$MASTER_NODE"
+echo "target map: $MAP_FOLDER"
 
 # Check if tmp folder exists
 echo "============== ENSIMAG: checking tmp folder"
