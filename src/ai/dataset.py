@@ -19,7 +19,8 @@ from engine.strategies.strategy_mutator import STRAT_NAMES, StrategyTypes
 class NodeDataset(Dataset):
     inputs: torch.TensorType
     outputs: torch.TensorType
-    seeds: int
+    seeds: torch.TensorType
+    result_scores: torch.TensorType
 
     def __len__(self):
         return len(self.inputs)
@@ -28,7 +29,7 @@ class NodeDataset(Dataset):
         return self.inputs[idx], self.outputs[idx]
 
     def save(self, target: PathLike):
-        torch.save([self.inputs, self.outputs, self.seeds], target)
+        torch.save([self.inputs, self.outputs, self.seeds, self.result_scores], target)
 
     def merge(self, other):
         self.inputs = torch.cat([self.inputs, other.inputs])
@@ -48,8 +49,8 @@ class NodeDataset(Dataset):
 
     @classmethod
     def from_generation(Cls, size: int, map_folder: str, tqdm_disable=True):
-        inputs, outputs, sim_seeds = generate_batch(size, map_folder, tqdm_disable)
-        return Cls(inputs, outputs, sim_seeds)
+        inputs, outputs, sim_seeds, result_scores = generate_batch(size, map_folder, tqdm_disable)
+        return Cls(inputs, outputs, sim_seeds, result_scores)
 
 def entry_from_node(node: Node, tqdm_disable=True):
     tensor = torch.zeros(MAX_ROADS * 2)
@@ -116,7 +117,7 @@ def seed_generator(meta_seed: int = None):
     while True:
         yield local_random.randrange(0, 2**32)
 
-def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
+def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType, torch.TensorType]:
     map_file = f"{map_folder}/map.csv"
     paths_file = f"{map_folder}/paths.csv"
     central_node = 0
@@ -124,6 +125,7 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
     batch = []
     expected = []
     sim_seeds = []
+    result_scores = []
 
     seed_gen = seed_generator()
 
@@ -139,13 +141,17 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
             simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
             # Run second range simulationS
-            scores, _ = simul_to_scores(central_node, second_seed, map_folder)
-            one_hot = F.one_hot(torch.tensor(scores).argmin(), len(scores))
-            one_hot = one_hot.float()
+            raw_scores, _ = simul_to_scores(central_node, second_seed, map_folder)
 
-            sim_seeds.append(sim_seed)
+            scores = torch.tensor(raw_scores)
+            scores = scores / torch.min(scores)
+            scores = torch.max(scores) - scores
+            soft_scores = F.softmax(scores, dim=0)
+
             batch.append(entry_from_node(simulation.nodes[central_node]))
-            expected.append(one_hot)
+            expected.append(soft_scores)
+            sim_seeds.append(sim_seed)
+            result_scores.append(torch.tensor(raw_scores))
 
             sim_seed += 1
     except KeyboardInterrupt:
@@ -154,4 +160,4 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
         print("Unknown exception occured, generated incomplete dataset...")
         print(e)
 
-    return torch.stack(batch), torch.stack(expected), torch.tensor(sim_seeds)
+    return torch.stack(batch), torch.stack(expected), torch.tensor(sim_seeds), torch.stack(result_scores)

@@ -25,8 +25,9 @@ def generate_dataset(size: int, dest: os.PathLike, map_folder: str, tqdm_disable
         ds.save(dest)
         print(f"Generated {len(ds)} entries")
 
-        for entry in ds:
-            print(entry)
+        if not quiet:
+            for entry in ds:
+                print(entry)
 
 def main():
     parser = argparse.ArgumentParser()
@@ -34,6 +35,7 @@ def main():
     parser.add_argument("--size", type=int, default=1)
     parser.add_argument("--dest", type=str, default="dataset.pt")
     parser.add_argument("--quiet", action="store_true")
+    parser.add_argument("--tqdm-disable", action="store_true")
     parser.add_argument("map_folder", type=str, default="src/maps/build/GUI/Training-4/Uniform", help="Folder containing map.csv and paths.csv")
     args = parser.parse_args()
 
@@ -42,7 +44,7 @@ def main():
         score_tester(map_folder=args.map_folder)
 
     print(f"====== Generating dataset for map {args.map_folder} ======")
-    generate_dataset(args.size, args.dest, args.map_folder, tqdm_disable=args.quiet, quiet=args.quiet)
+    generate_dataset(args.size, args.dest, args.map_folder, tqdm_disable=args.tqdm_disable, quiet=args.quiet)
 
 if __name__ == "__main__":
     main()
