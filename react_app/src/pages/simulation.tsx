@@ -42,22 +42,28 @@ export const Simulation = (props: { setPath: (path: string) => void }) => {
         ]}
       />
       <Title title="Génération de la carte" size="md" />
-      <Title title="API" size="sm" />
-      <Paragraph text="Nous disposons d'un outil permettant de récupérer la carte d'une ville." />
+      <Paragraph text="Nous disposons d'outils pour obtenir des cartes sur lesquelles tester et entrainer notre IA." />
+      <Title title="Génération par API" size="sm" />
+      <Paragraph text="Nous disposons d'un outil permettant de récupérer les routes et intersections qui forment une ville. Nous décrivons ci-dessous le processus qui permet d'obtenir ce résultat:" />
+
       <ParagraphList
         paragraphs={[
-          "Récupération des Données : Nous utilisons l'API de Overpass pour obtenir un ensemble de points représentant le réseau routier de la ville.",
-          "Reconstruction des Routes : À partir de ces points, nous reconstruisons les routes et identifions les intersections.",
-          "Simplification des Routes : Chaque route, définie par l'ensemble de points entre deux intersections, est simplifiée en un segment droit en conservant seulement les points extrêmes.",
-          "Sélection du Plus Grand Graphe Connexe : Nous conservons uniquement le plus grand graphe connexe du réseau routier. Ceci élimine les petits graphes isolés qui résultent de l'exclusion des routes mineures (comme les parkings et les sorties résidentielles) lors de la récupération des données.",
+          "L'API Overpass permet d'obtenir un ensemble de points représentant le réseau routier de la ville.",
+          "À partir de ces points, nous reconstruisons les routes et identifions les intersections.",
+          "Chaque route, définie par l'ensemble de points entre deux intersections, est simplifiée en un segment droit en conservant seulement les points extrêmes.",
+          "Nous conservons uniquement le plus grand graphe connexe du réseau routier. Ceci élimine les petits graphes isolés qui résultent de l'exclusion des routes mineures (comme les parkings et les sorties résidentielles) lors de la récupération des données.",
         ]}
       />
       <Image src={GRENOBLE} width={"60%"} alignSelf={"center"} />
-      <Paragraph text="La carte générée de Grenoble, bien que présentant quelques approximations, reste largement cohérente avec la carte réelle de la ville. Par exemple, bien que la route traversant le CEA au Nord-Ouest soit légèrement décalée, notre modèle reproduit avec une précision raisonnable l'architecture routière. Ces modifications d'échelle sont dues aux approximations inhérentes à notre méthode de simplification, mais elles n'affectent pas l'intégrité globale du complexe routier. Cette fidélité à la structure réelle des routes est cruciale pour notre objectif, qui est de simuler de manière réaliste la gestion du trafic urbain." />
+      <Paragraph text="Nous avons utilisé cette méthode pour récupérer la carte de Grenoble, puis, en utilisant Google Maps, nous avons supperposé notre résultat (en bleu et rouge) aux textures Google." />
+      <Paragraph text="On constate quelques approximations, mais cette carte reste cohérente avec la réalité géographique." />
+      <Paragraph text="Les cartes de villes et de villages sont malheureusement trop complexes et ne permettent pas d'isoler certains comportements. Voila pourquoi nous avons implémenté un second outil de génération." />
 
-      <Title title="GUI" size="sm" />
+      <Title title="Génération avec le GUI" size="sm" />
 
-      <Paragraph text="Nous avons développé une interface graphique pour modéliser nous même des cartes. Cela nous permet de tester notre moteur de simulation et de définir nos scénarios d'entrainement." />
+      <Paragraph text="Il s'agit d'une interface graphique permettant de modéliser des cartes manuellement. Cela nous permet de tester notre moteur de simulation et de définir nos scénarios d'entrainement." />
+      
+      <Paragraph text="Les ressources suivantes présentent à gauche le GUI et à droite une simulation se basant sur la carte fraichement générée." />
 
       <Box
         sx={{
@@ -76,25 +82,24 @@ export const Simulation = (props: { setPath: (path: string) => void }) => {
         <Image src={NETWORK} flex={"1"} width={"50%"} alignSelf={"center"} />
       </Box>
 
-      <Title title="Engine" size="md" />
-      <Paragraph text="Le modèle physique se découpe en plusieurs parties:" />
+      <Title title="Moteur de simulation" size="md" />
+      <Paragraph text="Le modèle physique implémente les notions suivantes:" />
       <ParagraphList
         paragraphs={[
-          "Des routes",
-          "Des intersections",
-          "Des objets qui se déplacent, pour la suite, on désignera cela par les voitures",
-          "Des générateurs de trafic",
+          "Routes",
+          "Intersections",
+          "Objets qui se déplacent, ce sont les voitures",
+          "Générateurs de trafic routier",
         ]}
       />
-      <Paragraph text="Le générateur de trafic génère une voiture, avec un itinéraire. L'itinéraire est choisi avec un calcul de Dijkstra. Pour accélérer la simulation, l'ensemble des calculs de chemin sont précalculés en utilisant une techno plus rapide que le Python ici le C++." />
-      <Paragraph text="Les routes doivent permettre de faire circuler des voitures et les intersections permettent de bloquer ou de faire passer les voitures." />
-      <Paragraph text="Les principales difficultés sont liées au comportement des voitures. Il faut pouvoir ralentir en fonction de la vitesse des autres voitures, il faut pouvoir dépasser une voiture trop lente." />
-      <Paragraph text="Nous avons aussi imaginé un système de collision qui permet aux voitures de réguler leurs allures en fonction du trafic et de traverser les intersections de manière réaliste." />
+      <Paragraph text="Les générateurs de trafic produisent des voitures avec des itinéraires précalculés. Cet itinéraire est choisi pour être le plus court grâce à l'algorithme de Dijkstra. Les chemins possibles sont précalculés en utilisant une technologie plus rapide que Python (le C++)." />
+      <Paragraph text="Les routes font circuler les voitures. Les intersections contiennent la logique de signalisation et contrôlent le passage des voitures." />
+      <Paragraph text="Les voitures adoptent un comportement dynamique inspiré de la conduite réelle, elles ralentissent et accélèrent pour respecter les limitations de vitesse. Dans les intersections, elles ralentissent et évitent à tout prix les collisions avec d'autres véhicules." />
 
       <Title title="Simulation graphique" size="md" />
-      <Paragraph text="La simulation graphique se fait avec la bibliothèque Pygame. Elle permet de visualiser la simulation en temps réel." />
+      <Paragraph text="Au delas du moteur, nous disposons d'un outil de simulation graphique. Cet outil permet de visualiser la simulation en temps réel et de débogger plus simplement. Nous utilisons Pygame pour obtenir ces résulats." />
 
-      <Paragraph text="Voici une vidéo explicative de la simulation graphique:" />
+      <Paragraph text="Cette vidéo présente la simulation graphique à la date du 15/12/2023:" />
 
       <Box
         sx={{
