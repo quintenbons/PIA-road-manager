@@ -41,13 +41,15 @@ class Simulation:
             s.spawn_initial()
 
     def init_constant(self):
-        from engine.constants import LEAVING_DIST, LEAVING_TIME, TIME, MAX_MOVABLES_IN_NODE, STOP_SPEED
+        from engine.constants import LEAVING_DIST, LEAVING_TIME, TIME, MAX_MOVABLES_IN_NODE, STOP_SPEED, NODE_RADIUS, ROAD_OFFSET
         import build.engine_ia as engine_ia
         engine_ia.set_leaving_time(LEAVING_TIME)
         engine_ia.set_leaving_dist(LEAVING_DIST)
         engine_ia.set_time(TIME)
         engine_ia.set_stop_speed(STOP_SPEED)
         engine_ia.set_max_movables_in_node(MAX_MOVABLES_IN_NODE)
+        engine_ia.set_node_radius(NODE_RADIUS)
+        engine_ia.set_road_offset(ROAD_OFFSET)
 
     def run(self, sim_duration: int = GENERATION_SEGMENT_DURATION):
         start_tick = self.current_tick

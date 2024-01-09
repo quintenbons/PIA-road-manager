@@ -4,7 +4,10 @@
 #include <iostream>
 
 #include "movable.h"  // Incluez le fichier d'en-tête de la classe Movable
-#define NODE_RADIUS 10
+// #define NODE_RADIUS 10
+extern double NODE_RADIUS;
+extern double ROAD_OFFSET;
+
 Road::Road(Node* start, Node* end, double speedLimit)
     : start{start}, end{end}, speedLimit{speedLimit}, aiFlowCount0{0}, aiFlowCount1{0} {
     length = start->position.getLength(end->position);
@@ -20,8 +23,8 @@ Road::Road(Node* start, Node* end, double speedLimit)
     // posStart.x += 5*u.x + 2*v.x;
     // posStart.y += 5*u.y + 2*v.y;
     // posEnd.x += -5*u.x
-    Point u5 = u.multiply(5);
-    Point v2 = v.multiply(2);
+    Point u5 = u.multiply(NODE_RADIUS/2);
+    Point v2 = v.multiply(ROAD_OFFSET);
     posStart = posStart.add(u5).add(v2);
     posEnd = posEnd.minus(u5).add(v2);
 

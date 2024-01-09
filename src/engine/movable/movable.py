@@ -5,8 +5,6 @@ from typing import TYPE_CHECKING, List
 from engine.tree import Nodable, TreeNode
 from ..utils import getLength, vecteur_norm, scalaire
 
-from ..constants import LEAVING_DIST, LEAVING_TIME, TIME, TIME2, TIME_DIV_175, TIME_DIV_25
-
 import build.engine_ia as engine_ia
 
 sys.path.append('../maps')
