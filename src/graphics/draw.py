@@ -11,8 +11,8 @@ from engine.constants import TIME
 
 
 def draw_car(movable: Movable, screen: pygame.Surface, car_asset: pygame.Surface, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
-    padding_x = screen_width * 0.05
-    padding_y = screen_height * 0.05
+    padding_x = screen_width *0.1
+    padding_y = screen_height *0.1
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
@@ -34,8 +34,8 @@ def draw_car(movable: Movable, screen: pygame.Surface, car_asset: pygame.Surface
 
 
 def draw_road(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
-    padding_x = screen_width * 0.05
-    padding_y = screen_height * 0.05
+    padding_x = screen_width *0.1
+    padding_y = screen_height *0.1
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
@@ -61,8 +61,8 @@ def draw_road(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engi
 
 
 def draw_node(screen, node: Node, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
-    padding_x = screen_width * 0.05
-    padding_y = screen_height * 0.05
+    padding_x = screen_width *0.1
+    padding_y = screen_height *0.1
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
@@ -85,8 +85,8 @@ def draw_movable(movable: Movable, screen, color: int, engine_x_min, engine_x_ma
 
 
 def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
-    padding_x = screen_width * 0.05
-    padding_y = screen_height * 0.05
+    padding_x = screen_width *0.1
+    padding_y = screen_height *0.1
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
@@ -135,9 +135,9 @@ def draw_speed_sign(screen, road, engine_x_min, engine_x_max, engine_y_min, engi
     normalized_y = (pos[1] - engine_y_min) / \
         (engine_y_max - engine_y_min)
     display_x = normalized_x * \
-        (screen_width - screen_width * 0.1) + screen_width * 0.05
+        (screen_width - screen_width * 0.1) + screen_width *0.1
     display_y = normalized_y * \
-        (screen_height - screen_height * 0.1) + screen_height * 0.05 - 20
+        (screen_height - screen_height * 0.1) + screen_height *0.1 - 20
 
     sign_radius = 5 * scale_factor
     post_width = 1 * scale_factor

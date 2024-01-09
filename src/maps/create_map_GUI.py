@@ -8,7 +8,6 @@ from graphics.constants import *
 from graphics.draw import draw_scale
 BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build/GUI/')
 
-# Initialisation de pygame
 pygame.init()
 
 
