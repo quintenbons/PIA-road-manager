@@ -8,7 +8,7 @@ from graphics.assets import AssetManager
 from graphics.utils import get_clicked_movable, get_clicked_node
 
 from graphics.init_pygame import pygame_init
-from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road, draw_hud, draw_paused_text
+from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road, draw_hud, draw_paused_text, draw_traffic_light
 from graphics.constants import MAX_SCALE_VALUE, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
@@ -47,8 +47,10 @@ class PygameDisplay:
             self.engine_y_max = max(self.engine_y_max, node.cnode.get_y())
 
         self.scale_factor = min(SCREEN_WIDTH / (self.engine_x_max - self.engine_x_min),
-                    SCREEN_HEIGHT / (self.engine_y_max - self.engine_y_min))
-        self.scale_factor = min(self.scale_factor, 4)
+                                SCREEN_HEIGHT / (self.engine_y_max - self.engine_y_min))
+        if self.scale_factor > MAX_SCALE_VALUE:
+            print("\nScale factor too high, setting to max. This may cause graphical issues. Please use a bigger map.")
+            self.scale_factor = MAX_SCALE_VALUE
 
     def draw(self):
         self.screen.fill((255, 255, 255))
@@ -56,15 +58,22 @@ class PygameDisplay:
             self.screen.blit(self.grid_surface, (0, 0))
         for road in self.simulation.roads:
             draw_road(self.screen, road, self.engine_x_min, self.engine_x_max,
-                      self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+                    self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+
         for node in self.simulation.nodes:
             draw_node(self.screen, node, self.engine_x_min, self.engine_x_max,
-                      self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+                    self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+
+        for node in self.simulation.nodes:
+            for road in node.cnode.get_road_in():
+                draw_traffic_light(self.screen, road, self.engine_x_min, self.engine_x_max,
+                                self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+
         for spawner in self.simulation.spawners:
             for movable in spawner.movables:
                 color = self.asset_manager.get_car_asset(movable)
                 draw_movable(movable, self.screen, color, self.engine_x_min, self.engine_x_max,
-                             self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+                            self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
 
         draw_hud(self)
 

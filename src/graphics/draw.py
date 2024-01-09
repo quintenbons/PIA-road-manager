@@ -20,7 +20,7 @@ def draw_car(movable: Movable, screen: pygame.Surface, color: int, engine_x_min,
     centered_x = normalized_x * scaled_width + padding_x
     centered_y = normalized_y * scaled_height + padding_y
 
-    car_radius = 4 * scale_factor 
+    car_radius = 2.5 * scale_factor 
 
     pygame.draw.circle(screen, ((color * 26)%255, (color * 12)%255, (color*3)%255), (int(centered_x), int(centered_y)), car_radius)
 
@@ -68,6 +68,25 @@ def draw_node(screen, node: Node, engine_x_min, engine_x_max, engine_y_min, engi
 
 def draw_movable(movable: Movable, screen, color: int, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
     draw_car(movable, screen, color, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor)
+
+def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
+    padding_x = screen_width * 0.05
+    padding_y = screen_height * 0.05
+    scaled_width = screen_width - 2 * padding_x
+    scaled_height = screen_height - 2 * padding_y
+
+    start_x, start_y = road.get_pos_start()
+
+    normalized_x = (start_x - engine_x_min) / (engine_x_max - engine_x_min)
+    normalized_y = (start_y - engine_y_min) / (engine_y_max - engine_y_min)
+    display_x = normalized_x * scaled_width + padding_x
+    display_y = normalized_y * scaled_height + padding_y
+
+    traffic_light_size = 5 * scale_factor
+    traffic_light_color = (255, 0, 0)  # Rouge
+
+    pygame.draw.circle(screen, traffic_light_color, (int(display_x), int(display_y)), traffic_light_size)
+
 
 def get_rect(obj):
     if isinstance(obj, Node):
