@@ -11,6 +11,7 @@ from graphics.init_pygame import pygame_init
 from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road, draw_hud, draw_paused_text
 from graphics.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
+
 class PygameDisplay:
     simulation: Simulation
     paused: bool = True
@@ -25,6 +26,11 @@ class PygameDisplay:
     def __init__(self, simulation: Simulation, debug_mode: bool = False):
         self.simulation = simulation
         self.debug_mode = debug_mode
+        self.engine_x_min = float('inf')
+        self.engine_x_max = float('-inf')
+        self.engine_y_min = float('inf')
+        self.engine_y_max = float('-inf')
+        self._calculate_engine_bounds()
 
         pygame.display.set_caption("Simulation de réseau routier")
         if self.debug_mode:
@@ -32,20 +38,30 @@ class PygameDisplay:
             print("Press Space to advance 10 steps")
 
         self.clock = pygame.time.Clock()
-    
+
+    def _calculate_engine_bounds(self):
+        for node in self.simulation.nodes:
+            self.engine_x_min = min(self.engine_x_min, node.cnode.get_x())
+            self.engine_x_max = max(self.engine_x_max, node.cnode.get_x())
+            self.engine_y_min = min(self.engine_y_min, node.cnode.get_y())
+            self.engine_y_max = max(self.engine_y_max, node.cnode.get_y())
+
     def draw(self):
         self.screen.fill((255, 255, 255))
         if self.debug_mode:
-            self.screen.blit(self.grid_surface, (0, 0)) 
+            self.screen.blit(self.grid_surface, (0, 0))
         for road in self.simulation.roads:
-            draw_road(self.screen, road)
+            draw_road(self.screen, road, self.engine_x_min, self.engine_x_max,
+                      self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT)
         for node in self.simulation.nodes:
-            draw_node(self.screen, node)
+            draw_node(self.screen, node, self.engine_x_min, self.engine_x_max,
+                      self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT)
         for spawner in self.simulation.spawners:
             for movable in spawner.movables:
                 color = self.asset_manager.get_car_asset(movable)
-                draw_movable(movable, self.screen, color)
-        
+                draw_movable(movable, self.screen, color, self.engine_x_min, self.engine_x_max,
+                             self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT)
+
         draw_hud(self)
 
     def run(self, max_time: int = None):
@@ -56,7 +72,7 @@ class PygameDisplay:
 
         self.speed_factor = 1
         base_fps = 45
-        base_tick_interval = TIME * 1000 
+        base_tick_interval = TIME * 1000
         last_tick_time = pygame.time.get_ticks()
 
         while running:
@@ -76,7 +92,7 @@ class PygameDisplay:
                             self.simulation.run_tick()
                     if event.key == pygame.K_p:
                         self.paused = not self.paused
-                    elif event.unicode == '+': # Unicode is better than key, since it will work with modifiers
+                    elif event.unicode == '+':  # Unicode is better than key, since it will work with modifiers
                         if self.speed_factor == 128:
                             print("Speed factor already at max")
                             break
@@ -87,11 +103,13 @@ class PygameDisplay:
                     if event.button == 1:
                         pos = pygame.mouse.get_pos()
                         for spawner in self.simulation.spawners:
-                            clicked_movable = get_clicked_movable(movables=spawner.movables, pos=pos)
+                            clicked_movable = get_clicked_movable(
+                                movables=spawner.movables, pos=pos)
                         if clicked_movable:
                             print("Clicked on car: ", clicked_movable)
                             break
-                        clicked_node = get_clicked_node(nodes=self.simulation.nodes, pos=pos)
+                        clicked_node = get_clicked_node(
+                            nodes=self.simulation.nodes, pos=pos)
                         if clicked_node:
                             print("Clicked on node: ", clicked_node)
 
@@ -111,6 +129,5 @@ class PygameDisplay:
                 self.clock.tick(base_fps*2)
             else:
                 self.clock.tick(base_fps)
-
 
         pygame.quit()
