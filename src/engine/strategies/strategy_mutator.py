@@ -1,5 +1,4 @@
-from yaml import Node
-from engine.constants import DEFAULT_DURATION, TIME
+from engine.constants import DEFAULT_DURATION
 from engine.strategies.model.cross_duplex_strategy import CrossDuplexStrategy
 from engine.strategies.model.open_corridor_strategy import OpenCorridorStrategy
 
