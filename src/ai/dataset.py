@@ -68,14 +68,13 @@ def entry_from_node(node: Node, tqdm_disable=True):
             tensor[num * 2 + 1] = node_road_out[num].get_ai_flow_count_0()
     return tensor
 
-def score_tester(map_folder: str):
+def score_tester(map_folder: str, nb_controllers: int):
     sim_seed = int(time.time())
     map_file = f"{map_folder}/map.csv"
     paths_file = f"{map_folder}/paths.csv"
     central_node = 0
 
     strategy_manager = StrategyManager()
-    nb_controllers = 4
 
     for typ, mutation in strategy_manager.enumerate_strategy_schemes(nb_controllers):
         random.seed(sim_seed)
@@ -86,12 +85,11 @@ def score_tester(map_folder: str):
         sim_score = simulation.get_total_score()
         print(f"{typ:3} {STRAT_NAMES[typ]:20} {mutation:3} {sim_score:15.5f}")
 
-def simul_to_scores(central_node: int, second_seed: int, map_folder: str):
+def simul_to_scores(central_node: int, second_seed: int, map_folder: str, nb_controllers: int):
     map_file = f"{map_folder}/map.csv"
     paths_file = f"{map_folder}/paths.csv"
 
     strategy_manager = StrategyManager()
-    nb_controllers = 4
 
     scores = []
 
@@ -157,17 +155,22 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
 
             # Run first simulation
             simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
+            nb_controllers = len(simulation.nodes) - 1
             simulation.set_node_strategy(central_node, StrategyTypes.CROSS_DUPLEX, 0)
             simulation.run(sim_duration=GENERATION_SEGMENT_DURATION)
 
             # Run second range simulationS
-            raw_scores, _ = simul_to_scores(central_node, second_seed, map_folder)
+            raw_scores, _ = simul_to_scores(central_node, second_seed, map_folder, nb_controllers)
             soft_scores = get_soft_scores(raw_scores)
+
+            # pad with 0s until MAX_STRATEGIES
+            raw_scores = torch.cat([torch.tensor(raw_scores), torch.zeros(MAX_STRATEGIES - len(raw_scores))])
+            soft_scores = torch.cat([soft_scores, torch.zeros(MAX_STRATEGIES - len(soft_scores))])
 
             batch.append(entry_from_node(simulation.nodes[central_node]))
             expected.append(soft_scores)
             sim_seeds.append(sim_seed)
-            result_scores.append(torch.tensor(raw_scores))
+            result_scores.append(raw_scores)
 
             sim_seed += 1
     except KeyboardInterrupt:

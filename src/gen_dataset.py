@@ -3,6 +3,8 @@ from ai.dataset import NodeDataset, score_tester
 import argparse
 import os
 
+from engine.simulation import Simulation
+
 def generate_dataset(size: int, dest: os.PathLike, map_folder: str, tqdm_disable=False, quiet=False):
     if os.path.exists(dest) and not quiet:
         answer = input("Dataset already exists, are you sure you want to overwrite it? (y/n)")
@@ -41,7 +43,11 @@ def main():
 
     if args.test_scores:
         print("====== Testing scores:")
-        score_tester(map_folder=args.map_folder)
+        map_file = f"{args.map_folder}/map.csv"
+        paths_file = f"{args.map_folder}/paths.csv"
+        simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=15)
+        nb_controllers = len(simulation.nodes) - 1
+        score_tester(args.map_folder, nb_controllers)
 
     print(f"====== Generating dataset for map {args.map_folder} ======")
     generate_dataset(args.size, args.dest, args.map_folder, tqdm_disable=args.tqdm_disable, quiet=args.quiet)
