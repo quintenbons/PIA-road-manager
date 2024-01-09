@@ -4,8 +4,8 @@ from .constants import *
 from engine.road import Road
 from engine.node import Node
 from engine.movable.movable import Movable
-from graphics.assets import NODE_RADIUS
-from engine.constants import TIME
+# from graphics.assets import NODE_RADIUS
+from engine.constants import TIME, ROAD_OFFSET, NODE_RADIUS
 
 def draw_car(movable: Movable, screen: pygame.Surface, color: int):
     x, y = movable.cmovable.to_coord_xy()
@@ -17,12 +17,12 @@ def draw_car(movable: Movable, screen: pygame.Surface, color: int):
 
 def draw_road(screen, road: Road):
     if road.croad.get_block_traffic():
-        pygame.draw.line(screen, CLOSED_ROAD_COLOR, road.croad.get_pos_start(), road.croad.get_pos_end(), ROAD_WIDTH)
+        pygame.draw.line(screen, CLOSED_ROAD_COLOR, road.croad.get_pos_start(), road.croad.get_pos_end(), ROAD_OFFSET)
     else:
-        pygame.draw.line(screen, ROAD_COLOR, road.croad.get_pos_start(), road.croad.get_pos_end(), ROAD_WIDTH)
+        pygame.draw.line(screen, ROAD_COLOR, road.croad.get_pos_start(), road.croad.get_pos_end(), ROAD_OFFSET)
 
 def draw_node(screen, node:Node):
-    pygame.draw.circle(screen, NODE_COLOR, (node.cnode.get_x(), node.cnode.get_y()), NODE_RADIUS)
+    pygame.draw.circle(screen, NODE_COLOR, (node.cnode.get_x(), node.cnode.get_y()), NODE_RADIUS/2)
 
 def draw_movable(movable: Movable, screen, color: int):
     draw_car(movable, screen, color)
