@@ -20,7 +20,7 @@ for r in $INPUT/*; do
         map_folder="$r"
         echo "Generating dataset for $map_folder"
         rm -f ensimag.pt
-        { echo $password; yes "y"; } | ./training/gen_datasets.sh bonsq main 1 "$map_folder"
+        { echo $password; yes "y"; } | ./training/gen_datasets.sh bonsq main 250 "$map_folder"
 
         map_name=$(basename "$map_folder")
         mv ensimag.pt "$OUTPUT/$map_name.pt"
