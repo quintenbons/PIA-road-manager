@@ -3,7 +3,6 @@
 #include <pybind11/stl.h>
 #include "movable.h"
 #include <vector>
-// #include "pet.h"
 
 namespace py = pybind11;
 double LEAVING_TIME = 5;
@@ -54,23 +53,9 @@ std::vector<int> spawnerUpdate(std::vector<Movable*> movables) {
     return removeList;
 }
 
-double next_pos(double speedLimit, double current_acceleration, double speed, double TIME, double pos) {
-    double tca = TIME * current_acceleration;
-    double sp = speed + tca;
-
-    if (sp > speedLimit && current_acceleration > 0) {
-        double t = (speedLimit - speed) / current_acceleration;
-        return t * tca / 2 + speed * t + speedLimit * (TIME - t) + pos;
-    } else if (sp < 0) {
-        double t = -speed / current_acceleration;
-        return t * tca / 2 + speed * t + pos;
-    }
-    return TIME*tca/2 + speed*TIME + pos;
-}
 
 PYBIND11_MODULE(engine_ia, m) {
 
-    m.def("next_pos", &next_pos, "next_position for movables"); // UNUSED
     m.def("spawner_update", &spawnerUpdate);
     m.def("set_leaving_time", &setLeavingTime);
     m.def("set_leaving_dist", &setLeavingDist);

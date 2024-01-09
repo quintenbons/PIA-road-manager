@@ -3,12 +3,11 @@
 
 #include <iostream>
 
-#include "road.h"  // Incluez le fichier d'en-tête de la classe Road
+#include "road.h"
 
 #define MIN(x, y) ((x) < (y) ? (x) : (y))
 #define MAX(x, y) ((x) < (y) ? (y) : (x))
-// #define LEAVING_DIST 20
-// #define LEAVING_TIME 10
+
 extern double LEAVING_DIST;
 extern double LEAVING_TIME;
 extern double TIME;
