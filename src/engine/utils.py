@@ -27,5 +27,4 @@ def scalaire(u, v):
 def get_angle(center:tuple[float, float], point:tuple[float, float]) -> float:
     x, y = point[0] - center[0], point[1] - center[1]
     angle_rad = math.atan2(y, x)
-    angle_deg = math.degrees(angle_rad)
-    return angle_deg
+    return angle_rad
