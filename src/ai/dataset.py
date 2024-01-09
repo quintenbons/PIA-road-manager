@@ -70,7 +70,7 @@ def score_tester(map_folder: str):
     sim_seed = int(time.time())
     map_file = f"{map_folder}/map.csv"
     paths_file = f"{map_folder}/paths.csv"
-    central_node = 1
+    central_node = 0
 
     strategy_manager = StrategyManager()
     nb_controllers = 4
@@ -119,7 +119,7 @@ def seed_generator(meta_seed: int = None):
 def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType]:
     map_file = f"{map_folder}/map.csv"
     paths_file = f"{map_folder}/paths.csv"
-    central_node = 1
+    central_node = 0
 
     batch = []
     expected = []
@@ -130,7 +130,7 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
     try:
         for _ in tqdm(range(size), disable=tqdm_disable):
             sim_seed = next(seed_gen)
-            random.seed()
+            random.seed(sim_seed)
             second_seed = random.randrange(0, 2**32)
 
             # Run first simulation
