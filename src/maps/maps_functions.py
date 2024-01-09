@@ -130,6 +130,7 @@ def read_paths(nodes: List[Node], name: str):
                 for n, previous in map(lambda x: x.split(':'), l):
                     # nodes[currentNode].paths[nodes[int(n)]] = nodes[int(previous)]
                     nodes[currentNode].cnode.set_path(nodes[int(n)].cnode, nodes[int(previous)].cnode)
+
 def set_traffic_lights(nodes: List[Node]):
     for node in nodes:
         for road in node.cnode.get_road_in():

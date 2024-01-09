@@ -4,10 +4,10 @@ from .constants import *
 from engine.road import Road
 from engine.node import Node
 from engine.movable.movable import Movable
-from graphics.assets import NODE_RADIUS
+from graphics.constants import *
 from engine.constants import TIME
 
-def draw_car(movable: Movable, screen: pygame.Surface, color: int, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height):
+def draw_car(movable: Movable, screen: pygame.Surface, color: int, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
     padding_x = screen_width * 0.05
     padding_y = screen_height * 0.05
     scaled_width = screen_width - 2 * padding_x
@@ -20,10 +20,11 @@ def draw_car(movable: Movable, screen: pygame.Surface, color: int, engine_x_min,
     centered_x = normalized_x * scaled_width + padding_x
     centered_y = normalized_y * scaled_height + padding_y
 
-    pygame.draw.circle(screen, ((color * 26)%255, (color * 12)%255, (color*3)%255), (int(centered_x), int(centered_y)), 4)
+    car_radius = 4 * scale_factor 
 
+    pygame.draw.circle(screen, ((color * 26)%255, (color * 12)%255, (color*3)%255), (int(centered_x), int(centered_y)), car_radius)
 
-def draw_road(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height):
+def draw_road(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
     padding_x = screen_width * 0.05
     padding_y = screen_height * 0.05
     scaled_width = screen_width - 2 * padding_x
@@ -42,13 +43,15 @@ def draw_road(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engi
     display_end_x = normalized_end_x * scaled_width + padding_x
     display_end_y = normalized_end_y * scaled_height + padding_y
 
+    road_width = int(ROAD_WIDTH * scale_factor)
+
     if road.croad.get_block_traffic():
-        pygame.draw.line(screen, CLOSED_ROAD_COLOR, (int(display_start_x), int(display_start_y)), (int(display_end_x), int(display_end_y)), ROAD_WIDTH)
+        pygame.draw.line(screen, CLOSED_ROAD_COLOR, (int(display_start_x), int(display_start_y)), (int(display_end_x), int(display_end_y)), road_width)
     else:
-        pygame.draw.line(screen, ROAD_COLOR, (int(display_start_x), int(display_start_y)), (int(display_end_x), int(display_end_y)), ROAD_WIDTH)
+        pygame.draw.line(screen, ROAD_COLOR, (int(display_start_x), int(display_start_y)), (int(display_end_x), int(display_end_y)), road_width)
 
 
-def draw_node(screen, node: Node, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height):
+def draw_node(screen, node: Node, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
     padding_x = screen_width * 0.05
     padding_y = screen_height * 0.05
     scaled_width = screen_width - 2 * padding_x
@@ -59,10 +62,12 @@ def draw_node(screen, node: Node, engine_x_min, engine_x_max, engine_y_min, engi
     display_x = normalized_x * scaled_width + padding_x
     display_y = normalized_y * scaled_height + padding_y
 
-    pygame.draw.circle(screen, NODE_COLOR, (int(display_x), int(display_y)), NODE_RADIUS)
+    node_radius = NODE_RADIUS * scale_factor
 
-def draw_movable(movable: Movable, screen, color: int, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height):
-    draw_car(movable, screen, color, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height)
+    pygame.draw.circle(screen, NODE_COLOR, (int(display_x), int(display_y)), node_radius)
+
+def draw_movable(movable: Movable, screen, color: int, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
+    draw_car(movable, screen, color, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor)
 
 def get_rect(obj):
     if isinstance(obj, Node):
