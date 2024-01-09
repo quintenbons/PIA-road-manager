@@ -9,6 +9,7 @@ from engine.movable.movable import Movable
 from graphics.constants import *
 from engine.constants import TIME
 
+
 def draw_car(movable: Movable, screen: pygame.Surface, car_asset: pygame.Surface, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
     padding_x = screen_width * 0.05
     padding_y = screen_height * 0.05
@@ -116,6 +117,44 @@ def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_
                        traffic_light_width // 2, red_light_y), circle_radius)
     pygame.draw.circle(screen, green_light_color, (traffic_light_x +
                        traffic_light_width // 2, green_light_y), circle_radius)
+
+
+def draw_speed_sign(screen, road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
+    speed_limit = int(road.get_speed_limit() * 10)
+
+    start_pos = road.get_pos_start()
+    end_pos = road.get_pos_end()
+    road_id_hash = ((id(road) >> 16) ^ id(road)) * 0x45d9f3b
+    ratio = 0.25 + (road_id_hash % 500) / 1000.0
+
+    pos = (start_pos[0] + ratio * (end_pos[0] - start_pos[0]),
+           start_pos[1] + ratio * (end_pos[1] - start_pos[1]))
+
+    normalized_x = (pos[0] - engine_x_min) / \
+        (engine_x_max - engine_x_min)
+    normalized_y = (pos[1] - engine_y_min) / \
+        (engine_y_max - engine_y_min)
+    display_x = normalized_x * \
+        (screen_width - screen_width * 0.1) + screen_width * 0.05
+    display_y = normalized_y * \
+        (screen_height - screen_height * 0.1) + screen_height * 0.05 - 20
+
+    sign_radius = 5 * scale_factor
+    post_width = 1 * scale_factor
+    post_height = 10 * scale_factor
+
+    pygame.draw.rect(screen, NODE_COLOR, (display_x -
+                     post_width / 2, display_y, post_width, post_height))
+
+    pygame.draw.circle(screen, (255, 0, 0), (int(
+        display_x), int(display_y)), sign_radius)
+    pygame.draw.circle(screen, (255, 255, 255), (int(
+        display_x), int(display_y)), sign_radius - 1 * scale_factor)
+
+    font = pygame.font.SysFont(None, int(7 * scale_factor))
+    speed_text = font.render(f"{speed_limit}", True, (0, 0, 0))
+    screen.blit(speed_text, (display_x - speed_text.get_width() /
+                2, display_y - speed_text.get_height() / 2))
 
 
 def get_rect(obj):

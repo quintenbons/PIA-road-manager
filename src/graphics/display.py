@@ -8,7 +8,7 @@ from graphics.assets import AssetManager, load_resource
 from graphics.utils import get_clicked_movable, get_clicked_node
 
 from graphics.init_pygame import pygame_init
-from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road, draw_hud, draw_paused_text, draw_traffic_light
+from graphics.draw import create_grid_surface, draw_movable, draw_node, draw_road, draw_hud, draw_paused_text, draw_speed_sign, draw_traffic_light
 from graphics.constants import BLUE_CAR, GREEN_CAR, MAX_SCALE_VALUE, RED_CAR, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
@@ -70,6 +70,10 @@ class PygameDisplay:
         for node in self.simulation.nodes:
             draw_node(self.screen, node, self.engine_x_min, self.engine_x_max,
                     self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+            
+        for road in self.simulation.roads:
+            draw_speed_sign(self.screen, road, self.engine_x_min, self.engine_x_max, 
+                        self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
 
         for node in self.simulation.nodes:
             for road in node.cnode.get_road_in():
