@@ -43,7 +43,7 @@ sshpass -p $password ssh "$ENSIMAG_USER@$MASTER_NODE" <<EOF > /dev/null 2>&1
     cd
     if [ ! -d ~/PIA-road-manager ]; then
         echo "Clonage du dépôt sysd"
-        git clone git@github.com:quintenbon/PIA-road-manager.git
+        git clone git@github.com:quintenbons/PIA-road-manager.git
     fi
 
     echo "Mise à jour du dépôt sysd"
