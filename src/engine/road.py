@@ -27,6 +27,9 @@ class CRoad:
     def get_road_len(self) -> float:
         pass
 
+    def get_speed_limit(self) -> float:
+        pass
+
     def get_block_traffic(self) -> bool:
         pass
 
@@ -61,6 +64,9 @@ class Road:
 
     def get_road_len(self) -> float:
         return self.croad.get_road_len()
+
+    def get_speed_limit(self) -> float:
+        return self.croad.get_speed_limit()
 
     def get_block_traffic(self) -> bool:
         return self.croad.get_block_traffic()

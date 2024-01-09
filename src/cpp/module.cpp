@@ -94,6 +94,7 @@ PYBIND11_MODULE(engine_ia, m) {
         .def("get_pos_end", &Road::getPosEnd)
         .def("get_pos_start", &Road::getPosStart)
         .def("get_road_len", &Road::getRoadLen)
+        .def("get_speed_limit", &Road::getSpeedLimit)
         .def("spawn_movable", &Road::spawnMovable)
         .def("get_block_traffic", &Road::getBlockTraffic)
         .def("set_block_traffic", &Road::setBlockTraffic)
