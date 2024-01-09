@@ -82,11 +82,23 @@ def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_
     display_x = normalized_x * scaled_width + padding_x
     display_y = normalized_y * scaled_height + padding_y
 
-    traffic_light_size = 5 * scale_factor
-    traffic_light_color = (255, 0, 0)  # Rouge
+    traffic_light_width = 3.33 * scale_factor
+    traffic_light_height = 6.66 * scale_factor
+    traffic_light_x = int(display_x - traffic_light_width / 2)
+    traffic_light_y = int(display_y - traffic_light_height / 2)
 
-    pygame.draw.circle(screen, traffic_light_color, (int(display_x), int(display_y)), traffic_light_size)
+    pygame.draw.rect(screen, (80, 80, 80), (traffic_light_x, traffic_light_y, traffic_light_width, traffic_light_height))
 
+    is_green = not road.get_block_traffic()
+
+    red_light_color = (255, 0, 0) if not is_green else (50, 0, 0)
+    green_light_color = (0, 255, 0) if is_green else (0, 50, 0)
+    circle_radius = 1.5 * scale_factor
+    red_light_y = traffic_light_y + traffic_light_height / 4
+    green_light_y = traffic_light_y + 3 * traffic_light_height / 4
+
+    pygame.draw.circle(screen, red_light_color, (traffic_light_x + traffic_light_width // 2, red_light_y), circle_radius)
+    pygame.draw.circle(screen, green_light_color, (traffic_light_x + traffic_light_width // 2, green_light_y), circle_radius)
 
 def get_rect(obj):
     if isinstance(obj, Node):
