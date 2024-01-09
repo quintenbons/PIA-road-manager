@@ -92,8 +92,6 @@ def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
             x, y, *_ = line.split()
             nodes.append(Node(float(x), float(y)))
 
-        normalize_coordinates(nodes, SCREEN_WIDTH, SCREEN_HEIGHT)
-
         for line in f:
             if line.strip() == "===":
                 break
