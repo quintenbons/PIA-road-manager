@@ -19,6 +19,7 @@ def main():
     parser.add_argument('--verbose', action="store_true", help='Enable if you need to output the dataset entries in logs.')
     parser.add_argument("--map_folder", type=str, default="src/maps/build/GUI/Training-4/Uniform", help="Folder containing map.csv and paths.csv")
     parser.add_argument("--cores", type=int, default=-1, help="Max cores. -1 for all cores (default)")
+    parser.add_argument("--base-seed-salt", type=int, default=None, help="Add salt to base seed (time.time())")
     args = parser.parse_args()
 
     if os.path.exists(args.dest):
@@ -47,6 +48,10 @@ def main():
     futures = set()
 
     base_seed = int(time.time())
+    print("Base seed:", base_seed)
+
+    if args.base_seed_salt is not None:
+        base_seed += int(args.base_seed_salt)
 
     with ProcessPoolExecutor(max_workers=max_cores) as executor:
         for core_num in range(max_cores):
