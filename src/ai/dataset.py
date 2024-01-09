@@ -35,6 +35,7 @@ class NodeDataset(Dataset):
         self.inputs = torch.cat([self.inputs, other.inputs])
         self.outputs = torch.cat([self.outputs, other.outputs])
         self.seeds = torch.cat([self.seeds, other.seeds])
+        self.result_scores = torch.cat([self.result_scores, other.result_scores])
         return self
 
     def merge_all(self, others):
