@@ -5,6 +5,7 @@
 Avant tout:
   ```bash
   cd src/maps/cpp && make all
+  pip install torch
   ```
 
 Cette étape est necessaire seulement si on doit toucher au code c++
