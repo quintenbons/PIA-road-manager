@@ -52,6 +52,7 @@ def main():
 
     if args.base_seed_salt is not None:
         base_seed += int(args.base_seed_salt)
+        print("Using salt:", args.base_seed_salt, "=>", base_seed)
 
     with ProcessPoolExecutor(max_workers=max_cores) as executor:
         for core_num in range(max_cores):
