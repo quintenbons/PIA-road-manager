@@ -117,6 +117,25 @@ def seed_generator(meta_seed: int = None):
     while True:
         yield local_random.randrange(0, 2**32)
 
+def get_soft_scores_inverted(raw_scores):
+    """This function insists on the worst score being 0, and the best score being 1"""
+    scores = torch.tensor(raw_scores)
+    scores = scores / torch.min(scores)
+    soft_scores = F.softmax(scores, dim=0)
+    soft_scores = torch.max(soft_scores) - soft_scores
+    return soft_scores
+
+def get_soft_scores(raw_scores):
+    """
+    This function insists on the best score being 0, and the worst score being 1
+    The best score will be more noticeable this way
+    """
+    scores = torch.tensor(raw_scores)
+    scores = scores / torch.min(scores)
+    scores = torch.max(scores) - scores
+    soft_scores = F.softmax(scores, dim=0)
+    return soft_scores
+
 def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch.TensorType, torch.TensorType, torch.TensorType, torch.TensorType]:
     map_file = f"{map_folder}/map.csv"
     paths_file = f"{map_folder}/paths.csv"
@@ -142,11 +161,7 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
 
             # Run second range simulationS
             raw_scores, _ = simul_to_scores(central_node, second_seed, map_folder)
-
-            scores = torch.tensor(raw_scores)
-            scores = scores / torch.min(scores)
-            scores = torch.max(scores) - scores
-            soft_scores = F.softmax(scores, dim=0)
+            soft_scores = get_soft_scores(raw_scores)
 
             batch.append(entry_from_node(simulation.nodes[central_node]))
             expected.append(soft_scores)
