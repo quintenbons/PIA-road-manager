@@ -52,9 +52,15 @@ class PygameDisplay:
             print("\nScale factor too high, setting to max. This may cause graphical issues. Please use a bigger map.")
             self.scale_factor = MAX_SCALE_VALUE
 
+    def draw_background_texture(self, screen, texture):
+        for x in range(0, SCREEN_WIDTH, texture.get_width()):
+            for y in range(0, SCREEN_HEIGHT, texture.get_height()):
+                screen.blit(texture, (x, y))
+
 
     def draw(self):
-        self.screen.fill((255, 255, 255))
+        grass_texture = pygame.image.load('src/assets/grass.jpg')
+        self.draw_background_texture(self.screen, grass_texture)
         if self.debug_mode:
             self.screen.blit(self.grid_surface, (0, 0))
         for road in self.simulation.roads:
