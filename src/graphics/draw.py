@@ -58,7 +58,7 @@ def draw_road(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engi
     display_end_x = normalized_end_x * scaled_width + padding_x
     display_end_y = normalized_end_y * scaled_height + padding_y
 
-    road_width = int(ROAD_OFFSET * scale_factor)
+    road_width = int(ROAD_WIDTH * scale_factor)
 
     pygame.draw.line(screen, ROAD_COLOR, (int(display_start_x), int(
         display_start_y)), (int(display_end_x), int(display_end_y)), road_width)
@@ -77,7 +77,7 @@ def draw_node(screen, node: Node, engine_x_min, engine_x_max, engine_y_min, engi
     display_x = normalized_x * scaled_width + padding_x
     display_y = normalized_y * scaled_height + padding_y
 
-    node_radius = NODE_RADIUS * scale_factor
+    node_radius = N_RADIUS * scale_factor
 
     pygame.draw.circle(screen, NODE_COLOR, (int(
         display_x), int(display_y)), node_radius)
