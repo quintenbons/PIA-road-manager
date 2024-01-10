@@ -69,8 +69,8 @@ def main():
 
         print()
         print(f"HIT rate: {hit / (hit + miss) * 100:.1f}% ({hit}/{hit+miss})")
-        print(f"Average position of best case of expected in foresight: {pos1 / (hit + miss):.1f}")
-        print(f"Average position of best case of foresight in expected: {pos2 / (hit + miss):.1f} (this one if more important)")
+        print(f"Average position of best case of expected in prediction: {pos1 / (hit + miss):.1f}")
+        print(f"Average position of best case of prediction in expected: {pos2 / (hit + miss):.1f} (this one if more important)")
 
 if __name__ == "__main__":
     main()
