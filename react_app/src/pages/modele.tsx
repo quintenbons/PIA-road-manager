@@ -1,4 +1,4 @@
-import { Container, theme, Image, Code } from "@chakra-ui/react";
+import { Container, theme, Image, Code, Box } from "@chakra-ui/react";
 import { BreadcrumbLnk } from "../components/BreadcrumbLnk";
 import { DocumentDescriptor } from "../components/DocumentDescriptor";
 import { Title } from "../components/Title";
@@ -6,9 +6,15 @@ import { Paragraph } from "../components/Paragraph";
 import { ParagraphList } from "../components/ParagraphList";
 import { ContinueLectureButton } from "../components/ContinueLectureButton";
 import {
+  ANGLE_ORDERING,
   CURRENT_MODEL,
   DATASET_GENERATION,
   DATASET_HESITATION,
+  ORDER_DIFF,
+  TBOTTOM,
+  TLEFT,
+  TRIGHT,
+  TTOP,
 } from "../assets";
 import LineChart from "../components/LineChart";
 import training_data from "../data/first_training_data.json";
@@ -63,17 +69,44 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
       />
       <Paragraph text="Cette approche structurée permettra à notre modèle de s'adapter et d'apprendre efficacement à partir d'un large éventail de scénarios de trafic." />
       
+
       <Title title="Génération des données d'entrée" size="md" />
-      <Paragraph text="L'IA est entrainnée sur des cartes crées à la main. Nous l'avons entrainé sur les intersections à 3, 4 et 5 routes entrantes (et sortante)." />      
       
-      <Image src={DATASET_GENERATION} width={"60%"} alignSelf={"center"} />
-
       <Paragraph text="La génération de jeux de données pour entraîner notre IA est un processus clé, impliquant la création de configurations spécifiques pour simuler divers scénarios de trafic urbain. Il est important de rappeler que notre modèle n'est conscient que d'une seule intersection, ce qui nous permet de simplifier drastiquement la génération des datasets, en limitant la simulation à un seul noeud." />
-      <Paragraph text="Après quelques expérimentations, nous avons réalisé que l'IA était sensible à l'orientation des routes. Par exemple, pour les intersections à trois branches, nous avons du entrainer l'IA sur ces différentes cartes:" />
+      
+      
+      <Paragraph text="L'IA est entraînée sur des cartes créées à la main. Nous l'avons entrainé sur les intersections à 3, 4 et 5 routes entrantes (et sortantes)." />      
+      <Paragraph text="Après quelques expérimentations, nous avons réalisé que l'IA était sensible l'ordre des routes d'une intersection. Par exemple, pour les intersections à trois branches en forme de T, nous avons dû entrainer l'IA sur ces différentes cartes:" />
+      
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "row",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: theme.space[4],
+        }}
+      >
+        <Image
+          src={TLEFT}
+          flex={"1"}
+          width={"25%"}
+          alignSelf={"center"}
+        />
+        <Image src={TRIGHT} flex={"1"} width={"25%"} alignSelf={"center"} />
+        <Image src={TTOP} flex={"1"} width={"25%"} alignSelf={"center"} />
+        <Image src={TBOTTOM} flex={"1"} width={"25%"} alignSelf={"center"} />
+      </Box>
 
-
+      <Paragraph text="Mais ce n'est pas assez, car pour l'IA, ces deux configurations sont différentes:" />
+      <Image src={ORDER_DIFF} width={"60%"} alignSelf={"center"} />
+      <Paragraph text="Ici, la numérotation des sommets se fait dans un ordre arbitraire qui dépend de la création de la carte. Pour la même forme on peut avoir une numérotation différente et donc des interprétations de l'IA différente. Pour pallier cette problématique, nous effectuons un réordonnancement dynamique de la numérotation des sommets avant chaque simulation par rapport à l'axe (1,0) ." />
+      <Image src={ANGLE_ORDERING} width={"60%"} alignSelf={"center"} />
+      
+      <Paragraph text="Ainsi et grâce à ce réordonnancement, il ne reste que trois ordres de sommets possibles et on élimine une des quatre cartes d'entrainement." />
 
       <Paragraph text="Pour générer une entrée de dataset (I, E), la simulation est d'abord exécutée pendant 15 minutes avec une stratégie sélectionnée uniformément, sur une configuration aléatoire. À l'issue de cette période, le paramètre I de l'entrée de dataset peut être calculé à partir des informations mesurées pendant l'exécution." />
+      <Image src={DATASET_GENERATION} width={"60%"} alignSelf={"center"} />
       <Paragraph text="Il faut ensuite générer le paramètre E, qui correspond au meilleur choix possible de stratégie pour les 15 minutes suivantes. Pour cela, nous pouvons simplement exécuter les stratégies une par une, et récupérer celle qui obtient le meilleur score (le moins de congestion). Attention ici à bien utiliser la même configuration de trafic que pour les 15 minutes initiales pour ne pas enfreindre notre hypothèse de consistence du trafic." />
 
       <Image src={DATASET_HESITATION} width={"60%"} alignSelf={"center"} />
