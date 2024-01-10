@@ -119,6 +119,7 @@ def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_
 
 
 def draw_speed_sign(screen, road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
+    return
     speed_limit = int(road.get_speed_limit() * 10)
 
     start_pos = road.get_pos_start()
