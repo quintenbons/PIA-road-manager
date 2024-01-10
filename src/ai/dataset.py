@@ -47,6 +47,51 @@ class NodeDataset(Dataset):
     def get_output_shape(self) -> int:
         return self.outputs.shape[1]
 
+    def describe_index(self, index: int):
+        print(f"Index: {index}")
+
+        inp = self.inputs[index]
+        out = self.outputs[index]
+        scores = self.result_scores[index]
+
+        nb_strategies = []
+        possible_nb_controllers = [3, 4, 5, 6]
+        for i in possible_nb_controllers:
+            scheme_generator = StrategyManager().enumerate_strategy_schemes(i)
+            nb_strategies.append(len(list(scheme_generator)))
+
+        idx = nb_strategies.index(out.shape[0])
+
+        if idx == -1:
+            print(f"Invalid output shape: {out.shape[0]}")
+            print(f"Possible output shapes: {nb_strategies} for nb controllers = {possible_nb_controllers}")
+            return
+
+        nb_controllers = possible_nb_controllers[idx]
+
+        print(f"===== Input: {nb_controllers} controllers (roads in)")
+        print("Total:")
+        print(f"  flow in:            {int(sum(inp[FLOW_IN_OFFSET::METRICS_PER_ROAD])):10.2f}")
+        print(f"  flow out:           {int(sum(inp[FLOW_OUT_OFFSET::METRICS_PER_ROAD])):10.2f}")
+        print(f"  wait duration:      {int(sum(inp[WAIT_DURATION_OFFSET::METRICS_PER_ROAD])):10.2f}")
+        print(f"  wait duration cum.: {int(sum(inp[WAIT_DURATION_CUMULATIVE::METRICS_PER_ROAD])):10.2f}")
+        print()
+
+        for i in range(nb_controllers):
+            print(f"Road {i}:")
+            road_index = i * METRICS_PER_ROAD
+            print(f"  Flow in:            {inp[road_index + FLOW_IN_OFFSET]:10.2f}")
+            print(f"  Flow out:           {inp[road_index + FLOW_OUT_OFFSET]:10.2f}")
+            print(f"  Wait duration:      {inp[road_index + WAIT_DURATION_OFFSET]:10.2f}")
+            print(f"  Wait duration cum.: {inp[road_index + WAIT_DURATION_CUMULATIVE]:10.2f}")
+            print()
+
+        print("===== Output:")
+        scheme_generator = StrategyManager().enumerate_strategy_schemes(i)
+        print(f"{'typ':3} {'strat name':20} {'mut':3} {'sim score':>15}")
+        for (typ, mutation), sim_score in zip(scheme_generator, scores):
+            print(f"{typ:3} {STRAT_NAMES[typ]:20} {mutation:3} {sim_score:15.5f}")
+
     @classmethod
     def load(Cls, target: PathLike, device: str = "cpu"):
         data = torch.load(target, map_location=device)
