@@ -14,7 +14,9 @@ pygame.init()
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Créateur de Carte")
 
-SCALE_RATIO = 100  # 100 pixels = 100m, si on veut 100px = 50m, mettre 50
+LENGTH_SCALE = 100  # Echelle affichée sur l'écran de {LENGTH_SCALE}px
+METERS_AMOUNT = 100  # Nombre de mètres représentés par {LENGTH_SCALE}px
+scale_ratio = LENGTH_SCALE / METERS_AMOUNT  # Nombre de pixels pour un mètre
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
@@ -26,8 +28,8 @@ links = []
 def save_to_file(nodes, links, filename):
     with open(filename, 'w') as file:
         for i, node in enumerate(nodes):
-            scaled_x = node.x
-            scaled_y = node.y
+            scaled_x = node.x / scale_ratio
+            scaled_y = node.y / scale_ratio
             file.write(f"{scaled_x} {scaled_y} : {i}\n")
         file.write("===\n")
         # Écrire les liens
@@ -81,7 +83,7 @@ while running:
                 nodes.append(pygame.Rect(pos[0], pos[1], 10, 10))
         
     screen.fill(WHITE)
-    draw_scale(screen, SCALE_RATIO, 100) # 100 pixels = 100m
+    draw_scale(screen, LENGTH_SCALE, METERS_AMOUNT)
     
     for link in links:
         if link[1] is not None:
