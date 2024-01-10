@@ -25,7 +25,7 @@ def generate_dataset(size: int, dest: os.PathLike, map_folder: str, tqdm_disable
             print("Could not generate dataset, aborting")
             exit(1)
         ds.save(dest)
-        print(f"Generated {len(ds)} entries")
+        print(f"Generated {len(ds)} entries (shape {ds.inputs.shape[1:]} => {ds.outputs.shape[1:]})")
 
         if not quiet:
             for entry in ds:

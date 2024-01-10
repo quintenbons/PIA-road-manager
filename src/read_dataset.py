@@ -9,7 +9,7 @@ def main():
     args = parser.parse_args()
 
     ds = NodeDataset.load(args.target[0])
-    print(f"Loaded {len(ds)} entries")
+    print(f"Loaded {len(ds)} entries (shape {ds.inputs.shape[1:]} => {ds.outputs.shape[1:]})")
 
     if args.v:
         for entry in ds:

@@ -30,7 +30,7 @@ def main():
 
     print("====== Merging datasets:")
     ds = datasets[0].merge_all(datasets[1:])
-    print(f"Generated {len(ds)} entries")
+    print(f"Generated {len(ds)} entries (shape {ds.inputs.shape[1:]} => {ds.outputs.shape[1:]})")
 
     ds.save(args.dest)
 
