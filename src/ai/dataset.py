@@ -53,6 +53,10 @@ class NodeDataset(Dataset):
         inputs, outputs, sim_seeds, result_scores = generate_batch(size, map_folder, tqdm_disable)
         return Cls(inputs, outputs, sim_seeds, result_scores)
 
+class BenchNodeDataset(NodeDataset):
+    def __getitem__(self, idx):
+        return self.inputs[idx], self.outputs[idx], self.result_scores[idx]
+
 def entry_from_node(node: Node, tqdm_disable=True):
     tensor = torch.zeros(MAX_ROADS * 2)
     for num in tqdm(range(MAX_ROADS), disable=tqdm_disable):
