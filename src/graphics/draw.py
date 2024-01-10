@@ -126,6 +126,7 @@ def draw_traffic_light(screen, traffic_light: TrafficLight, engine_x_min, engine
 
 
 def draw_speed_sign(screen, road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
+    return 
     speed_limit = math.ceil(road.get_speed_limit() * 3.6)
     padding_x = screen_width * 0.1
     padding_y = screen_height * 0.1
