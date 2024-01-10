@@ -43,6 +43,9 @@ class NodeDataset(Dataset):
             self.merge(other)
         return self
 
+    def get_output_shape(self) -> int:
+        return self.outputs.shape[1]
+
     @classmethod
     def load(Cls, target: PathLike, device: str = "cpu"):
         data = torch.load(target, map_location=device)
@@ -52,6 +55,10 @@ class NodeDataset(Dataset):
     def from_generation(Cls, size: int, map_folder: str, tqdm_disable=True):
         inputs, outputs, sim_seeds, result_scores = generate_batch(size, map_folder, tqdm_disable)
         return Cls(inputs, outputs, sim_seeds, result_scores)
+
+class BenchNodeDataset(NodeDataset):
+    def __getitem__(self, idx):
+        return self.inputs[idx], self.outputs[idx], self.result_scores[idx]
 
 def entry_from_node(node: Node, tqdm_disable=True):
     tensor = torch.zeros(MAX_ROADS * 2)

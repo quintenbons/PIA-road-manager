@@ -1,4 +1,5 @@
 from os import PathLike
+import os
 import torch
 from torch.utils.data import DataLoader
 from ai.dataset import NodeDataset
@@ -33,7 +34,16 @@ def training_loop(model: CrossRoadModel, dataloader: DataLoader, num_epochs: int
 
 def train(dataset_target: PathLike, model_target: PathLike, num_epochs):
     device = "cuda" if torch.cuda.is_available() else "cpu"
+    print("Used device:", device)
     dataset = NodeDataset.load(dataset_target, device)
+
+    # Create model if it does not exist
+    if not os.path.exists(model_target):
+        output_shape = dataset.get_output_shape()
+        print(f"====== Generating model of output shape {output_shape}:")
+        model = CrossRoadModel(output_shape)
+        model.save(model_target)
+
     model = CrossRoadModel.load(model_target, device)
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=4, pin_memory=True)
     training_loop(model, dataloader, num_epochs)
