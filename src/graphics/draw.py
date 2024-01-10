@@ -1,4 +1,5 @@
 import pygame
+from engine.traffic.traffic_light import TrafficLight
 
 from graphics.assets import scale_car_asset
 
@@ -88,13 +89,13 @@ def draw_movable(movable: Movable, screen, color: int, engine_x_min, engine_x_ma
              engine_y_min, engine_y_max, screen_width, screen_height, scale_factor)
 
 
-def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
+def draw_traffic_light(screen, traffic_light: TrafficLight, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
     padding_x = screen_width * 0.1
     padding_y = screen_height * 0.1
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
-    start_x, start_y = road.get_pos_start()
+    start_x, start_y = traffic_light.pos
 
     normalized_x = (start_x - engine_x_min) / (engine_x_max - engine_x_min)
     normalized_y = (start_y - engine_y_min) / (engine_y_max - engine_y_min)
@@ -109,7 +110,7 @@ def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_
     pygame.draw.rect(screen, (80, 80, 80), (traffic_light_x,
                      traffic_light_y, traffic_light_width, traffic_light_height))
 
-    is_green = not road.get_block_traffic()
+    is_green = traffic_light.flag
 
     red_light_color = (255, 0, 0) if not is_green else (50, 0, 0)
     green_light_color = (0, 255, 0) if is_green else (0, 50, 0)
