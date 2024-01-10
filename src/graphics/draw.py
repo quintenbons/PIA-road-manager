@@ -2,7 +2,7 @@ import pygame
 
 from graphics.assets import scale_car_asset
 
-from .constants import ROAD_COLOR, NODE_COLOR, SCREEN_HEIGHT, SCREEN_WIDTH
+from .constants import ROAD_COLOR, NODE_COLOR, SCREEN_HEIGHT, SCREEN_WIDTH, ROAD_WIDTH
 from engine.road import Road
 from engine.node import Node
 from engine.movable.movable import Movable
