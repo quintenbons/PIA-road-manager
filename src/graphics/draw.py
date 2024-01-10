@@ -8,6 +8,11 @@ from engine.node import Node
 from engine.movable.movable import Movable
 from engine.constants import TIME, ROAD_OFFSET, NODE_RADIUS
 
+from math import cos, asin
+H_FACTOR = (ROAD_OFFSET + ROAD_WIDTH/2)/NODE_RADIUS
+L_FACTOR = cos(asin(H_FACTOR))
+RADIUS_FACTOR = L_FACTOR
+N_RADIUS = NODE_RADIUS / RADIUS_FACTOR
 
 def draw_car(movable: Movable, screen: pygame.Surface, car_asset: pygame.Surface, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
     padding_x = screen_width * 0.1
