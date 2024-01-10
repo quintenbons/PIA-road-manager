@@ -34,7 +34,7 @@ def training_loop(model: CrossRoadModel, dataloader: DataLoader, num_epochs: int
 
 def train(dataset_target: PathLike, model_target: PathLike, num_epochs):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    print(torch.cuda.get_device_name(0))
+    print("Used device:", device)
     torch.cuda.set_device(0)
     dataset = NodeDataset.load(dataset_target, device)
 
