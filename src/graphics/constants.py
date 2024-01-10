@@ -2,9 +2,6 @@ SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 800
 MAX_SCALE_VALUE = 5
 
-# ROAD_WIDTH = 2
-# NODE_RADIUS = 11
-
 # Colors
 BACKGROUND_COLOR = (0, 0, 0)    # Black
 ROAD_COLOR = (150, 150, 150)    # Light gray

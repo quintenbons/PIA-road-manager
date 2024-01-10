@@ -57,7 +57,6 @@ class PygameDisplay:
             for y in range(0, SCREEN_HEIGHT, texture.get_height()):
                 screen.blit(texture, (x, y))
 
-
     def draw(self):
         grass_texture = pygame.image.load('src/assets/grass.jpg')
         self.draw_background_texture(self.screen, grass_texture)
@@ -65,20 +64,20 @@ class PygameDisplay:
             self.screen.blit(self.grid_surface, (0, 0))
         for road in self.simulation.roads:
             draw_road(self.screen, road, self.engine_x_min, self.engine_x_max,
-                    self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+                      self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
 
         for node in self.simulation.nodes:
             draw_node(self.screen, node, self.engine_x_min, self.engine_x_max,
-                    self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
-            
+                      self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+
         for road in self.simulation.roads:
-            draw_speed_sign(self.screen, road, self.engine_x_min, self.engine_x_max, 
-                        self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+            draw_speed_sign(self.screen, road, self.engine_x_min, self.engine_x_max,
+                            self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
 
         for node in self.simulation.nodes:
             for road in node.cnode.get_road_in():
                 draw_traffic_light(self.screen, road, self.engine_x_min, self.engine_x_max,
-                                self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+                                   self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
 
         for spawner in self.simulation.spawners:
             for movable in spawner.movables:
@@ -91,8 +90,7 @@ class PygameDisplay:
                     car_asset = load_resource(GREEN_CAR)
 
                 draw_movable(movable, self.screen, car_asset, self.engine_x_min, self.engine_x_max,
-                            self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
-
+                             self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
 
         draw_hud(self)
 

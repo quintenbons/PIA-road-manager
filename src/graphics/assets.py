@@ -19,7 +19,6 @@ def scale_car_asset(car_asset, node_radius):
 
 def load_resource(path: PathLike) -> pygame.Surface:
     img = pygame.image.load(path)
-    # return scale_to_road_width(img)
     return img
 
 

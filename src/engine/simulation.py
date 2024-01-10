@@ -62,8 +62,6 @@ class Simulation:
     def run_tick(self):
         for r in self.roads:
             r.croad.update()
-            print(r.get_ai_wait_duration())
-            print(r.get_ai_wait_duration_cumulative())
         for n in self.nodes:
             n.cnode.update(n.strategy, self.current_tick)
         self.current_tick += 1
