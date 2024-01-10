@@ -22,8 +22,6 @@ def main():
     dataset = BenchNodeDataset.load(args.dataset_path)
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True)
 
-    print("+++++++++++++++++++ This is not totally working ++++++++++++++++++++++")
-
     hit = 0
     miss = 0
     pos1 = 0
@@ -58,7 +56,6 @@ def main():
                 pos2 += output_index
 
                 # Score check
-                score = score[score>0]
                 top_prediction_index = sorted_output[0]
                 top_prediction_score = score[top_prediction_index]
 
@@ -74,17 +71,14 @@ def main():
                 total_relative_error += relative_error
                 total_worst_relative_error += worst_relative_error
 
-                # print("output:", output)
-                # print("target:", target)
-                # print()
-                # print(sorted_output)
-                # print(sorted_target)
-                # print()
-                # print(best_index)
-                # print(sorted_output[best_index])
-                # print()
-                # print(output_index)
-                # print(sorted_target[output_index])
+                # Output a bench_data.csv
+                # print("strategy_id,strategy_name,mutator_id,loss_score,target_score,output_score")
+                # strategy_manager = StrategyManager()
+                # for idx, (typ, mutation) in enumerate(strategy_manager.enumerate_strategy_schemes(4)):
+                #     tscore = score[idx].item()
+                #     ttarget = target[idx].item()
+                #     toutput = output[idx].item()
+                #     print(f"{typ},{STRAT_NAMES[typ]},{mutation},{tscore},{ttarget},{toutput}")
                 # return
 
         avg_score_difference = total_score_difference / (hit + miss)
