@@ -1,26 +1,41 @@
 #!/usr/bin/env python3
+import argparse
 import shutil
 import pygame
 import os
 import sys
 sys.path.append(os.path.dirname(__file__)+"/..")
 from graphics.constants import *
-from graphics.draw import draw_scale
+from graphics.draw import draw_grid, draw_scale
+
 BUILD_DIR = os.path.join(os.path.dirname(__file__), 'build/GUI/')
 
-pygame.init()
+parser = argparse.ArgumentParser(description="Créateur de Carte avec option d'arrière-plan PNG.")
+parser.add_argument("--png", type=str, help="Chemin vers une image PNG à utiliser comme arrière-plan.", default=None)
+parser.add_argument("--grid", action='store_true', help="Afficher une grille sur l'écran.")
+args = parser.parse_args()
 
+background_image = None
+if args.png:
+    try:
+        background_image = pygame.image.load(args.png)
+        background_image = pygame.transform.scale(background_image, (SCREEN_WIDTH, SCREEN_HEIGHT))
+    except Exception as e:
+        print(f"Erreur lors du chargement de l'image de fond : {e}")
+
+
+pygame.init()
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Créateur de Carte")
 
 LENGTH_SCALE = 100  # Echelle affichée sur l'écran de {LENGTH_SCALE}px
-METERS_AMOUNT = 100  # Nombre de mètres représentés par {LENGTH_SCALE}px
+METERS_AMOUNT = 50  # Nombre de mètres représentés par {LENGTH_SCALE}px
 scale_ratio = LENGTH_SCALE / METERS_AMOUNT  # Nombre de pixels pour un mètre
 
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
-RED = (255, 0, 0)
+BLUE = (0, 0, 255)
 
 nodes = []
 links = []
@@ -83,6 +98,12 @@ while running:
                 nodes.append(pygame.Rect(pos[0], pos[1], 10, 10))
         
     screen.fill(WHITE)
+    if background_image:
+        screen.blit(background_image, (0, 0))
+    if args.grid:
+        draw_grid(screen, LENGTH_SCALE, screen.get_size())
+
+
     draw_scale(screen, LENGTH_SCALE, METERS_AMOUNT)
     
     for link in links:
@@ -90,7 +111,7 @@ while running:
             pygame.draw.line(screen, BLACK, link[0].center, link[1].center, 2)
 
     for node in nodes:
-        pygame.draw.rect(screen, RED, node)
+        pygame.draw.circle(screen, BLUE, node.center, 5)
 
     pygame.display.flip()
 
