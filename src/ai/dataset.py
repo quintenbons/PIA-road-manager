@@ -169,9 +169,9 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
 
             # Run second range simulationS
             raw_scores, _ = simul_to_scores(central_node, second_seed, map_folder, nb_controllers)
-            raw_scores = torch.tensor(raw_scores)
             soft_scores = get_soft_scores(raw_scores)
 
+            raw_scores = torch.tensor(raw_scores)
             batch.append(entry_from_node(simulation.nodes[central_node]))
             expected.append(soft_scores)
             sim_seeds.append(sim_seed)
