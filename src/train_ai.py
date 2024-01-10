@@ -18,12 +18,7 @@ def main():
         print("No dataset found please generate one with gen_dataset.py")
         exit(1)
 
-    # Create model
-    if not os.path.exists(args.model_path):
-        print("====== Generating model:")
-        model = CrossRoadModel()
-        model.save(args.model_path)
-
+    # Model is generated if it does not exist
     train(args.dataset_path, args.model_path, args.epoch)
 
 if __name__ == "__main__":

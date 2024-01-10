@@ -43,6 +43,9 @@ class NodeDataset(Dataset):
             self.merge(other)
         return self
 
+    def get_output_shape(self) -> int:
+        return self.outputs.shape[1]
+
     @classmethod
     def load(Cls, target: PathLike, device: str = "cpu"):
         data = torch.load(target, map_location=device)
