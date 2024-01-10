@@ -37,6 +37,7 @@ def train(dataset_target: PathLike, model_target: PathLike, num_epochs):
     print("Used device:", device)
     if torch.cuda.is_available():
         torch.cuda.set_device(0)
+        print(torch.cuda.get_device_name(0))
     dataset = NodeDataset.load(dataset_target, device)
 
     # Create model if it does not exist
