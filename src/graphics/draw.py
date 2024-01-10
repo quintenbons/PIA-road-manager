@@ -1,3 +1,4 @@
+import math
 import pygame
 from engine.traffic.traffic_light import TrafficLight
 
@@ -21,7 +22,7 @@ def draw_car(movable: Movable, screen: pygame.Surface, car_asset: pygame.Surface
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
-    node_radius = NODE_RADIUS * scale_factor
+    node_radius = 5 * ROAD_OFFSET * scale_factor
     scaled_car_asset = scale_car_asset(car_asset, node_radius)
 
     x, y = movable.cmovable.to_coord_xy()
@@ -125,7 +126,7 @@ def draw_traffic_light(screen, traffic_light: TrafficLight, engine_x_min, engine
 
 
 def draw_speed_sign(screen, road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
-    speed_limit = int(road.get_speed_limit() * 3.6)
+    speed_limit = math.ceil(road.get_speed_limit() * 3.6)
     padding_x = screen_width * 0.1
     padding_y = screen_height * 0.1
 
@@ -197,6 +198,17 @@ def create_grid_surface(screen):
 
     return grid_surface
 
+def draw_grid(screen, grid_size, window_size):
+    for x in range(0, window_size[0], grid_size):
+        pygame.draw.line(screen, (200, 200, 200), (x, 0), (x, window_size[1]))
+    for y in range(0, window_size[1], grid_size):
+        pygame.draw.line(screen, (200, 200, 200), (0, y), (window_size[0], y))
+    for x in range(0, window_size[0], grid_size):
+        for y in range(0, window_size[1], grid_size):
+            coord_text = f"{x},{y}"
+            font = pygame.font.Font(None, 14)
+            text = font.render(coord_text, True, (200, 200, 200))
+            screen.blit(text, (x + 5, y + 5))
 
 def draw_hud(display):
     elapsed_time_in_seconds = display.simulation.current_tick * TIME

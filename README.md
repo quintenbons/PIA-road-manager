@@ -41,10 +41,14 @@ S'assurer d'être au root du repo.
   La map a utilisé sera stockée dans `src/maps/build/GUI/<nom_choisi>/map.csv` et les chemins dans `src/maps/build/GUI/<nom_choisi>/paths.csv`.
   Attention à bien faire un graph totalement connecté.
 
+  Options:
+  - `--png`: Chemin vers une image PNG à utiliser comme arrière-plan.
+  - `--grid`: Afficher la grille sur l'arrière-plan.
+
 #### Lancer une simulation
 
 ```bash
-  python3 src/main.py --nb_movables <int> --map_file src/maps/build/GUI/<nom>/map.csv 
+  python3 src/main.py --map_file src/maps/build/GUI/<nom>/map.csv 
 ```
 
 - `--nb_movables`: Nombre de véhicules à placer
