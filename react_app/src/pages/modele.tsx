@@ -62,10 +62,17 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
         ]}
       />
       <Paragraph text="Cette approche structurée permettra à notre modèle de s'adapter et d'apprendre efficacement à partir d'un large éventail de scénarios de trafic." />
+      
       <Title title="Génération des données d'entrée" size="md" />
+      <Paragraph text="L'IA est entrainnée sur des cartes crées à la main. Nous l'avons entrainé sur les intersections à 3, 4 et 5 routes entrantes (et sortante)." />      
+      
       <Image src={DATASET_GENERATION} width={"60%"} alignSelf={"center"} />
 
-      <Paragraph text="La génération de jeux de données pour entraîner notre IA est un processus clé, impliquant la création de configurations spécifiques pour simuler divers scénarios de trafic urbain. Il est important de rappeler que notre modèle n'est conscient que d'une seule intersection, ce qui nous permet de simplifier drastiquement la génération des datasets, en limiant la simulation à un seul noeud." />
+      <Paragraph text="La génération de jeux de données pour entraîner notre IA est un processus clé, impliquant la création de configurations spécifiques pour simuler divers scénarios de trafic urbain. Il est important de rappeler que notre modèle n'est conscient que d'une seule intersection, ce qui nous permet de simplifier drastiquement la génération des datasets, en limitant la simulation à un seul noeud." />
+      <Paragraph text="Après quelques expérimentations, nous avons réalisé que l'IA était sensible à l'orientation des routes. Par exemple, pour les intersections à trois branches, nous avons du entrainer l'IA sur ces différentes cartes:" />
+
+
+
       <Paragraph text="Pour générer une entrée de dataset (I, E), la simulation est d'abord exécutée pendant 15 minutes avec une stratégie sélectionnée uniformément, sur une configuration aléatoire. À l'issue de cette période, le paramètre I de l'entrée de dataset peut être calculé à partir des informations mesurées pendant l'exécution." />
       <Paragraph text="Il faut ensuite générer le paramètre E, qui correspond au meilleur choix possible de stratégie pour les 15 minutes suivantes. Pour cela, nous pouvons simplement exécuter les stratégies une par une, et récupérer celle qui obtient le meilleur score (le moins de congestion). Attention ici à bien utiliser la même configuration de trafic que pour les 15 minutes initiales pour ne pas enfreindre notre hypothèse de consistence du trafic." />
 

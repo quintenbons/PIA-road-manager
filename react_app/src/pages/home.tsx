@@ -48,7 +48,7 @@ export const Home = (props: { setPath: (path: string) => void }) => {
       <ParagraphList
         paragraphs={[
           "L'entrée correspond à l'état d'une intersection, ainsi que des évènements issus de la simulation sur les 15 minutes précédentes. Il est important d'inclure dans cette entrée la stratégie précédemment choisie, ainsi que la congestion (terme qui n'est pas encore défini mathématiquement dans notre modèle).",
-          "La sortie correspond à un choix de stratégie (one hot, choisi avec un softmax) à prendre pour les 15 prochaines minutes pour une intersection donnée. Cette stratégie est un algorithme conçu par nos soins. Il est important ici d'avoir des stratégies cohérentes avec le monde réel, mais aussi adaptables au nombre d'entrées/sorties de l'intersection sur laquelle on l'utilise.",
+          "La sortie correspond à un softmax des scores prévus pour les stratégies disponibles. Les stratégie sont des algorithmes de gestion de la circulation conçus par nos soins. Elles sont décrite dans la suite du rapport. Il est important ici d'avoir des stratégies cohérentes avec le monde réel, mais aussi adaptables au nombre d'entrées/sorties de l'intersection sur laquelle on l'utilise.",
         ]}
       />
       <Paragraph text="Cela signifie que l'IA aura un impact uniquement toutes les 15 minutes, et qu'elle n'a d'informations que sur une seule intersection. Cela nous semblait raisonable sous quelques hypothèses:" />
