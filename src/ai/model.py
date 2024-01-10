@@ -41,5 +41,6 @@ class CrossRoadModel(nn.Module):
         dimensions, state_dict = torch.load(target, map_location=device)
         input_size, output_size = dimensions
         model = Cls(output_size)
+        model = model.to(device) 
         model.load_state_dict(state_dict)
         return model
