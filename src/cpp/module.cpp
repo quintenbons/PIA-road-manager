@@ -102,6 +102,7 @@ PYBIND11_MODULE(engine_ia, m) {
         .def("get_ai_flow_count_1", &Road::getAiFlowCount1)
         .def("get_ai_wait_duration", &Road::getAiWaitDuration)
         .def("get_ai_wait_duration_cumulative", &Road::getAiWaitDurationCumulative)
+        .def("reset_ai_metrics", &Road::resetAiMetrics)
         ;
 
     py::class_<Node>(m, "Node")
