@@ -61,8 +61,6 @@ class Simulation:
 
     def run_tick(self):
         for r in self.roads:
-            if r.get_ai_wait_duration() > 10:
-                r.reset_ai_metrics()
             r.croad.update()
         for n in self.nodes:
             n.cnode.update(n.strategy, self.current_tick)
