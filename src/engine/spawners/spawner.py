@@ -63,23 +63,23 @@ class Spawner:
 
     def spawn(self, current_tick: int):
         source = self.sources[random.randint(0, len(self.sources) - 1)]
-        new_movable = Movable(random.random()*4 + 1, random.random()*2.5 + 0.5, random.random() * source.croad.get_road_len(), 2, spawn_tick=current_tick)
+        new_movable = Movable(random.random()*4 + 1, random.random()*2.5 + 0.5, random.random() * source.get_road_len(), 2, spawn_tick=current_tick)
         # Add the movable to the road and the road to the movable
         # print(new_movable.cmovable)
-        if source.croad.spawn_movable(new_movable.cmovable):
+        if source.spawn_movable(new_movable):
 
         # Get a random destination
             # new_movable.get_path(self.destinations[random.randint(0, len(self.destinations) - 1)])
             destination = self.destinations[random.randint(0, len(self.destinations) - 1)]
 
             if destination == source:
-                remaining = destination.croad.get_road_len() - new_movable.cmovable.get_pos()
-                pos = new_movable.cmovable.get_pos() + remaining * (random.random() * 0.8)
+                remaining = destination.get_road_len() - new_movable.get_pos()
+                pos = new_movable.get_pos() + remaining * (random.random() * 0.8)
                 # print("unlucky ?")
             else:
-                pos = destination.croad.get_road_len() * (random.random() * 0.5 + 0.25)
+                pos = destination.get_road_len() * (random.random() * 0.5 + 0.25)
 
-            new_movable.cmovable.set_road_goal(destination.croad, pos)
+            new_movable.set_road_goal(destination, pos)
             self.movables.append(new_movable)
 
         

@@ -17,6 +17,7 @@ public:
     Point minus(Point& p);
     Point add(Point& p);
     Point multiply(double lambda);
+    Point normalize();
 
 };
 

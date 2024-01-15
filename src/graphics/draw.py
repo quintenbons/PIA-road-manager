@@ -23,7 +23,7 @@ def draw_car(movable: Movable, screen: pygame.Surface, car_asset: pygame.Surface
     node_radius = NODE_RADIUS * scale_factor
     scaled_car_asset = scale_car_asset(car_asset, node_radius)
 
-    x, y = movable.cmovable.to_coord_xy()
+    x, y = movable.to_coord_xy()
     normalized_x = (x - engine_x_min) / (engine_x_max - engine_x_min)
     normalized_y = (y - engine_y_min) / (engine_y_max - engine_y_min)
     centered_x = normalized_x * scaled_width + padding_x
@@ -43,8 +43,8 @@ def draw_road(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engi
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
-    start_x, start_y = road.croad.get_pos_start()
-    end_x, end_y = road.croad.get_pos_end()
+    start_x, start_y = road.get_pos_start()
+    end_x, end_y = road.get_pos_end()
 
     normalized_start_x = (start_x - engine_x_min) / \
         (engine_x_max - engine_x_min)
@@ -168,7 +168,7 @@ def get_rect(obj):
     if isinstance(obj, Node):
         return pygame.Rect(obj.cnode.get_x() - NODE_RADIUS, obj.cnode.get_y() - NODE_RADIUS, NODE_RADIUS * 2, NODE_RADIUS * 2)
     elif isinstance(obj, Movable):
-        x, y = obj.cmovable.to_coord_xy()
+        x, y = obj.to_coord_xy()
         centered_x = x - NODE_RADIUS
         centered_y = y - NODE_RADIUS
         return pygame.Rect(centered_x, centered_y, NODE_RADIUS * 2, NODE_RADIUS * 2)

@@ -13,7 +13,7 @@ sys.path.append('../maps')
 if TYPE_CHECKING:
     sys.path.append('../engine')
 
-    from engine.road import Road
+    from engine.road import Road, CRoad
     from engine.node import Node
 
 
@@ -28,7 +28,7 @@ class CMovable:
     def get_pos(self) -> float:
         pass
 
-    def set_road_goal(self, destination: Road, pos: float):
+    def set_road_goal(self, destination: CRoad, pos: float):
         pass
 
     def get_id(self) -> int:
@@ -57,10 +57,10 @@ class Movable(Nodable):
         self.cmovable.set_road_goal(destination.croad, pos)
 
     def get_id(self) -> int:
-        self.cmovable.get_id()
+        return self.cmovable.get_id()
 
     def to_coord_xy(self) -> (float, float):
-        self.cmovable.to_coord_xy()
+        return self.cmovable.to_coord_xy()
 
     # def __str__(self):
     #     return f'{{(x,y): {self.to_coord_xy()}, "pos on the road": {self.pos}, "speed": {self.speed}, "latency": {self.latency}, "size": {self.size}, "node": {self.node} "road": {self.road}, "id": {self._id}}}'

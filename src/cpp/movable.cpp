@@ -202,7 +202,11 @@ bool Movable::updateRoad() {
         node_dir = next_road->posStart.minus(road->posEnd);
         node_dir = node_dir.multiply(1 / norm);
         speed /= 2; // TODO modifié cela pour avoir un comportement réaliste
-        current_acceleration = 1;
+        Point road_vec = road->end->position.minus(road->start->position).normalize();
+        double vec_scalaire = road_vec.scalaire(node_dir);
+        // speed = MAX(, speed/3);
+        speed = vec_scalaire < 0 ? 0 : MAX(vec_scalaire, speed / 3);
+        current_acceleration = acceleration/2;
         node_len = norm;
 
         road = next_road;

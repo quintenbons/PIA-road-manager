@@ -43,3 +43,8 @@ Point Point::add(Point& p) {
 Point Point::multiply(double lambda) {
     return Point(x*lambda, y*lambda);
 }
+
+Point Point::normalize() {
+    double len = getLength();
+    return multiply(1/len);
+}
