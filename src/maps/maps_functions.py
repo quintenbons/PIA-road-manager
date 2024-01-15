@@ -114,8 +114,8 @@ def read_map(name: str) -> Tuple[List[Road], List[Node], List[Spawner]]:
         # Create roads
         for n1, n2 in nodes_links:
             #TODO change speedlimit and remove second line
-            road1 = Road(nodes[n1], nodes[n2], 8)
-            roads2 = Road(nodes[n2], nodes[n1], 8)
+            road1 = Road(nodes[n1], nodes[n2], 8.3333)
+            roads2 = Road(nodes[n2], nodes[n1], 8.3333)
             roads.append(road1)
             roads.append(roads2)
             roads_dictionnary[(n1, n2)] = road1
@@ -154,7 +154,7 @@ def set_strategies(nodes: List[Node], strategy_manager: StrategyManager, benchma
         if benchmark:
             node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.PIECE_OF_CAKE, 0))
         else:
-            node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.OPEN_CORRIDOR, 0))
+            node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.PIECE_OF_CAKE, 0))
             # node.set_strategy(strategy_manager.get_strategy(node, StrategyTypes.OPEN, 0))
         
 

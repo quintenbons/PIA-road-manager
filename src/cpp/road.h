@@ -27,6 +27,7 @@ public:
     int getAiFlowCount1();
     double getAiWaitDuration();
     double getAiWaitDurationCumulative();
+    void resetAiMetrics();
     Node* start;
     Node* end;
     Point posStart;

@@ -295,7 +295,7 @@ double Movable::minValue() {
     return pos - size;
 }
 double Movable::getScore(double currentTick) {
-    return (currentTick - spawn_tick) * (currentTick - spawn_tick);
+    return ((currentTick - spawn_tick) * (currentTick - spawn_tick)) / 100;
 }
 
 double Movable::getPos() {

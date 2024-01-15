@@ -74,6 +74,7 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
       
       <Paragraph text="La génération de jeux de données pour entraîner notre IA est un processus clé, impliquant la création de configurations spécifiques pour simuler divers scénarios de trafic urbain. Il est important de rappeler que notre modèle n'est conscient que d'une seule intersection, ce qui nous permet de simplifier drastiquement la génération des datasets, en limitant la simulation à un seul noeud." />
       
+      <Title title="Génération des cartes" size="sm" />
       
       <Paragraph text="L'IA est entraînée sur des cartes créées à la main. Nous l'avons entrainé sur les intersections à 3, 4 et 5 routes entrantes (et sortantes)." />      
       <Paragraph text="Après quelques expérimentations, nous avons réalisé que l'IA était sensible l'ordre des routes d'une intersection. Par exemple, pour les intersections à trois branches en forme de T, nous avons dû entrainer l'IA sur ces différentes cartes:" />

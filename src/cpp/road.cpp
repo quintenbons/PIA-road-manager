@@ -201,3 +201,9 @@ double Road::getAiWaitDuration() {
 double Road::getAiWaitDurationCumulative() {
     return aiWaitDurationCumulative;
 }
+void Road::resetAiMetrics() {
+    aiFlowCount0 = 0;
+    aiFlowCount1 = 0;
+    aiWaitDuration = 0;
+    aiWaitDurationCumulative = 0;
+}

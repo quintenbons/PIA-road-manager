@@ -66,7 +66,7 @@ export const Home = (props: { setPath: (path: string) => void }) => {
       <Paragraph text="Ce schéma présente une intersection avec deux feux de signalisation. Cette intersection se traduit en un graphe à deux états, l'état n°1 représente la route avec la signalisation bleue ouverte et avec la signalisation orange bloquée. L'état n°2 inverse les routes bloquées et ouvertes." />
       <Paragraph text="Parmi les stratégies, nous générons aussi des mutations de celles-ci qui rendent les transitions plus ou moins longues. Cela a pour but de donner à l'IA de la flexibilité et de s'adapter lorsque les routes d'entrée des carrefours ont des débits de véhicules différents." />
       
-      <Title title="Présentation des stratégues primaires" size="sm" />
+      <Title title="Présentation des stratégies primaires" size="sm" />
       <Paragraph text="Ce composant présente les différentes stratégies implémentées. Les voitures sont représentées par les points de couleur, les intersections par les larges points verts. Une route bloquée est une route dont la couleur est noire." />
       
       <MultipleTabs

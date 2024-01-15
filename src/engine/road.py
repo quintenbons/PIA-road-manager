@@ -51,6 +51,9 @@ class CRoad:
     def get_ai_wait_duration_cumulative(self) -> float:
         pass
 
+    def reset_ai_metrics(self):
+        pass
+
 
 class Road:
 
@@ -70,6 +73,9 @@ class Road:
 
     def get_block_traffic(self) -> bool:
         return self.croad.get_block_traffic()
+    
+    def reset_ai_metrics(self):
+        return self.croad.reset_ai_metrics()
 
     def get_pos_start(self) -> (float, float):
         return self.croad.get_pos_start()

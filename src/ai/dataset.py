@@ -1,3 +1,4 @@
+from ai.model_constants import *
 from dataclasses import dataclass
 from os import PathLike
 from typing import Tuple
@@ -43,6 +44,54 @@ class NodeDataset(Dataset):
             self.merge(other)
         return self
 
+    def get_output_shape(self) -> int:
+        return self.outputs.shape[1]
+
+    def describe_index(self, index: int):
+        print(f"Index: {index}")
+
+        inp = self.inputs[index]
+        out = self.outputs[index]
+        scores = self.result_scores[index]
+
+        nb_strategies = []
+        possible_nb_controllers = [3, 4, 5, 6]
+        for i in possible_nb_controllers:
+            scheme_generator = StrategyManager().enumerate_strategy_schemes(i)
+            nb_strategies.append(len(list(scheme_generator)))
+
+        idx = nb_strategies.index(out.shape[0])
+
+        if idx == -1:
+            print(f"Invalid output shape: {out.shape[0]}")
+            print(f"Possible output shapes: {nb_strategies} for nb controllers = {possible_nb_controllers}")
+            return
+
+        nb_controllers = possible_nb_controllers[idx]
+
+        print(f"===== Input: {nb_controllers} controllers (roads in)")
+        print("Total:")
+        print(f"  flow in:            {int(sum(inp[FLOW_IN_OFFSET::METRICS_PER_ROAD])):10.2f}")
+        print(f"  flow out:           {int(sum(inp[FLOW_OUT_OFFSET::METRICS_PER_ROAD])):10.2f}")
+        print(f"  wait duration:      {int(sum(inp[WAIT_DURATION_OFFSET::METRICS_PER_ROAD])):10.2f}")
+        print(f"  wait duration cum.: {int(sum(inp[WAIT_DURATION_CUMULATIVE::METRICS_PER_ROAD])):10.2f}")
+        print()
+
+        for i in range(nb_controllers):
+            print(f"Road {i}:")
+            road_index = i * METRICS_PER_ROAD
+            print(f"  Flow in:            {inp[road_index + FLOW_IN_OFFSET]:10.2f}")
+            print(f"  Flow out:           {inp[road_index + FLOW_OUT_OFFSET]:10.2f}")
+            print(f"  Wait duration:      {inp[road_index + WAIT_DURATION_OFFSET]:10.2f}")
+            print(f"  Wait duration cum.: {inp[road_index + WAIT_DURATION_CUMULATIVE]:10.2f}")
+            print()
+
+        print("===== Output:")
+        scheme_generator = StrategyManager().enumerate_strategy_schemes(i)
+        print(f"{'typ':3} {'strat name':20} {'mut':3} {'sim score':>15}")
+        for (typ, mutation), sim_score in zip(scheme_generator, scores):
+            print(f"{typ:3} {STRAT_NAMES[typ]:20} {mutation:3} {sim_score:15.5f}")
+
     @classmethod
     def load(Cls, target: PathLike, device: str = "cpu"):
         data = torch.load(target, map_location=device)
@@ -53,19 +102,23 @@ class NodeDataset(Dataset):
         inputs, outputs, sim_seeds, result_scores = generate_batch(size, map_folder, tqdm_disable)
         return Cls(inputs, outputs, sim_seeds, result_scores)
 
+class BenchNodeDataset(NodeDataset):
+    def __getitem__(self, idx):
+        return self.inputs[idx], self.outputs[idx], self.result_scores[idx]
+
 def entry_from_node(node: Node, tqdm_disable=True):
-    tensor = torch.zeros(MAX_ROADS * 2)
+    tensor = torch.zeros(INPUT_DIM)
     for num in tqdm(range(MAX_ROADS), disable=tqdm_disable):
-        if num >= 5:
-            break
-        # print(node.cnode)
         node_road_in = node.get_road_in()
         node_road_out = node.get_road_out()
-        # print(node_road_in, node_road_out)
+
+        road_index = num * METRICS_PER_ROAD
         if num < len(node_road_in):
-            tensor[num * 2] = node_road_in[num].get_ai_flow_count_1()
+            tensor[road_index + FLOW_IN_OFFSET] = node_road_in[num].get_ai_flow_count_1()
+            tensor[road_index + WAIT_DURATION_OFFSET] = node_road_in[num].get_ai_wait_duration()
+            tensor[road_index + WAIT_DURATION_CUMULATIVE] = node_road_in[num].get_ai_wait_duration_cumulative()
         if num < len(node_road_out):
-            tensor[num * 2 + 1] = node_road_out[num].get_ai_flow_count_0()
+            tensor[road_index + FLOW_OUT_OFFSET] = node_road_out[num].get_ai_flow_count_0()
     return tensor
 
 def score_tester(map_folder: str, nb_controllers: int):
@@ -163,10 +216,7 @@ def generate_batch(size: int, map_folder: str, tqdm_disable=True) -> Tuple[torch
             raw_scores, _ = simul_to_scores(central_node, second_seed, map_folder, nb_controllers)
             soft_scores = get_soft_scores(raw_scores)
 
-            # pad with 0s until MAX_STRATEGIES
-            raw_scores = torch.cat([torch.tensor(raw_scores), torch.zeros(MAX_STRATEGIES - len(raw_scores))])
-            soft_scores = torch.cat([soft_scores, torch.zeros(MAX_STRATEGIES - len(soft_scores))])
-
+            raw_scores = torch.tensor(raw_scores)
             batch.append(entry_from_node(simulation.nodes[central_node]))
             expected.append(soft_scores)
             sim_seeds.append(sim_seed)

@@ -4,6 +4,7 @@ Main interface for the display.
 import pygame
 from engine.constants import TIME
 from engine.simulation import Simulation
+from engine.traffic.traffic_light import TrafficLight
 from graphics.assets import AssetManager, load_resource
 from graphics.utils import get_clicked_movable, get_clicked_node
 
@@ -75,9 +76,10 @@ class PygameDisplay:
                             self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
 
         for node in self.simulation.nodes:
-            for road in node.cnode.get_road_in():
-                draw_traffic_light(self.screen, road, self.engine_x_min, self.engine_x_max,
-                                   self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
+            for controller in node.controllers:
+                if isinstance(controller, TrafficLight):
+                    draw_traffic_light(self.screen, controller, self.engine_x_min, self.engine_x_max,
+                                       self.engine_y_min, self.engine_y_max, SCREEN_WIDTH, SCREEN_HEIGHT, self.scale_factor)
 
         for spawner in self.simulation.spawners:
             for movable in spawner.movables:

@@ -1,4 +1,6 @@
+import math
 import pygame
+from engine.traffic.traffic_light import TrafficLight
 
 from graphics.assets import scale_car_asset
 
@@ -20,7 +22,7 @@ def draw_car(movable: Movable, screen: pygame.Surface, car_asset: pygame.Surface
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
-    node_radius = NODE_RADIUS * scale_factor
+    node_radius = 5 * ROAD_OFFSET * scale_factor
     scaled_car_asset = scale_car_asset(car_asset, node_radius)
 
     x, y = movable.to_coord_xy()
@@ -88,13 +90,13 @@ def draw_movable(movable: Movable, screen, color: int, engine_x_min, engine_x_ma
              engine_y_min, engine_y_max, screen_width, screen_height, scale_factor)
 
 
-def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
+def draw_traffic_light(screen, traffic_light: TrafficLight, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
     padding_x = screen_width * 0.1
     padding_y = screen_height * 0.1
     scaled_width = screen_width - 2 * padding_x
     scaled_height = screen_height - 2 * padding_y
 
-    start_x, start_y = road.get_pos_start()
+    start_x, start_y = traffic_light.pos
 
     normalized_x = (start_x - engine_x_min) / (engine_x_max - engine_x_min)
     normalized_y = (start_y - engine_y_min) / (engine_y_max - engine_y_min)
@@ -109,7 +111,7 @@ def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_
     pygame.draw.rect(screen, (80, 80, 80), (traffic_light_x,
                      traffic_light_y, traffic_light_width, traffic_light_height))
 
-    is_green = not road.get_block_traffic()
+    is_green = traffic_light.flag
 
     red_light_color = (255, 0, 0) if not is_green else (50, 0, 0)
     green_light_color = (0, 255, 0) if is_green else (0, 50, 0)
@@ -124,7 +126,8 @@ def draw_traffic_light(screen, road: Road, engine_x_min, engine_x_max, engine_y_
 
 
 def draw_speed_sign(screen, road, engine_x_min, engine_x_max, engine_y_min, engine_y_max, screen_width, screen_height, scale_factor):
-    speed_limit = int(road.get_speed_limit() * 3.6)
+    return 
+    speed_limit = math.ceil(road.get_speed_limit() * 3.6)
     padding_x = screen_width * 0.1
     padding_y = screen_height * 0.1
 
@@ -196,6 +199,17 @@ def create_grid_surface(screen):
 
     return grid_surface
 
+def draw_grid(screen, grid_size, window_size):
+    for x in range(0, window_size[0], grid_size):
+        pygame.draw.line(screen, (200, 200, 200), (x, 0), (x, window_size[1]))
+    for y in range(0, window_size[1], grid_size):
+        pygame.draw.line(screen, (200, 200, 200), (0, y), (window_size[0], y))
+    for x in range(0, window_size[0], grid_size):
+        for y in range(0, window_size[1], grid_size):
+            coord_text = f"{x},{y}"
+            font = pygame.font.Font(None, 14)
+            text = font.render(coord_text, True, (200, 200, 200))
+            screen.blit(text, (x + 5, y + 5))
 
 def draw_hud(display):
     elapsed_time_in_seconds = display.simulation.current_tick * TIME
