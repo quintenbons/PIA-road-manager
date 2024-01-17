@@ -102,7 +102,7 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
       <Paragraph text="Mais ce n'est pas assez, car pour l'IA, ces deux configurations sont différentes:" />
       <Image src={ORDER_DIFF} width={"60%"} alignSelf={"center"} />
       <Paragraph text="Ici, la numérotation des sommets se fait dans un ordre arbitraire qui dépend de la création de la carte. Pour la même forme on peut avoir une numérotation différente et donc des interprétations de l'IA différente. Pour pallier cette problématique, nous effectuons un réordonnancement dynamique de la numérotation des sommets avant chaque simulation par rapport à l'axe (1,0) ." />
-      <Image src={ANGLE_ORDERING} width={"60%"} alignSelf={"center"} />
+      <Image src={ANGLE_ORDERING} height={"400px"} alignSelf={"center"} />
       
       <Paragraph text="Ainsi et grâce à ce réordonnancement, il ne reste que trois ordres de sommets possibles et on élimine une des quatre cartes d'entrainement." />
 

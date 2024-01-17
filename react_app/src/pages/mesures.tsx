@@ -118,6 +118,12 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
             commitHash: "d9a51775c2bd61c1a0e4e87a2ba83d9de7b6c463",
             granularity: "0.5",
           },
+          {
+            date: "17 Janvier, 2024",
+            time: "0.9306144396",
+            commitHash: "899ea191be1ad6b6caecaa37eb761d7c3412e337",
+            granularity: "0.5",
+          },
         ]}
         caption={"Exécution de la simulation sur le benchmark #1"}
       />

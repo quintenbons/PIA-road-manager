@@ -93,6 +93,7 @@ export const Simulation = (props: { setPath: (path: string) => void }) => {
         ]}
       />
       <Paragraph text="Les générateurs de trafic produisent des voitures avec des itinéraires précalculés. Cet itinéraire est choisi pour être le plus court grâce à l'algorithme de Dijkstra. Les chemins possibles sont précalculés en utilisant une technologie plus rapide que Python (le C++)." />
+      <Paragraph text="Les voitures apparaissent et disparaissent sur des routes, un générateur de trafic se définit par une liste de routes d'apparition et une liste de routes de disparition. Ainsi que d'une fonction de génération qui prend en entrée un temps T et qui fait apparaître une voiture sur les routes d'apparition si la valeur de retour de cette fonction est supérieure à un." />
       <Paragraph text="Les routes font circuler les voitures. Les intersections contiennent la logique de signalisation et contrôlent le passage des voitures." />
       <Paragraph text="Les voitures adoptent un comportement dynamique inspiré de la conduite réelle, elles ralentissent et accélèrent pour respecter les limitations de vitesse. Dans les intersections, elles ralentissent et évitent à tout prix les collisions avec d'autres véhicules." />
 

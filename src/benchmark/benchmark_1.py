@@ -15,6 +15,5 @@ class Benchmark1():
         simulation = Simulation(map_file=map_file, paths_file=paths_file, nb_movables=0)
 
         t = time.time()
-        print("Launching simulation #1")
         simulation.run(sim_duration=sim_duration)
         print("Time to run simulation #1: ", time.time() - t)
