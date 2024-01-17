@@ -21,7 +21,7 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
       }}
     >
       <BreadcrumbLnk
-      setPath={props.setPath}
+        setPath={props.setPath}
         sections={[
           {
             name: "Home",
@@ -111,21 +111,37 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
       <Title title="Performances du moteur" size="md" />
       <Title title="Benchmark #1" size="sm" />
       <ResultTab
+        githubLink="https://github.com/quintenbons/PIA-road-manager"
         data={[
           {
             date: "14 Décembre, 2023",
             time: "150.15505409240723",
             commitHash: "d9a51775c2bd61c1a0e4e87a2ba83d9de7b6c463",
-            granularity: "0.5",
+            comment: "Premier benchmark",
+          },
+          {
+            date: "24 Décembre, 2023",
+            time: "125.799693107604",
+            commitHash: "bed5853c81e771398a63684a1444fdf9cda304e9",
+            comment: "Optimisation en python",
+          },
+          {
+            date: "6 Janvier, 2024",
+            time: "0.8052122275",
+            commitHash: "a054416a0b8f60788eb60fb360f62639f21085d0",
+            comment: "Migration d'une partie du moteur en C++",
           },
           {
             date: "17 Janvier, 2024",
             time: "0.9306144396",
             commitHash: "9dd718a0f822842e5461f90428d5b6614e2a80d3",
-            granularity: "0.5",
+            comment:
+              "Correction de bugs et modification du comportement des véhicules",
           },
         ]}
-        caption={"Exécution de la simulation sur le benchmark #1"}
+        caption={
+          "Exécution de la simulation sur le benchmark #1 (Granularité 0.5s)"
+        }
       />
       <Image src={DATASET_1} width={"60%"} alignSelf={"center"} />
       <Paragraph text="Le benchmark #1 est une simulation à 7 neuds avec un débit de voiture supérieur à la capacité du réseau routier." />
@@ -248,9 +264,7 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
         }}
       />
 
-      <Title title="Pistes d'amélioration" size="md" />
-      <Paragraph text="Nous n'avons pas réalisé de refactoring ou d'optimisation de la codebase. Nous pensons que cela pourrait largement améliorer les performances de l'engine et ainsi augmenter la vitesse de génération des datasets." />
-      <Paragraph text="Nous aimerions aussi ajouter de nouveaux benchmarks. Nous sommes satisfait pour ce POC et nous pourrons toujours revenir aux commits." />
+      {/* <Title title="Pistes d'amélioration" size="md" /> */}
     </Container>
   );
 };

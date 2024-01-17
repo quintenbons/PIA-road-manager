@@ -59,7 +59,7 @@ export const Home = (props: { setPath: (path: string) => void }) => {
         ]}
       />
       <Title title="Les stratégies" size="md" />
-      <Paragraph text="Les stratégies sont des algorithmes qui permettent de gérer les feux de signalisation d'une intersection. Nous utilisons le paradigme de stratégie afin de restreindre les choix de l'IA sur un sous-ensemble de solutions possibles dont on sait qu'une au moins sera proche de la meilleure solution. Cette approche euristique permet des résultats cohérents avec un coût en temps et en énergie raisonable."/>
+      <Paragraph text="Les stratégies sont des algorithmes qui permettent de gérer les feux de signalisation d'une intersection. Nous utilisons le paradigme de stratégie afin de restreindre les choix de l'IA sur un sous-ensemble de solutions possibles dont on sait qu'une au moins sera proche de la meilleure solution. Cette approche heuristique permet des résultats cohérents avec un coût en temps et en énergie raisonable."/>
       <Paragraph text="Jusqu'à présent nous avons dégagé un total de quatre stratégies primaires. Les règles de circulation classiques telles que les priorités à droite ou les distances de sécurité s'appliquent en priorité sur les stratégies." />
       <Paragraph text="Chaque stratégie peut être représentée par un graphe d'état cyclique. Les arrêtes reliants chaque état correspondent au temps nécessaires pour passer à l'état suivant." />
       <Image src={STRATEGY_GRAPH_EXAMPLE} width={"60%"} alignSelf={"center"} />

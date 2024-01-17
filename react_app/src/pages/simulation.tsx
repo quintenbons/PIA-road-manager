@@ -100,8 +100,7 @@ export const Simulation = (props: { setPath: (path: string) => void }) => {
       <Title title="Simulation graphique" size="md" />
       <Paragraph text="Au delas du moteur, nous disposons d'un outil de simulation graphique. Cet outil permet de visualiser la simulation en temps réel et de débogger plus simplement. Nous utilisons Pygame pour obtenir ces résulats." />
 
-      <Paragraph text="Cette vidéo présente la simulation graphique à la date du 15/12/2023:" />
-
+      <Paragraph text="La vidéo de gauche présente notre simulation graphique à la date du 15/12/2023, à droite, une version plus récente du 10/01/2024." />
       <Box
         sx={{
           display: "flex",
@@ -116,8 +115,14 @@ export const Simulation = (props: { setPath: (path: string) => void }) => {
           src="https://www.youtube.com/embed/Hei4Z9-AF-I"
           allowFullScreen
         />
+          <iframe
+          height={500}
+          width={800}
+          title="Graphical simulation"
+          src="https://www.youtube.com/embed/RMmCcr4tUs4"
+          allowFullScreen
+        />
       </Box>
-
       <ContinueLectureButton
         text="Continuer vers Modèle"
         href="/modele"
