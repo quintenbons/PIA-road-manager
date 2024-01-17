@@ -121,7 +121,7 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
           {
             date: "17 Janvier, 2024",
             time: "0.9306144396",
-            commitHash: "899ea191be1ad6b6caecaa37eb761d7c3412e337",
+            commitHash: "9dd718a0f822842e5461f90428d5b6614e2a80d3",
             granularity: "0.5",
           },
         ]}
