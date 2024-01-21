@@ -5,11 +5,14 @@
 Avant tout:
   ```bash
   cd src/maps/cpp && make all
-  pip install torch
+  pip install numpy torch pygame tqdm
   ```
 
-Cette étape est necessaire seulement si on doit toucher au code c++
+#### Recompiler le simulateur
+
+Cette étape est necessaire seulement si on doit toucher au code C++, ou si le binaire existant n'est pas compatible avec votre architechture.
 Installer pybind (seulement ce qui est necessaire):
+
   ```bash
   pip install pybind
   apt install pybind11-dev
@@ -21,22 +24,23 @@ Compiler (une version compilée est déjà présente dans le repo)
   ```
 
 #### Créer une map
-On a besoin de deux fichiers, une map et la liste des chemins correspondants.
-S'assurer d'être au root du repo.
 
-- Via l'API:
+On a besoin de deux fichiers, une map et la liste des chemins correspondants.
+S'assurer d'être à la racine du repo.
+
+- Via l'API: Conforme au réseau routier réel d'une ville de France
   ```bash
   python3 src/maps/create_map_API.py <Nom_de_la_ville>
   ```
   puis suivre les instructions. La map a utilisé sera stockée dans `src/maps/build/API/<Nom_de_la_ville>/map.csv` et les chemins dans `src/maps/build/API/<Nom_de_la_ville>/paths.csv`.
 
-- Via l'interface graphique:
+- Via l'interface graphique: Libre placement des routes et des noeuds
   ```bash
-  python3 src/maps/create_map_GUI.py 
+  python3 src/maps/create_map_GUI.py
   ```
-  - On clic pour ajouter un node.
-  - On reste appuyer sur `Espace` tout en cliquant sur 2 nodes pour créer une route entre eux.
-  - On reste appuyer sur `d` tout en cliquant sur un node pour le supprimer ainsi que toutes les routes qui y sont liées.
+  - Cliquez pour ajouter un node.
+  - Enfoncez `Espace` tout en cliquant sur 2 nodes pour créer une route bidirectionnelle entre eux.
+  - Enfoncez `d` tout en cliquant sur un node pour le supprimer ainsi que toutes les routes qui y sont liées.
 
   La map a utilisé sera stockée dans `src/maps/build/GUI/<nom_choisi>/map.csv` et les chemins dans `src/maps/build/GUI/<nom_choisi>/paths.csv`.
   Attention à bien faire un graph totalement connecté.
@@ -46,6 +50,8 @@ S'assurer d'être au root du repo.
   - `--grid`: Afficher la grille sur l'arrière-plan.
 
 #### Lancer une simulation
+
+Des cartes sont déjà disponibles. Nous vous conseillons de commencer par `src/maps/build/GUI/Training-4/Uniform/map.csv`.
 
 ```bash
   python3 src/main.py --map_file src/maps/build/GUI/<nom>/map.csv 
@@ -57,19 +63,27 @@ S'assurer d'être au root du repo.
 
 #### Générer des datasets d'entraînement
 
-- Localement: `python3 src/gen_dataset.py --help`
+Les scripts utilisent argparse, donc `--help` pour plus d'infos.
+
+- Localement: `python3 src/gen_dataset.py --size 10 src/maps/build/GUI/Training-4/Uniform`
 - En parallèle: `python3 src/gen_dataset_parallel.py`
 - Avec les vmgpu de l'ENSIMAG (attention à ne pas gêner les autres): `./training/gen_datasets.sh`
 
 ## Structure
 
-- [examples/](./examples/): Examples and tests of simple sample usecases
+- [data](./data/): Datasets, modèles, etc.
+- [docs](./docs/): Aide à la documentation
+- [react_app](./react_app/): Rendu
+- [training](./training/): Scripts de génération/entrainement
 - [src/](./src/)
-  - [strategy](./src/strategy.py): AI strategy (TO START)
-  - [engine/](./src/engine/): Engine only, try to keep this standalone so we can simulate without graphics too
-  - [graphics/](./src/graphics/): All pygame related stuff, meaning it will rely on the engine
+  - [cpp/](./src/cpp/): Code C++ pour la simulation
+  - [engine/](./src/engine.py): Code python pour la simulation (binding C++)
+  - [graphics/](./src/graphics.py): Code totalement isolé pour l'affichage (pygame)
+  - [maps/](./src/maps/): Code pour la génération de maps
+  - [ai/](./src/ai/): Code pour l'IA (pytorch)
+  - *.py: multitudes de scripts pour l'entrainement, la génération de datasets, la simulation en direct...
 
-## 26/09
+## 26/09 (Idée initiale)
 
 ### Noeud
 > Un élément qui sépare deux routes. Ex: Un passage piéton, un feu, un stop. Certains noeuds peuvent être gérés par le système d'IA (feux) tandis que d'autres ne servent qu'à la prise de déscision (autres que feux).
