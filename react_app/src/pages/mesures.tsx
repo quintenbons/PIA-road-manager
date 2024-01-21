@@ -10,6 +10,7 @@ import BarChart from "../components/BarChart";
 import BenchChart from "../components/BenchChart";
 import scores_data from "../data/scores_per_strategy.json";
 import bench_data from "../data/bench.json";
+import { ContinueLectureButton } from "../components/ContinueLectureButton";
 
 export const Mesures = (props: { setPath: (path: string) => void }) => {
   return (
@@ -283,6 +284,11 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
         }}
       />
 
+      <ContinueLectureButton
+        text="Continuer vers Exploration"
+        href="/exploration"
+        setPath={props.setPath}
+      />
       {/* <Title title="Pistes d'amélioration" size="md" /> */}
     </Container>
   );

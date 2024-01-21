@@ -18,6 +18,8 @@ import TRIGHT from "./TRight.png";
 import TTOP from "./TTop.png";
 import ANGLE_ORDERING from "./angle_ordering.png";
 import ORDER_DIFF from "./order_diff.png";
+import SHAPECMP from "./shapecmp.png"
+import DEEP_SPIKES from "./deep_spikes.png";
 
 export {
   BANNER,
@@ -40,4 +42,6 @@ export {
   TTOP,
   ANGLE_ORDERING,
   ORDER_DIFF,
+  SHAPECMP,
+  DEEP_SPIKES
 };

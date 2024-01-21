@@ -8,6 +8,7 @@ import { Modele } from "./pages/modele";
 import { Footer } from "./components/Footer";
 import { References } from "./pages/references";
 import { useNavigation } from "./navigation";
+import { Exploration } from "./pages/Exploration";
 
 function App() {
   const { path, setPath } = useNavigation();
@@ -34,6 +35,10 @@ function App() {
               href: "/mesures",
             },
             {
+              name: "Exploration",
+              href: "/exploration",
+            },
+            {
               name: "Références",
               href: "/references",
             },
@@ -48,6 +53,8 @@ function App() {
             <Modele setPath={setPath} />
           ) : path === "/mesures" ? (
             <Mesures setPath={setPath} />
+          ) : path === "/exploration" ? (
+            <Exploration setPath = {setPath} />
           ) : path === "/references" ? (
             <References setPath={setPath} />
           ) : (
