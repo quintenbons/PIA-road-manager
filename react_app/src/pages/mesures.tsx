@@ -58,7 +58,7 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
               <Paragraph text="Pour générer 100,000 entrées (I, E) (on rappelle que le but est de 1,000,000 d'entrées):" />
               <Paragraph text="Il faut pouvoir exécuter 15 minutes de simulation dans un intervalle de temps réel de l'ordre de la seconde. Si on utilise une solution naive, il nous faudra ([nb_strategies] + 1) x [temps de simul 15 minutes] pour générer 1 entrée (I, E)." />
               <Paragraph text="Avec 10 stratégies, on a donc 11 secondes par entrée, soit 305 heures. Sur 8 coeurs cela revient à 38 heures de génération, ce qui est loin d'être négligeable." />
-              <Paragraph text="En pratique:" />
+              <Paragraph text="En pratique (rappel: décembre. Voir la section suivante pour une mise à jour):" />
               <Paragraph text="À notre grande surprise, nous arrivons à générer en python 15 minutes de simulation en 1.4 secondes, sans avoir fait d'optimisation. Nous pensons pouvoir descendre en dessous de la seconde." />
               <Paragraph text="Générer un dataset est encore très coûteux. Comme nous avons en réalité 15 stratégies, nous mettons environ 60 heures à générer 100000 entrées (I, E)" />
             </Box>
@@ -85,7 +85,7 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
             >
               <Paragraph text="L'entraînement consiste à faire un forward + backward sur des batch générés par un dataloader. La complexité de cette tâche est de l'ordre de la taille du dataset utilisé. En pratique, l'entraînement d'un DNN à 64 neuronnes par couche sur un dataset de 100,000 entrées peut se fait en 5 minutes sans même utiliser de GPU (mesuré avec un exercice de pathfinding)." />
               <Paragraph text="En pratique:" />
-              <Paragraph text="Pas de mauvaise surprise, nous arrivons à entraîner l'IA dans des ordres de grandeurs négligeables face au temps de génération des datasets." />
+              <Paragraph text="Il faut environ 20 minutes pour 100 epoch et 189k entrées" />
             </Box>
           ),
           "🏧 Coût de fonctionnement": (
@@ -98,23 +98,22 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
             >
               <Paragraph text="L'IA en pratique serait utilisée une fois par croisement, toutes les 15 minutes. La performance n'est pas requise temporellement. Cependant, une meilleure performance permet de réduire la consommation énergétique, ce qui est un des buts principaux du projet. En effet, si l'énergie consommée n'était pas importante, il suffirait de lancer notre algorithme naif toutes les 15 minutes sur la simulation." />
               <Paragraph text="En pratique:" />
-              <Paragraph text="Le coût temporel forward de l'IA est vastement négligeable face au coût temporel de la simulation (de l'ordre de 0.01%). Cela prouve que le coût énergétique d'un forward est lui aussi très faible." />
+              <Paragraph text="Le coût temporel forward de l'IA est vastement négligeable face au coût temporel de la simulation (de l'ordre de 0.01%). Cela prouve que le coût énergétique d'un forward est lui aussi très faible. Cependant il faut prendre aussi en compte le coût énergétique et l'ACL des capteurs à poser sur les feux." />
             </Box>
           ),
         }}
       />
       <Title title="Génération de datasets de l'IA" size="md" />
       <Code colorScheme="green">
-        100%|█████████████████████████████████████████| 96/96 [33:58/00:00,
-        21.23s/it] 100%|█████████████████████████████████████████| 96/96
-        [34:07/00:00, 21.33s/it] 100%|█████████████████████████████████████████|
-        96/96 [34:14/00:00, 21.40s/it]
-        100%|█████████████████████████████████████████| 96/96 [34:30/00:00,
-        21.57s/it]
-        <br />
+        100%|███████████| 100/100 [00:32, 3.07it/s]
+        100%|███████████| 100/100 [00:33, 3.00it/s]
+        100%|███████████| 100/100 [00:34, 2.91it/s]
+        100%|███████████| 100/100 [00:34, 2.89it/s]
+        100%|███████████| 100/100 [00:34, 2.87it/s]
+        100%|███████████| 100/100 [00:35, 2.84it/s]
       </Code>
-      <Paragraph text="Voici l'output de notre script de génération en parallèle de dataset. Nous avons créé ici 96 entrées par coeur en 34 minutes." />
-      <Paragraph text="Comme nous le voyons grâce à tqdm, nous pouvons générer 1 entrée de dataset en 21 secondes, sur 4 coeurs en simultané." />
+      <Paragraph text="Voici l'output de notre script de génération en parallèle de dataset. Nous avons créé ici 600 entrées par coeur en 34 secondes. (En décembre, on avait 96 entrées en 34 minutes)" />
+      <Paragraph text="Comme nous le voyons grâce à tqdm, nous pouvons générer ~3 entrées de dataset par seconde, sur 6 coeurs en simultané. (Précédemment 1 it / 24 secondes)" />
 
       <Title title="Scores" size="md" />
 
