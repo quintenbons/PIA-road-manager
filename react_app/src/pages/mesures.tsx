@@ -7,7 +7,9 @@ import { ResultTab } from "../components/ResultTab";
 import { AccordionParagraph } from "../components/AccordionParagraph";
 import { DATASET_1 } from "../assets";
 import BarChart from "../components/BarChart";
+import BenchChart from "../components/BenchChart";
 import scores_data from "../data/scores_per_strategy.json";
+import bench_data from "../data/bench.json";
 
 export const Mesures = (props: { setPath: (path: string) => void }) => {
   return (
@@ -116,8 +118,14 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
       <Paragraph text="Comme nous le voyons grâce à tqdm, nous pouvons générer ~3 entrées de dataset par seconde, sur 6 coeurs en simultané. (Précédemment 1 it / 24 secondes)" />
 
       <Title title="Scores" size="md" />
-
       <BarChart data={scores_data} />
+      <Paragraph text="Voici les scores une charge faible de traffic (1 véhicule toutes les 8 secondes) sur un noeud à 4 routes entrantes. Constatons que la stratégie Open ici est envisageable car il y a peu de conflits entre voitures." />
+
+      <Title title="Résultats concrêts de l'IA" size="md" />
+      <BenchChart data={bench_data} />
+      <Paragraph text="Voici une comparaison output de l'IA/résultat attendu sur une carte choisie au hasard. Il est possible de générer plus de graphes, et les courbes sont généralement assez similaires. Ici, PIECE_OF_CAKE était une bonne stratégie car nous étions sur une carte à 4 voies entrantes, avec une voie moins fréquentée que les 3 autres. Ceci dit, OPEN_CORRIDOR était aussi correct, ce qui est innatendu (aléas, et simulation)" />
+      <Paragraph text="Le seuil rouge est mis à 2 * minScore. Nous avons remarqué empiriquement que le score minimal en sortie de notre IA est en réalité à un facteur 1.95 du score minimum attendu en moyenne. Le pire score est en moyenne à un facteur 8.2 du minimum." />
+      <Paragraph text="L'IA choisit en moyenne la 5.8ème meilleure stratégie sur 15, qui fait généralement partie d'un lot presque indiscernable de scores. Une stratégie est systématiquement mauvaise, donc l'IA a appris à ne jamais la choisir." />
 
       <Title title="Performances du moteur" size="md" />
       <Title title="Benchmark #1" size="sm" />
