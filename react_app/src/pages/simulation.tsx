@@ -83,6 +83,7 @@ export const Simulation = (props: { setPath: (path: string) => void }) => {
       </Box>
 
       <Title title="Moteur de simulation" size="md" />
+      <Paragraph text="Le but du moteur de pouvoir fournir un environnement physique virtuel à l'IA. Ce moteur physique doit pouvoir être assez performant pour entraîner l'IA dans un temps raisonnable, ce modèle devrait en théorie le plus se rapprocher de la réalité. Dans cette version, notre modèle est assez simpliste par rapport à la réalité. En revanche, il a été conçu pour pouvoir être amélioré sans grandes modifications de l'architecture du code. " />
       <Paragraph text="Le modèle physique implémente les notions suivantes:" />
       <ParagraphList
         paragraphs={[
@@ -92,12 +93,14 @@ export const Simulation = (props: { setPath: (path: string) => void }) => {
           "Générateurs de trafic routier",
         ]}
       />
+      
       <Paragraph text="Les générateurs de trafic produisent des voitures avec des itinéraires précalculés. Cet itinéraire est choisi pour être le plus court grâce à l'algorithme de Dijkstra. Les chemins possibles sont précalculés en utilisant une technologie plus rapide que Python (le C++)." />
       <Paragraph text="Par soucis de performance, la majeure partie du moteur a été réécrite en C++. Ainsi, le moteur est un mélange de C++ et de Python. Le C++ est utilisé pour les parties du code les plus exécuté. Ces parties correspondaient à plus de 99.5 % du temps passé pour la mise à jour et les calculs. C'est en partie ce qui nous à permis de générer suffisamment de dataset en un temps raisonnable." />
       <Paragraph text="Les voitures apparaissent et disparaissent sur des routes, un générateur de trafic se définit par une liste de routes d'apparition et une liste de routes de disparition. Ainsi que d'une fonction de génération qui prend en entrée un temps T et qui fait apparaître une voiture sur les routes d'apparition si la valeur de retour de cette fonction est supérieure à un." />
       <Paragraph text="Les routes font circuler les voitures. Les intersections contiennent la logique de signalisation et contrôlent le passage des voitures." />
       <Paragraph text="Les voitures adoptent un comportement dynamique inspiré de la conduite réelle, elles ralentissent et accélèrent pour respecter les limitations de vitesse. Dans les intersections, elles ralentissent et évitent à tout prix les collisions avec d'autres véhicules." />
 
+      
       <Title title="Simulation graphique" size="md" />
       <Paragraph text="Au delas du moteur, nous disposons d'un outil de simulation graphique. Cet outil permet de visualiser la simulation en temps réel et de débogger plus simplement. Nous utilisons Pygame pour obtenir ces résulats." />
 
