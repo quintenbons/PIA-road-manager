@@ -12,14 +12,16 @@ def main():
     parser.add_argument("--epoch", type=int, default=1)
     parser.add_argument("--dataset-path", type=str, default="dataset.pt")
     parser.add_argument("--model-path", type=str, default="model.pt")
+    parser.add_argument("--csv", action="store_true")
     args = parser.parse_args()
 
     if not os.path.exists(args.dataset_path):
-        print("No dataset found please generate one with gen_dataset.py")
+        if not args.csv:
+            print("No dataset found please generate one with gen_dataset.py")
         exit(1)
 
     # Model is generated if it does not exist
-    train(args.dataset_path, args.model_path, args.epoch)
+    train(args.dataset_path, args.model_path, args.epoch, args.csv)
 
 if __name__ == "__main__":
     main()

@@ -47,7 +47,7 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
       <Paragraph text="Il existe trois points critiques pour la performance de notre projet:" />
       <AccordionParagraph
         children={{
-          "🧪 Estimation du temps de génération des datasets": (
+          "🧪 Estimation du temps de génération des datasets (décembre)": (
             <Box
               sx={{
                 display: "flex",
@@ -61,6 +61,18 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
               <Paragraph text="En pratique:" />
               <Paragraph text="À notre grande surprise, nous arrivons à générer en python 15 minutes de simulation en 1.4 secondes, sans avoir fait d'optimisation. Nous pensons pouvoir descendre en dessous de la seconde." />
               <Paragraph text="Générer un dataset est encore très coûteux. Comme nous avons en réalité 15 stratégies, nous mettons environ 60 heures à générer 100000 entrées (I, E)" />
+            </Box>
+          ),
+          "⏱ Mesure du temps de génération de datasets (janvier)": (
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                gap: theme.space[4],
+              }}
+            >
+              <Paragraph text="En pratique, nous avons généré sur les machines ensipc2xx.ensimag.fr 1 entrée par seconde et par coeur, sur un total de 120 coeurs." />
+              <Paragraph text="Pour nos 189k entrées principales (sur la topologogie Training-4), nous avions mis environ 25 minutes. Nous avons généré en tout un peu moins de 1M entrées sur des maps différentes, mais avons souvent dû les jeter à cause de modifications de la simulation." />
             </Box>
           ),
           "🎰 Temps d'entraînement": (

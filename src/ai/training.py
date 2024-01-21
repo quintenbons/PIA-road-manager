@@ -7,12 +7,18 @@ from ai.model import CrossRoadModel
 import torch.nn as nn
 from torch.optim.lr_scheduler import StepLR
 
-def training_loop(model: CrossRoadModel, dataloader: DataLoader, num_epochs: int):
+def training_loop(model: CrossRoadModel, dataloader: DataLoader, num_epochs: int, csv = False):
     log_interval = 100
     criterion_next_move = nn.CrossEntropyLoss()
     optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
-    scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
+    # scheduler = StepLR(optimizer, step_size=10, gamma=0.1)
+
+    if csv:
+        print("epoch,loss")
+
     for epoch in range(num_epochs):
+        total_loss = 0
+
         for batch_idx, (inputs, targets) in enumerate(dataloader):
             optimizer.zero_grad()
 
@@ -27,14 +33,21 @@ def training_loop(model: CrossRoadModel, dataloader: DataLoader, num_epochs: int
 
             # Update weights
             optimizer.step()
+            total_loss += loss.item()
 
-            if batch_idx % log_interval == 0:             
+            if not csv and batch_idx % log_interval == 0:             
                 print(f"Epoch: {epoch+1:4} / {num_epochs:4}, Batch: {batch_idx+1:8d} / {len(dataloader):8d}, Loss: {loss.item():.4f}")
-        scheduler.step()
 
-def train(dataset_target: PathLike, model_target: PathLike, num_epochs):
+        # scheduler.step()
+
+        if csv:
+            avg_loss = total_loss / len(dataloader)
+            print(f"{epoch+1},{avg_loss:.4f}")
+
+def train(dataset_target: PathLike, model_target: PathLike, num_epochs, csv = False):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    print("Used device:", device)
+    if not csv:
+        print("Used device:", device)
     if torch.cuda.is_available():
         torch.cuda.set_device(0)
         print(torch.cuda.get_device_name(0))
@@ -43,13 +56,14 @@ def train(dataset_target: PathLike, model_target: PathLike, num_epochs):
     # Create model if it does not exist
     if not os.path.exists(model_target):
         output_shape = dataset.get_output_shape()
-        print(f"====== Generating model of output shape {output_shape}:")
+        if not csv:
+            print(f"====== Generating model of output shape {output_shape}:")
         model = CrossRoadModel(output_shape)
         model.save(model_target)
 
     model = CrossRoadModel.load(model_target, device)
     dataloader = DataLoader(dataset, batch_size=32, shuffle=True, num_workers=0, pin_memory=False)
-    training_loop(model, dataloader, num_epochs)
+    training_loop(model, dataloader, num_epochs, csv)
     model.save(model_target)
 
 

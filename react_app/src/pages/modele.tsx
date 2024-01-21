@@ -18,6 +18,7 @@ import {
 } from "../assets";
 import LineChart from "../components/LineChart";
 import training_data from "../data/first_training_data.json";
+import large_training_data from "../data/large_training_data.json";
 
 export const Modele = (props: { setPath: (path: string) => void }) => {
   return (
@@ -63,7 +64,7 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
       <Paragraph text="Le dataset sera constitué de tuples (I, E)." />
       <ParagraphList
         paragraphs={[
-          "I (input) correspond à une entrée du réseau neuronal pour une intersection donnée. I contient aussi des informations sur les évènements des 15 minutes précédentes.",
+          "I (input) correspond à une entrée du réseau neuronal pour une intersection donnée. Chaque route collecte pendant 15 minutes 4 mesures de trafic: nombre de véhicules (entrants/sortants), nombre de secondes passées au feu rouge (première voiture/cumulé). Ces mesures sont ensuite normalisées et concaténées pour former le vecteur d'entrée I.",
           "E (expected) correspond au résultat attendu 'expected', qui devra être généré algorithmiquement.",
         ]}
       />
@@ -106,25 +107,28 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
       
       <Paragraph text="Ainsi et grâce à ce réordonnancement, il ne reste que trois ordres de sommets possibles et on élimine une des quatre cartes d'entrainement." />
 
+      <Title title="Génération des labels" size="sm" />
+
       <Paragraph text="Pour générer une entrée de dataset (I, E), la simulation est d'abord exécutée pendant 15 minutes avec une stratégie sélectionnée uniformément, sur une configuration aléatoire. À l'issue de cette période, le paramètre I de l'entrée de dataset peut être calculé à partir des informations mesurées pendant l'exécution." />
       <Image src={DATASET_GENERATION} width={"60%"} alignSelf={"center"} />
-      <Paragraph text="Il faut ensuite générer le paramètre E, qui correspond au meilleur choix possible de stratégie pour les 15 minutes suivantes. Pour cela, nous pouvons simplement exécuter les stratégies une par une, et récupérer celle qui obtient le meilleur score (le moins de congestion). Attention ici à bien utiliser la même configuration de trafic que pour les 15 minutes initiales pour ne pas enfreindre notre hypothèse de consistence du trafic." />
+      <Paragraph text="Il faut ensuite générer le paramètre E, qui correspond au label de l'entrée de dataset. Dans notre cas, nous avons choisi de ne pas demander un one-hot du meilleur résultat (B), mais plutôt une estimation des scores en softmax inverse. Pour cela, nous pouvons simplement exécuter les stratégies une par une, et récupérer celle qui obtient le meilleur score (le moins de congestion). Attention ici à bien utiliser la même configuration de trafic que pour les 15 minutes initiales pour ne pas enfreindre notre hypothèse de consistence du trafic. (La seed est aussi fixée pour ne pas faire de jaloux)" />
 
       <Image src={DATASET_HESITATION} width={"60%"} alignSelf={"center"} />
-      <Paragraph text="Un cas particulier est à prévoir (voir schéma ci-dessus) : si plusieurs stratégies sont correctes, pénaliser le modèle lors du backwards peut être néfaste. C'est pourquoi nous détecterons ces situations afin de les exclure du dataset." />
-      <Paragraph text="Nous hésitons aussi à passer d'un modèle one-hot à un modèle softmax probabiliste. C'est quelque chose que nous avions déjà fait remarquer lors du dernier livrable, et qui n'est toujours pas sûr." />
+      <Paragraph text="Le cas particulier ci dessus est à prévoir : si plusieurs stratégies sont correctes, pénaliser le modèle lors du backwards peut être néfaste. Le fait d'attendre une estimation des scores permet de ne pas trop punir l'IA dans ce genre de situations." />
+      <Paragraph text="Note: Nous avions initialement choisi d'utiliser un label one-hot, qui donnait des résultats bien pires que ceux que nous avons maintenant." />
       <Paragraph text="Note: les scores sont en réalité de l'ordre de plusieurs millions. Plus d'information dans la page 'Mesures'." />
 
       <Title title="Modèle d'IA : Dense Neural Network" size="md" />
       <Paragraph text="Afin de prendre en main Pytorch, un court exercice a été fait : entraîner un modèle de Pathfinding. Cela nous a aussi permis de faire des premières estimations de performance (sur la page Home)." />
-      <Paragraph text="Une infrastructure d'entraînement pour le projet routier est déjà prête. Elle contient:" />
+      <Paragraph text="Une infrastructure d'entraînement pour le projet routier est disponible. Nous y avons mis beaucoup d'effort afin de rentre le projet assez générique pour pouvoir essayer de nouvelles structures de modèle et d'entrées par exemple. Nous vous conseillons de regarder le README du projet si vous souhaitez en voir la complétude. Elle contient:" />
       <ParagraphList
         paragraphs={[
-          "Un module de manipulation des datasets",
-          "Un module d'entraînement, prennant en entrée un dataloader, et le modèle",
-          "Possibilité de sauvegarder les datasets et modèles",
-          "Des fonctionalités de génération automatique de dataset à partir de configs externes",
-          "Branchement à des cas concrets (transformation d'une situation réelle en entrée du dataset)",
+          "Manipulation des datasets (suppression, split, merge, lecture, description détaillée)",
+          "Entraînement, prennant en entrée un dataloader, et le modèle",
+          "Sauvegarde des datasets et modèles",
+          "Génération automatique de dataset à partir de configs externes",
+          "Génération à distance (cluster pré-déployé avec des clés SSH) dans notre cas nous nous sommes permis d'utiliser des vmgpu de l'ensimag pendant 2 heures.",
+          "Branchement à des cas concrets (transformation d'une situation réelle en entrée du dataset avec une fonction torchify)",
         ]}
       />
 
@@ -133,61 +137,45 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
       <Code colorScheme="green">
         class CrossRoadModel(nn.Module):
         <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;inp: nn.Linear
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;hidden_layers: nn.ModuleList
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;out: nn.Linear
+        <br />
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;input_size: int = INPUT_DIM
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;output_size: int = OUTPUT_DIM
+        <br />
+        <br />
         &nbsp;&nbsp;&nbsp;&nbsp;def __init__(self, nb_strats=OUTPUT_DIM):
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(CrossRoadModel,
-        self).__init__()
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;super(CrossRoadModel, self).__init__()
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fc1 =
-        nn.Linear(INPUT_DIM, HIDDEN_DIM)
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.inp = nn.Linear(INPUT_DIM, HIDDEN_DIM)
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fc2 =
-        nn.Linear(HIDDEN_DIM, HIDDEN_DIM)
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.hidden_layers = nn.ModuleList([nn.Linear(HIDDEN_DIM, HIDDEN_DIM) for _ in range(HIDDEN_AMOUNT)])
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.fc3 =
-        nn.Linear(HIDDEN_DIM, nb_strats)
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.out = nn.Linear(HIDDEN_DIM, nb_strats)
+        <br />
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.input_size = INPUT_DIM
+        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.output_size = nb_strats
         <br />
         <br />
         &nbsp;&nbsp;&nbsp;&nbsp;def forward(self, x):
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(self.fc1(x))
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(self.inp(x))
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(self.fc2(x))
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for layer in self.hidden_layers:
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(self.fc3(x))
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(layer(x))
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return x<br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;x = F.relu(self.out(x))
         <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;def save(self, target: PathLike):
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if isinstance(self,
-        nn.DataParallel):
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state_dict
-        = self.module.state_dict()
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;else:
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state_dict
-        = self.state_dict()
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;torch.save(state_dict,
-        target)
-        <br />
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;@classmethod
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;def load(Cls, target: PathLike, device="cpu"):
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;state_dict =
-        torch.load(target, map_location=device)
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model = Cls()
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model.load_state_dict(state_dict)
-        <br />
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return model
-        <br />
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return x
       </Code>
 
       <Paragraph text="Schéma représentatif:" />
@@ -195,9 +183,12 @@ export const Modele = (props: { setPath: (path: string) => void }) => {
       <Image src={CURRENT_MODEL} height={"30rem"} alignSelf={"center"} />
 
       <Title title="Entraînement du modèle sur 400 entrées" size="md" />
-      <LineChart data={training_data} />
+      <LineChart data={training_data} entryNumber={400} minRange={2} />
+      <Paragraph text="Ce graphe date du dernier rapport. Nous n'avions pas encore d'entrée conséquente, et le label était en one-hot. Nous nous attendions à une divergeance des résultats pour quelques raisons: dataset trop petite, trop peu d'input, modèle trop peu profond (nous commenterons cela dans la section exploration)." />
 
-      <Paragraph text="Comme vous pouvez le constater, le modèle est déjà capable de s'entraîner sur les datasets. Cependant, il ne converge pas pour l'instant vers une valeur de pertes acceptable (comme nous le constaterons dans la page Mesures). Cela s'explique par la forme actuelle du modèle: un seul hidden layer n'est pas suffisant pour bien approximer la fonction de score, même sur un très petit dataset. De plus, il faudra à l'avenir essayer de modifier la taille des hidden layers." />
+      <Title title="Entraînement du modèle sur 189k entrées" size="md" />
+      <LineChart data={large_training_data} entryNumber={189000} minRange={2.5} />
+      <Paragraph text="Comme vous pouvez le constater, L'entraînement ne fournit pas encore des courbes de pertes visuellement satisfaisantes. Cependant nous en avons compris les raisons, et avons su tirer profit de cette expérience (nous le verrons dans la section exploration)." />
 
       <ContinueLectureButton
         text="Continuer vers Mesures"
