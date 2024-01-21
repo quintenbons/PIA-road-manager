@@ -105,12 +105,12 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
       />
       <Title title="Génération de datasets de l'IA" size="md" />
       <Code colorScheme="green">
-        100%|███████████| 100/100 [00:32, 3.07it/s]
-        100%|███████████| 100/100 [00:33, 3.00it/s]
-        100%|███████████| 100/100 [00:34, 2.91it/s]
-        100%|███████████| 100/100 [00:34, 2.89it/s]
-        100%|███████████| 100/100 [00:34, 2.87it/s]
-        100%|███████████| 100/100 [00:35, 2.84it/s]
+        100%|███████████| 100/100 [00:32, 3.07it/s]<br />
+        100%|███████████| 100/100 [00:33, 3.00it/s]<br />
+        100%|███████████| 100/100 [00:34, 2.91it/s]<br />
+        100%|███████████| 100/100 [00:34, 2.89it/s]<br />
+        100%|███████████| 100/100 [00:34, 2.87it/s]<br />
+        100%|███████████| 100/100 [00:35, 2.84it/s]<br />
       </Code>
       <Paragraph text="Voici l'output de notre script de génération en parallèle de dataset. Nous avons créé ici 600 entrées par coeur en 34 secondes. (En décembre, on avait 96 entrées en 34 minutes)" />
       <Paragraph text="Comme nous le voyons grâce à tqdm, nous pouvons générer ~3 entrées de dataset par seconde, sur 6 coeurs en simultané. (Précédemment 1 it / 24 secondes)" />
