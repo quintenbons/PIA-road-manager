@@ -54,7 +54,7 @@ S'assurer d'être à la racine du repo.
 Des cartes sont déjà disponibles. Nous vous conseillons de commencer par `src/maps/build/GUI/Training-4/Uniform/map.csv`.
 
 ```bash
-  python3 src/main.py --map_file src/maps/build/GUI/<nom>/map.csv 
+  python3 src/main.py --map_file src/maps/build/GUI/<nom>/map.csv
 ```
 
 - `--nb_movables`: Nombre de véhicules à placer
@@ -68,6 +68,8 @@ Les scripts utilisent argparse, donc `--help` pour plus d'infos.
 - Localement: `python3 src/gen_dataset.py --size 10 src/maps/build/GUI/Training-4/Uniform`
 - En parallèle: `python3 src/gen_dataset_parallel.py`
 - Avec les vmgpu de l'ENSIMAG (attention à ne pas gêner les autres): `./training/gen_datasets.sh`
+
+Notez que l'entraînement s'est fait sur le git tag training-tag. Les mesures actuelles peuvent entrer en conflit avec les mesures du rapport.
 
 ## Structure
 
@@ -91,7 +93,7 @@ Les scripts utilisent argparse, donc `--help` pour plus d'infos.
 ### Input
 > Prétraitement transaparent au réseau de neuronne. Adaptable de part ce pré-traitement.
 
-> - `hikers` : Combien a t-on de personnes sont à proximité du noeud (vélo/piéton) 
+> - `hikers` : Combien a t-on de personnes sont à proximité du noeud (vélo/piéton)
 > - `vehicles` : Combien de véhicules sont à proximité du noeud
 > - `hikers_speed` : Vitesse moyenne des `hikers` à proximité du noeud
 > - `vehicles_speed` : Vitesse moyenne des `vehicles` à proximité du noeud
@@ -107,7 +109,7 @@ Les scripts utilisent argparse, donc `--help` pour plus d'infos.
 
 `vehicle`: Représente un véhicule, si la position est à 1 ou plus, cela signifie que le véhicule doit passer sur la prochaine route sur son chemin, à condition qu'il ne soit pas bloqué.
 
-`trafficFlow`: 
+`trafficFlow`:
 
 Une `simulation` contient des `node` représentant des intersections ainsi que des `car` représentant des véhicules.
 La `simulation` a une méthode `run` qui permet de jouer la `simulation`. Lorsqu'une `simulation` est jouée, elle met à jour les états des `node` et des `car` de manière itérative et jusqu'à ce que toutes les `car` aient atteinte leur objectif.
