@@ -31,7 +31,7 @@ export const Exploration = (props: { setPath: (path: string) => void }) => {
       />
       <DocumentDescriptor
         title="Exploration"
-        date="13 Décembre, 2023"
+        date="22 Janvier, 2023"
         authors={[
           "Julien Bourseau",
           "Luca Bitaudeau",

@@ -38,7 +38,7 @@ export const Mesures = (props: { setPath: (path: string) => void }) => {
       />
       <DocumentDescriptor
         title="Mesures"
-        date="13 Décembre, 2023"
+        date="22 Janvier, 2023"
         authors={[
           "Julien Bourseau",
           "Luca Bitaudeau",

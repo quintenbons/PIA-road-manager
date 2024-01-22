@@ -32,7 +32,7 @@ export const References = (props: { setPath: (path: string) => void }) => {
       />
       <DocumentDescriptor
         title="Références"
-        date="13 Décembre, 2023"
+        date="22 Janvier, 2023"
         authors={[
           "Julien Bourseau",
           "Luca Bitaudeau",

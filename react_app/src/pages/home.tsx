@@ -29,7 +29,7 @@ export const Home = (props: { setPath: (path: string) => void }) => {
       <Banner />
       <DocumentDescriptor
         title="Gestion du trafic par IA"
-        date="13 Décembre, 2023"
+        date="22 Janvier, 2023"
         authors={[
           "Julien Bourseau",
           "Luca Bitaudeau",
