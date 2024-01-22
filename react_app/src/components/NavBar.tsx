@@ -1,5 +1,6 @@
 import { Box, Icon, theme, Text, useColorMode, Link } from "@chakra-ui/react";
 import { ColorSwitch } from "./ColorSwitch";
+import { FaGithub } from "react-icons/fa";
 
 export type NavBarProps = {
   sections: {
@@ -30,9 +31,11 @@ export const NavBar = (props: NavBarProps) => {
           position: "fixed",
         }}
       >
-        <Icon w={8} h={8}>
-          Icon
-        </Icon>
+        <a href="https://github.com/quintenbons/PIA-road-manager">
+          <Icon as={FaGithub} w={8} h={8}>
+            Icon
+          </Icon>
+        </a>
         {props.sections.map((section) => (
           <Link
             sx={{
